@@ -12,10 +12,9 @@ DATA_FILE = "data.json"
 
 MIN_ODDS_FLOOR = 1.50
 
-# 2018'DEN 2026'YA KADAR 8 SEZONUN TAMAMI
+# 2018-2026 ARASI 8 SEZONUN TAMAMI
 SEASONS = ["2526", "2425", "2324", "2223", "2122", "2021", "1920", "1819"]
 
-# 16 MAJÖR VE ALT LİG KODLARI
 LEAGUE_CODES = [
     ("İngiltere Premier", "E0"),
     ("İngiltere Championship", "E1"),
@@ -66,9 +65,9 @@ def fetch_single_csv(args):
                             "hg": hg,
                             "ag": ag,
                             "score": f"{hg}-{ag}",
-                            "h": h,
-                            "d": d,
-                            "a": a
+                            "h": round(h, 2),
+                            "d": round(d, 2),
+                            "a": round(a, 2)
                         })
                 except Exception:
                     continue
@@ -94,7 +93,7 @@ def download_and_build_cache(data):
         for r_list in results:
             records.extend(r_list)
 
-    # 2026 EKİM GÜNCEL KÜTÜĞÜNÜ DE HAVUZA KAT (19-22 EKİM MAÇLARI)
+    # 2026 EKİM GÜNCEL KÜTÜĞÜ
     for arch in data.get("archive", []):
         try:
             score = arch.get("score", "")
@@ -111,14 +110,14 @@ def download_and_build_cache(data):
                     "hg": hg,
                     "ag": ag,
                     "score": f"{hg}-{ag}",
-                    "h": float(arch.get("odds", 1.50)),
+                    "h": round(float(arch.get("odds", 1.50)), 2),
                     "d": 3.40,
                     "a": 3.80
                 })
         except Exception:
             pass
 
-    print(f"Başarılı: 2018-2026 arası toplam {len(records)} adet maç bellek havuzuna alındı!")
+    print(f"Başarılı: Toplam {len(records)} adet maç bellek havuzuna alındı!")
     GLOBAL_DATABASE_CACHE = records
     return records
 
@@ -139,25 +138,79 @@ def check_pick_success(hg, ag, pick_str):
     if "X2" in pick: return ag >= hg
     return False
 
-def evaluate_real_dna(target_h, target_d, target_a, prediction, data, tolerance=0.06, display_limit=4):
+# BİREBİR ORAN EŞLEŞMESİ (TOLERANS = 0.00) VE KOMPLE SONUÇ DAĞILIMI
+def evaluate_exact_odds_breakdown(target_h, target_d, target_a, prediction, data, display_limit=4):
     records = download_and_build_cache(data)
+    
     matched_games = []
-    total_pool_matches = 0
-    success_count = 0
+    total_matched = 0
+    pick_wins = 0
+    
+    # 1X2 Dağılımı
+    h_wins = 0
+    draws = 0
+    a_wins = 0
+    
+    # Gol Baremleri
+    over25 = 0
+    under25 = 0
+    
+    # Karşılıklı Gol
+    btts_yes = 0
+    btts_no = 0
+
+    target_h_rounded = round(target_h, 2)
 
     for r in records:
-        if abs(r["h"] - target_h) <= tolerance and abs(r["d"] - target_d) <= 0.22:
-            total_pool_matches += 1
-            is_win = check_pick_success(r["hg"], r["ag"], prediction)
-            if is_win:
-                success_count += 1
+        # BİREBİR KURULUŞU KURUŞUNA EŞLEŞME (TOLERANS = 0.00)
+        if r["h"] == target_h_rounded:
+            total_matched += 1
+            hg = r["hg"]
+            ag = r["ag"]
+            total_goals = hg + ag
             
+            # 1X2
+            if hg > ag: h_wins += 1
+            elif hg == ag: draws += 1
+            else: a_wins += 1
+            
+            # 2.5 Üst / Alt
+            if total_goals >= 3: over25 += 1
+            else: under25 += 1
+            
+            # KG
+            if hg > 0 and ag > 0: btts_yes += 1
+            else: btts_no += 1
+            
+            # Tercih Doğrulaması
+            is_win = check_pick_success(hg, ag, prediction)
+            if is_win:
+                pick_wins += 1
+                
             if len(matched_games) < display_limit:
                 durum = "✅" if is_win else "❌"
                 matched_games.append(f"{r['season']} {r['league']}: {r['home']} {r['score']} {r['away']} ({durum} @ {r['h']:.2f})")
 
-    dna_score = (success_count / total_pool_matches * 100.0) if total_pool_matches > 0 else 50.0
-    return matched_games, dna_score, total_pool_matches
+    stats = {
+        "total_matched": total_matched,
+        "pick_wins": pick_wins,
+        "dna_score": round((pick_wins / total_matched * 100.0), 1) if total_matched > 0 else 50.0,
+        "h_wins": h_wins,
+        "h_pct": round((h_wins / total_matched * 100.0), 1) if total_matched > 0 else 0,
+        "draws": draws,
+        "d_pct": round((draws / total_matched * 100.0), 1) if total_matched > 0 else 0,
+        "a_wins": a_wins,
+        "a_pct": round((a_wins / total_matched * 100.0), 1) if total_matched > 0 else 0,
+        "over25": over25,
+        "over_pct": round((over25 / total_matched * 100.0), 1) if total_matched > 0 else 0,
+        "under25": under25,
+        "under_pct": round((under25 / total_matched * 100.0), 1) if total_matched > 0 else 0,
+        "btts_yes": btts_yes,
+        "btts_pct": round((btts_yes / total_matched * 100.0), 1) if total_matched > 0 else 0,
+        "btts_no": btts_no
+    }
+
+    return matched_games, stats
 
 def get_current_shift():
     manual = os.getenv("MANUAL_SHIFT")
@@ -191,7 +244,7 @@ def get_progress_bar(percent):
     filled = int(round(percent / 10))
     return "🟩" * filled + "⬜" * (10 - filled)
 
-# 16:15 RESMİ BÜLTEN
+# 16:15 RESMİ BÜLTEN (BİREBİR ORAN & KOMPLE DAĞILIM TABLOSU)
 def build_afternoon_bulletin(data):
     today = data.get("current_date", "23.10.2026")
     matches = data.get("matches", [])
@@ -213,12 +266,13 @@ def build_afternoon_bulletin(data):
                 target_d = float(parts[1].strip())
                 target_a = float(parts[2].strip())
                 
-                real_h, calc_dna_score, total_count = evaluate_real_dna(target_h, target_d, target_a, m["prediction"], data)
+                # BİREBİR EŞLEŞTİRME VE KOMPLE DAĞILIM ANALİZİ
+                real_h, stats = evaluate_exact_odds_breakdown(target_h, target_d, target_a, m["prediction"], data)
                 
                 if real_h:
                     m["history_matches"] = real_h
-                    m["total_matched_pool"] = total_count
-                    m["dna_score"] = round(calc_dna_score, 1)
+                    m["stats"] = stats
+                    m["dna_score"] = stats["dna_score"]
                     form_score = m.get("form_score", 75.0)
                     m["confidence"] = round((0.85 * m["dna_score"]) + (0.15 * form_score), 1)
 
@@ -229,14 +283,15 @@ def build_afternoon_bulletin(data):
 
     lines = []
     lines.append("╔════════════════════════╗")
-    lines.append("  ⚡ <b>OPTAODDS AI v5.6 RESMİ BÜLTENİ</b> ⚡")
-    lines.append(f"  📅 <b>{today}</b> | 🔬 <b>2018 - 2026 Arşivi</b>")
+    lines.append("  ⚡ <b>OPTAODDS v5.6 BİREBİR ORAN BÜLTENİ</b> ⚡")
+    lines.append(f"  📅 <b>{today}</b> | 🔬 <b>Sıfır Tolerans (0.00) DNA</b>")
     lines.append(f"  🛡️ <b>Kural:</b> Minimum 1.50 Oran Tabanı")
     lines.append("╚════════════════════════╝\n")
 
-    # 1. BANKO SEÇİMLER
-    lines.append("👑 <b>DOĞRULANMIŞ BANKO MAÇLAR (2018-2026 İSPATLI)</b>\n")
+    # 1. BANKO SEÇİMLER & KOMPLE DAĞILIM
+    lines.append("👑 <b>BİREBİR ORAN İSPATLI BANKO SEÇİMLER</b>\n")
     for m in valid_banko_matches:
+        st = m["stats"]
         bar = get_progress_bar(m['confidence'])
         hist_lines = ""
         for h in m.get("history_matches", []):
@@ -245,10 +300,17 @@ def build_afternoon_bulletin(data):
         lines.append(f"⚽ <b>{m['match'].upper()}</b>")
         lines.append(f"🏆 <i>{m['league']}</i> | ⏰ {m['time']}")
         lines.append(f"🎯 <b>Tercih:</b> <code>{m['prediction']}</code>  |  <b>Oran:</b> <code>@{m.get('current_odds', m['odds']):.2f}</code>")
-        lines.append(f"📊 <b>2018-2026 DNA İsabeti:</b> %{m['dna_score']} (Toplam {m.get('total_matched_pool', 10)} maç)")
+        lines.append(f"📊 <b>Birebir Oran İsabeti:</b> %{m['dna_score']} ({st['pick_wins']}/{st['total_matched']} Maç)")
         lines.append(f"🔥 <b>Bileşik Model Güveni:</b> <b>%{m['confidence']}</b>")
         lines.append(f"   {bar}")
-        lines.append(f"🧬 <b>2018-2026 Örnek Eşleşmeleri:</b>\n{hist_lines}")
+        
+        # KOMPLE SONUÇ RÖNTGENİ
+        lines.append(f"📈 <b>{st['total_matched']} Birebir Maçın Tam Dağılımı:</b>")
+        lines.append(f"   ├ <b>1X2:</b> Ev: {st['h_wins']} (%{st['h_pct']}) | Ber: {st['draws']} (%{st['d_pct']}) | Dep: {st['a_wins']} (%{st['a_pct']})")
+        lines.append(f"   ├ <b>Gol:</b> 2.5 Üst: {st['over25']} (%{st['over_pct']}) | 2.5 Alt: {st['under25']} (%{st['under_pct']})")
+        lines.append(f"   └ <b>KG:</b> Var: {st['btts_yes']} (%{st['btts_pct']}) | Yok: {st['btts_no']}")
+        
+        lines.append(f"\n🧬 <b>Örnek Birebir Eşleşmeler (2018-2026):</b>\n{hist_lines}")
         lines.append("───────────────────────\n")
 
     # 2. VIP DEĞER ODASI
@@ -316,7 +378,7 @@ def main():
         send_telegram_message(msg)
 
     save_data(data)
-    print("İşlem tamamlandı.")
+    print("İşlem başarıyla tamamlandı.")
 
 if __name__ == "__main__":
     main()
