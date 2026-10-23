@@ -12,6 +12,7 @@ TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID") or "867372590"
 DATA_FILE = "data.json"
 
 MIN_ODDS_FLOOR = 1.50
+MIN_SAMPLE_SIZE = 12  # EN AZ 12 BİREBİR GEÇMİŞ MAÇ EŞLEŞMESİ ŞARTI!
 
 LIVE_SPORT_KEYS = [
     ("Türkiye Süper Lig", "soccer_turkey_super_league"),
@@ -72,85 +73,28 @@ def download_and_build_cache():
     GLOBAL_DATABASE_CACHE = records
     return records
 
-# HEM 1X2 HEM DE TOTALS (2.5 ÜST/ALT) ORANLARINI KARIŞTIRMADAN ÇEKEN FONKSİYON
-def fetch_today_clean_odds():
-    now_tsi = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=3)
-    today_ymd = now_tsi.strftime("%Y-%m-%d")
-    matches = []
-
-    for league_name, sport_key in LIVE_SPORT_KEYS:
-        # totals ve h2h birlikte istenir
-        url = f"https://api.the-odds-api.com/v4/sports/{sport_key}/odds/?apiKey={ODDS_API_KEY}&regions=eu&markets=h2h,totals&oddsFormat=decimal"
-        try:
-            res = requests.get(url, timeout=5)
-            if res.status_code == 200:
-                events = res.json()
-                for ev in events:
-                    commence = ev.get("commence_time", "")
-                    if not commence: continue
-                    t_utc = datetime.datetime.fromisoformat(commence.replace("Z", "+00:00"))
-                    t_tsi = t_utc + datetime.timedelta(hours=3)
-                    
-                    if t_tsi.strftime("%Y-%m-%d") != today_ymd: continue
-                    if t_tsi <= now_tsi: continue
-
-                    bookies = ev.get("bookmakers", [])
-                    if not bookies: continue
-
-                    # 1X2 Oranları
-                    h2h_market = next((m for m in bookies[0]["markets"] if m["key"] == "h2h"), None)
-                    if not h2h_market: continue
-                    h_odd = next((o["price"] for o in h2h_market["outcomes"] if o["name"] == ev["home_team"]), 1.80)
-                    d_odd = next((o["price"] for o in h2h_market["outcomes"] if o["name"].lower() == "draw"), 3.40)
-                    a_odd = next((o["price"] for o in h2h_market["outcomes"] if o["name"] == ev["away_team"]), 3.80)
-
-                    # GERÇEK 2.5 ÜST/ALT ORANI (ASLA 5-6 ORAN OLMAZ!)
-                    totals_market = next((m for m in bookies[0]["markets"] if m["key"] == "totals"), None)
-                    over_odd = 1.65 # Varsayılan gerçekçi piyasa tabanı
-                    if totals_market:
-                        for out in totals_market["outcomes"]:
-                            if out.get("name") == "Over" and out.get("point") == 2.5:
-                                over_odd = out.get("price", 1.65)
-
-                    matches.append({
-                        "id": ev.get("id", str(len(matches)+1)),
-                        "time": t_tsi.strftime("%H:%M"),
-                        "league": league_name,
-                        "match": f"{ev['home_team']} vs {ev['away_team']}",
-                        "odds_dna": f"{h_odd:.2f} | {d_odd:.2f} | {a_odd:.2f} | 1.85 | 1.75 | 1.68",
-                        "h_odd": h_odd,
-                        "d_odd": d_odd,
-                        "a_odd": a_odd,
-                        "over_odd": round(over_odd, 2)
-                    })
-        except Exception: continue
-
-    return matches
-
 def optimize_match(m, records):
     h = round(m["h_odd"], 2)
-    over_odd = m["over_odd"]
+    over_odd = m.get("over_odd", 1.65)
     
     matched = [r for r in records if r["h"] == h]
     if not matched:
         matched = [r for r in records if abs(r["h"] - h) <= 0.04]
         
     tot = len(matched)
-    if tot == 0:
-        m["prediction"] = "MS 1" if h <= 1.85 else "2.5 Üst"
-        m["odds"] = h if h <= 1.85 else over_odd
-        m["confidence"] = 72.0
-        m["dna_score"] = 70.0
-        return m
+    if tot < MIN_SAMPLE_SIZE:
+        return None  # EŞLEŞME SAYISI YETERSİZSE DİREKT ELE!
 
     h_wins = sum(1 for r in matched if r["hg"] > r["ag"])
+    draws = sum(1 for r in matched if r["hg"] == r["ag"])
+    a_wins = tot - h_wins - draws
     over25 = sum(1 for r in matched if (r["hg"] + r["ag"]) >= 3)
     btts = sum(1 for r in matched if r["hg"] > 0 and r["ag"] > 0)
 
     over_pct = (over25 / tot) * 100
     h_pct = (h_wins / tot) * 100
 
-    # DOĞRU ORAN BAŞLIĞI: 2.5 Üst seçildiyse ASLA h_odd yazılmaz, gerçek over_odd yazılır!
+    # ASLA 5-6 ORAN OLAMAZ! 2.5 ÜST SEÇİLİRSE GERÇEK OVER ORANI YAZILIR
     if over_pct >= 65.0:
         m["prediction"] = "2.5 Üst"
         m["odds"] = over_odd
@@ -166,15 +110,23 @@ def optimize_match(m, records):
 
     m["confidence"] = round((0.85 * m["dna_score"]) + 11.2, 1)
     m["status"] = "BANKO"
-    m["history_matches"] = [f"{r['season']} {r['league']}: {r['home']} {r['score']} {r['away']}" for r in matched[:3]]
+    
+    # GEÇMİŞ MAÇLAR KESİNTİSİZ EKLENİR
+    m["history_matches"] = [
+        f"{r['season']} {r['league']}: {r['home']} {r['score']} {r['away']} (@ {r['h']:.2f})"
+        for r in matched[:3]
+    ]
+    
+    # RÖNTGEN DAĞILIM KUTUSU KESİNTİSİZ EKLENİR
     m["stats"] = {
         "total_matched": tot,
         "h_wins": h_wins, "h_pct": round(h_pct, 1),
-        "draws": sum(1 for r in matched if r["hg"] == r["ag"]),
-        "a_wins": tot - h_wins - sum(1 for r in matched if r["hg"] == r["ag"]),
+        "draws": draws, "d_pct": round((draws / tot) * 100, 1),
+        "a_wins": a_wins, "a_pct": round((a_wins / tot) * 100, 1),
         "over25": over25, "over_pct": round(over_pct, 1),
         "under25": tot - over25, "under_pct": round(100 - over_pct, 1),
-        "btts_yes": btts, "btts_pct": round((btts/tot)*100, 1), "btts_no": tot - btts
+        "btts_yes": btts, "btts_pct": round((btts / tot) * 100, 1),
+        "btts_no": tot - btts
     }
     return m
 
@@ -208,16 +160,18 @@ def get_progress_bar(percent):
     filled = int(round(percent / 10))
     return "🟩" * filled + "⬜" * (10 - filled)
 
+# TELEGRAM BÜLTENİ (6 MAÇ SINIRI KALDIRILDI! N ADET NİTELİKLİ MAÇ)
 def build_bulletin_telegram(data):
     today = data.get("current_date", "24.10.2026")
-    matches = data.get("matches", [])[:6]
+    matches = data.get("matches", []) # 6 SINIRI YOK! TÜM NİTELİKLİ MAÇLAR
 
     lines = [
         "╔════════════════════════╗",
         "  ⚡ <b>OPTAODDS QUANT RESMİ BÜLTEN</b> ⚡",
-        f"  📅 <b>{today} Cumartesi</b> | 🔬 <b>Doğru Oran Modeli</b>",
+        f"  📅 <b>{today} Cumartesi</b> | 🔬 <b>2016-2026 Gerçek Oranlar</b>",
+        f"  🎯 <b>Nitelikli Maç Sayısı:</b> {len(matches)} Adet",
         "╚════════════════════════╝\n",
-        "👑 <b>GÜNÜN 6 RESMİ BANKO SEÇİMİ</b>\n"
+        "👑 <b>DOĞRULANMIŞ BANKO SEÇİMLER (≥%68 İSPATLI)</b>\n"
     ]
 
     for m in matches:
@@ -237,7 +191,7 @@ def build_bulletin_telegram(data):
 
         hist = m.get("history_matches", [])
         if hist:
-            lines.append(f"🧬 <b>Geçmiş Eşleşmeler:</b>")
+            lines.append(f"🧬 <b>Geçmiş Birebir Eşleşmeler:</b>")
             for h in hist[:3]: lines.append(f"   ▫️ <i>{h}</i>")
 
         lines.append("───────────────────────\n")
@@ -254,23 +208,26 @@ def main():
     data["current_date"] = now_tsi.strftime("%d.%m.%Y")
 
     records = download_and_build_cache()
-    today_clean = fetch_today_clean_odds()
 
-    if today_clean:
-        optimized = []
-        for tc in today_clean:
-            opt = optimize_match(tc, records)
-            if opt.get("odds", 1.50) >= MIN_ODDS_FLOOR:
-                optimized.append(opt)
+    # DATA.JSON İÇİNDEKİ MAÇLARI KÜTÜKTE TEKRAR DOĞRULA VE İSTATİSTİKLERİNİ GARANTİLE
+    validated_matches = []
+    for m in data.get("matches", []):
+        parts = m.get("odds_dna", "").split("|")
+        h_val = float(parts[0].strip()) if len(parts) >= 1 else 1.80
+        m["h_odd"] = h_val
+        m["over_odd"] = m.get("odds", 1.65) if "Üst" in m.get("prediction", "") else 1.65
+        opt = optimize_match(m, records)
+        if opt:
+            validated_matches.append(opt)
 
-        optimized.sort(key=lambda x: x.get("confidence", 0), reverse=True)
-        data["matches"] = optimized[:6]
+    # 6 MAÇ SINIRI KALKTI: ŞARTLARI SAĞLAYAN TÜM MAÇLAR GİRER!
+    data["matches"] = validated_matches
 
     msg = build_bulletin_telegram(data)
     send_telegram_message(msg)
 
     save_data(data)
-    print("İşlem başarıyla tamamlandı.")
+    print(f"İşlem tamamlandı. Toplam {len(validated_matches)} adet ispatlı maç bültene alındı.")
 
 if __name__ == "__main__":
     main()
