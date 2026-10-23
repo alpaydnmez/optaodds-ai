@@ -80,18 +80,36 @@
       "current_odds": 1.52,
       "history_count": 3,
       "history_matches": [
-        "2025/2026 İngiltere Premier: Leeds 2-1 West Ham (✅ @ 1.80)",
-        "2025/2026 İngiltere Premier: Tottenham 1-1 Sunderland (✅ @ 1.80)",
-        "2025/2026 İngiltere Premier: Everton 1-1 Wolves (✅ @ 1.75)",
-        "2025/2026 İngiltere Premier: Sunderland 3-0 Burnley (✅ @ 1.80)"
+        "2025/2026 İngiltere Premier: Man City 3-0 Man United (✅ @ 1.75)",
+        "2025/2026 İngiltere Premier: Nott'm Forest 0-1 Sunderland (❌ @ 1.75)",
+        "2025/2026 İngiltere Premier: Man United 0-1 Everton (❌ @ 1.75)",
+        "2025/2026 İngiltere Premier: Aston Villa 3-1 Nott'm Forest (✅ @ 1.75)"
       ],
-      "dna_score": 59.7,
+      "dna_score": 65.0,
       "form_score": 74.0,
-      "confidence": 61.8,
+      "confidence": 66.3,
       "prediction": "1X ve 1.5 Üst",
       "odds": 1.52,
       "status": "BANKO",
-      "total_matched_pool": 1684
+      "total_matched_pool": 1684,
+      "stats": {
+        "total_matched": 897,
+        "pick_wins": 583,
+        "dna_score": 65.0,
+        "h_wins": 500,
+        "h_pct": 55.7,
+        "draws": 236,
+        "d_pct": 26.3,
+        "a_wins": 161,
+        "a_pct": 17.9,
+        "over25": 463,
+        "over_pct": 51.6,
+        "under25": 434,
+        "under_pct": 48.4,
+        "btts_yes": 479,
+        "btts_pct": 53.4,
+        "btts_no": 418
+      }
     },
     {
       "id": "23-02",
@@ -103,18 +121,36 @@
       "current_odds": 1.5,
       "history_count": 4,
       "history_matches": [
-        "2025/2026 İngiltere Premier: Arsenal 2-3 Man United (❌ @ 1.55)",
-        "2025/2026 İngiltere Premier: Brentford 2-2 Wolves (❌ @ 1.55)",
-        "2025/2026 İngiltere Premier: Fulham 3-1 Burnley (✅ @ 1.53)",
-        "2025/2026 İngiltere Premier: Nott'm Forest 4-1 Burnley (✅ @ 1.50)"
+        "2025/2026 İngiltere Premier: Tottenham 1-1 Wolves (❌ @ 1.50)",
+        "2025/2026 İngiltere Premier: Man United 2-0 Sunderland (✅ @ 1.50)",
+        "2025/2026 İngiltere Premier: Man City 3-1 Bournemouth (✅ @ 1.50)",
+        "2025/2026 İngiltere Premier: Aston Villa 1-0 Wolves (✅ @ 1.50)"
       ],
-      "dna_score": 64.0,
+      "dna_score": 64.1,
       "form_score": 78.0,
-      "confidence": 66.1,
+      "confidence": 66.2,
       "prediction": "MS 1",
       "odds": 1.5,
       "status": "BANKO",
-      "total_matched_pool": 789
+      "total_matched_pool": 789,
+      "stats": {
+        "total_matched": 608,
+        "pick_wins": 390,
+        "dna_score": 64.1,
+        "h_wins": 390,
+        "h_pct": 64.1,
+        "draws": 123,
+        "d_pct": 20.2,
+        "a_wins": 95,
+        "a_pct": 15.6,
+        "over25": 339,
+        "over_pct": 55.8,
+        "under25": 269,
+        "under_pct": 44.2,
+        "btts_yes": 311,
+        "btts_pct": 51.2,
+        "btts_no": 297
+      }
     },
     {
       "id": "23-03",
@@ -126,18 +162,36 @@
       "current_odds": 1.7,
       "history_count": 3,
       "history_matches": [
-        "2025/2026 İngiltere Premier: Tottenham 1-2 Aston Villa (✅ @ 2.05)",
-        "2025/2026 İngiltere Premier: Brighton 3-4 Aston Villa (✅ @ 2.15)",
+        "2025/2026 İngiltere Premier: Fulham 1-0 Sunderland (❌ @ 2.10)",
         "2025/2026 İngiltere Premier: Aston Villa 2-1 Man United (✅ @ 2.10)",
-        "2025/2026 İngiltere Premier: Crystal Palace 1-1 Fulham (❌ @ 2.15)"
+        "2025/2026 İngiltere Premier: Nott'm Forest 0-2 Everton (❌ @ 2.10)",
+        "2025/2026 İngiltere Premier: Brentford 0-0 Tottenham (❌ @ 2.10)"
       ],
-      "dna_score": 49.5,
+      "dna_score": 46.7,
       "form_score": 72.0,
-      "confidence": 52.9,
+      "confidence": 50.5,
       "prediction": "2.5 Üst",
       "odds": 1.7,
       "status": "BANKO",
-      "total_matched_pool": 2172
+      "total_matched_pool": 2172,
+      "stats": {
+        "total_matched": 1335,
+        "pick_wins": 623,
+        "dna_score": 46.7,
+        "h_wins": 600,
+        "h_pct": 44.9,
+        "draws": 424,
+        "d_pct": 31.8,
+        "a_wins": 311,
+        "a_pct": 23.3,
+        "over25": 623,
+        "over_pct": 46.7,
+        "under25": 712,
+        "under_pct": 53.3,
+        "btts_yes": 722,
+        "btts_pct": 54.1,
+        "btts_no": 613
+      }
     },
     {
       "id": "23-04",
@@ -149,18 +203,36 @@
       "current_odds": 1.5,
       "history_count": 4,
       "history_matches": [
-        "2025/2026 İngiltere Premier: Nott'm Forest 0-3 West Ham (✅ @ 1.67)",
         "2025/2026 İngiltere Premier: Crystal Palace 0-0 Sunderland (❌ @ 1.65)",
-        "2025/2026 İngiltere Premier: Everton 1-1 West Ham (❌ @ 1.70)",
-        "2025/2026 İngiltere Premier: Aston Villa 2-1 Burnley (✅ @ 1.60)"
+        "2025/2026 İngiltere Premier: Liverpool 2-0 Aston Villa (❌ @ 1.65)",
+        "2025/2026 İngiltere Premier: Crystal Palace 1-0 Wolves (❌ @ 1.65)",
+        "2025/2026 İngiltere Premier: Liverpool 2-0 Fulham (❌ @ 1.65)"
       ],
-      "dna_score": 54.3,
+      "dna_score": 56.4,
       "form_score": 76.0,
-      "confidence": 57.6,
+      "confidence": 59.3,
       "prediction": "2.5 Üst",
       "odds": 1.5,
       "status": "BANKO",
-      "total_matched_pool": 1870
+      "total_matched_pool": 1870,
+      "stats": {
+        "total_matched": 406,
+        "pick_wins": 229,
+        "dna_score": 56.4,
+        "h_wins": 248,
+        "h_pct": 61.1,
+        "draws": 94,
+        "d_pct": 23.2,
+        "a_wins": 64,
+        "a_pct": 15.8,
+        "over25": 229,
+        "over_pct": 56.4,
+        "under25": 177,
+        "under_pct": 43.6,
+        "btts_yes": 205,
+        "btts_pct": 50.5,
+        "btts_no": 201
+      }
     },
     {
       "id": "23-05",
@@ -172,18 +244,36 @@
       "current_odds": 1.85,
       "history_count": 3,
       "history_matches": [
-        "2025/2026 İngiltere Premier: Fulham 1-0 Leeds (✅ @ 1.91)",
-        "2025/2026 İngiltere Premier: Leeds 2-1 West Ham (✅ @ 1.80)",
-        "2025/2026 İngiltere Premier: Fulham 3-0 Wolves (✅ @ 1.83)",
-        "2025/2026 İngiltere Premier: West Ham 3-2 Burnley (✅ @ 1.91)"
+        "2025/2026 İngiltere Premier: Aston Villa 0-3 Crystal Palace (❌ @ 1.85)",
+        "2025/2026 İngiltere Premier: Arsenal 1-1 Man City (❌ @ 1.85)",
+        "2025/2026 İngiltere Premier: Chelsea 1-3 Brighton (❌ @ 1.85)",
+        "2025/2026 İngiltere Premier: Brighton 3-0 Leeds (✅ @ 1.85)"
       ],
-      "dna_score": 50.4,
+      "dna_score": 51.4,
       "form_score": 69.0,
-      "confidence": 53.2,
+      "confidence": 54.0,
       "prediction": "MS 1",
       "odds": 1.85,
       "status": "BANKO",
-      "total_matched_pool": 2037
+      "total_matched_pool": 2037,
+      "stats": {
+        "total_matched": 834,
+        "pick_wins": 429,
+        "dna_score": 51.4,
+        "h_wins": 429,
+        "h_pct": 51.4,
+        "draws": 242,
+        "d_pct": 29.0,
+        "a_wins": 163,
+        "a_pct": 19.5,
+        "over25": 362,
+        "over_pct": 43.4,
+        "under25": 472,
+        "under_pct": 56.6,
+        "btts_yes": 401,
+        "btts_pct": 48.1,
+        "btts_no": 433
+      }
     },
     {
       "id": "23-06",
@@ -196,17 +286,35 @@
       "history_count": 4,
       "history_matches": [
         "2025/2026 İngiltere Premier: Aston Villa 2-1 Arsenal (❌ @ 4.20)",
-        "2023/2024 İngiltere Premier: Nott'm Forest 2-0 Aston Villa (❌ @ 4.20)",
-        "2023/2024 İngiltere Premier: Sheffield United 1-0 Brentford (❌ @ 4.20)",
-        "2023/2024 İngiltere Premier: Crystal Palace 1-3 Chelsea (✅ @ 4.20)"
+        "2025/2026 İngiltere Premier: Wolves 1-4 Man United (✅ @ 4.20)",
+        "2025/2026 İngiltere Premier: Crystal Palace 1-2 Arsenal (✅ @ 4.20)",
+        "2024/2025 İngiltere Premier: Newcastle 3-3 Liverpool (❌ @ 4.20)"
       ],
-      "dna_score": 56.4,
+      "dna_score": 56.6,
       "form_score": 75.0,
-      "confidence": 59.2,
+      "confidence": 59.4,
       "prediction": "MS 2",
       "odds": 1.5,
       "status": "BANKO",
-      "total_matched_pool": 234
+      "total_matched_pool": 234,
+      "stats": {
+        "total_matched": 371,
+        "pick_wins": 210,
+        "dna_score": 56.6,
+        "h_wins": 76,
+        "h_pct": 20.5,
+        "draws": 85,
+        "d_pct": 22.9,
+        "a_wins": 210,
+        "a_pct": 56.6,
+        "over25": 200,
+        "over_pct": 53.9,
+        "under25": 171,
+        "under_pct": 46.1,
+        "btts_yes": 190,
+        "btts_pct": 51.2,
+        "btts_no": 181
+      }
     }
   ]
 }
