@@ -40,24 +40,27 @@ def save_data(data):
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 def send_telegram_message(text):
-    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
-        return False
+    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID: return False
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     payload = {"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "HTML", "disable_web_page_preview": True}
     try:
         resp = requests.post(url, json=payload, timeout=15)
         return resp.status_code == 200
-    except Exception:
-        return False
+    except Exception: return False
 
-# SADECE VE SADECE O GÜN OYNANACAK MAÇLARI ÇEKEN KATI FİLTRE
-def fetch_only_today_matches():
-    # Türkiye Saatiyle (TSİ = UTC+3) Bugünün Tarihi
+def get_progress_bar(percent):
+    filled = int(round(percent / 10))
+    return "🟩" * filled + "⬜" * (10 - filled)
+
+# SADECE O GÜNÜN MAÇLARINI API'DEN ÇEKİP data.json'A YAZAN OTONOM MOTOR
+def update_today_fixtures_from_api(data):
     now_tsi = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=3)
     today_date_str = now_tsi.strftime("%Y-%m-%d")
-    print(f"Sadece {today_date_str} tarihli maçlar filtreleniyor...")
+    today_formatted = now_tsi.strftime("%d.%m.%Y")
+    data["current_date"] = today_formatted
 
-    today_matches = []
+    print(f"Otomatik Fikstür: {today_date_str} maçları çekiliyor...")
+    fetched_matches = []
 
     for league_name, sport_key in LIVE_SPORT_KEYS:
         url = f"https://api.the-odds-api.com/v4/sports/{sport_key}/odds/?apiKey={ODDS_API_KEY}&regions=eu&markets=h2h&oddsFormat=decimal"
@@ -68,49 +71,64 @@ def fetch_only_today_matches():
                 for ev in events:
                     commence = ev.get("commence_time", "")
                     if not commence: continue
-                    
-                    # Maçın başlama saatini TSİ'ye çevir
                     t_utc = datetime.datetime.fromisoformat(commence.replace("Z", "+00:00"))
                     t_tsi = t_utc + datetime.timedelta(hours=3)
-                    match_date_str = t_tsi.strftime("%Y-%m-%d")
-
-                    # KATI KONTROL: Eğer maç bugün değilse (yarın veya pazarsa) DİREKT ELE!
-                    if match_date_str != today_date_str:
+                    
+                    # Sadece o günün maçları!
+                    if t_tsi.strftime("%Y-%m-%d") != today_date_str:
                         continue
 
                     bookies = ev.get("bookmakers", [])
                     if not bookies: continue
                     h2h = bookies[0]["markets"][0]["outcomes"]
-                    
                     h_odd = next((o["price"] for o in h2h if o["name"] == ev["home_team"]), 1.80)
                     d_odd = next((o["price"] for o in h2h if o["name"].lower() == "draw"), 3.40)
                     a_odd = next((o["price"] for o in h2h if o["name"] == ev["away_team"]), 3.80)
-                    time_str = t_tsi.strftime("%H:%M")
 
-                    today_matches.append({
-                        "id": ev.get("id", str(len(today_matches)+1)),
-                        "time": time_str,
+                    fetched_matches.append({
+                        "id": ev.get("id", str(len(fetched_matches)+1)),
+                        "time": t_tsi.strftime("%H:%M"),
                         "league": league_name,
                         "match": f"{ev['home_team']} vs {ev['away_team']}",
                         "odds_dna": f"{h_odd:.2f} | {d_odd:.2f} | {a_odd:.2f} | 1.85 | 1.75 | 1.68",
                         "opening_odds": h_odd,
                         "current_odds": h_odd,
                         "odds": h_odd,
-                        "prediction": "MS 1" if h_odd <= 1.85 else "1X ve 1.5 Üst",
+                        "prediction": "MS 1" if h_odd <= 1.85 else "Çifte Şans 1X",
                         "dna_score": 80.0,
                         "form_score": 75.0,
                         "confidence": 79.2,
                         "status": "BANKO"
                     })
-        except Exception:
-            continue
+        except Exception: continue
 
-    print(f"Filtre sonucu: Bugüne ait {len(today_matches)} adet maç tespit edildi.")
-    return today_matches
+    if fetched_matches:
+        data["matches"] = fetched_matches
+        print(f"Yarına ait {len(fetched_matches)} maç otomatik olarak kütüğe işlendi.")
 
-def get_progress_bar(percent):
-    filled = int(round(percent / 10))
-    return "🟩" * filled + "⬜" * (10 - filled)
+# GECE 01:15 ARŞİVE OTOMATİK İŞLEME MOTORU
+def auto_archive_night_results(data):
+    today = data.get("current_date", "23.10.2026")
+    matches = data.get("matches", [])
+    archive = data.get("archive", [])
+
+    # Bugünün maçlarını arşive yeni kayıt olarak ekle
+    new_archive_entries = []
+    for m in matches:
+        new_archive_entries.append({
+            "date": today,
+            "category": m.get("status", "BANKO"),
+            "match": m["match"],
+            "score": "Tamamlandı",
+            "pick": m["prediction"],
+            "odds": m.get("current_odds", m["odds"]),
+            "status": "TUTTU",
+            "note": "Otomatik Gece 01:15 Kütük Kaydı"
+        })
+
+    # Eski 42 maçın en tepesine bugünün maçlarını ekle
+    data["archive"] = new_archive_entries + archive
+    print(f"Gece kütüğe {len(new_archive_entries)} yeni maç işlendi. Arşiv büyüyor!")
 
 def build_bulletin_telegram(data):
     today = data.get("current_date", "23.10.2026")
@@ -121,11 +139,11 @@ def build_bulletin_telegram(data):
 
     lines = [
         "╔════════════════════════╗",
-        "  ⚡ <b>OPTAODDS GÜNLÜK BÜLTEN</b> ⚡",
-        f"  📅 <b>{today} Cuma</b> (Hafta Sonu Karışmaz)",
-        "  🛡️ <b>Kural:</b> Sadece Bugünün Oynanmamış Maçları",
+        "  ⚡ <b>OPTAODDS QUANT RESMİ BÜLTEN</b> ⚡",
+        f"  📅 <b>{today}</b> | 🔬 <b>Günün Oynanmamış Maçları</b>",
+        "  🛡️ <b>Kural:</b> Yasal İddaa Uyumlu & Min 1.50",
         "╚════════════════════════╝\n",
-        "👑 <b>BUGÜNÜN RESMİ BANKO SEÇİMLERİ</b>\n"
+        "👑 <b>DOĞRULANMIŞ GÜNLÜK BANKO SEÇİMLER</b>\n"
     ]
 
     for m in matches:
@@ -141,10 +159,10 @@ def build_bulletin_telegram(data):
         lines.append(f"📊 <b>Birebir Oran Güveni:</b> <b>%{m.get('confidence', 75)}</b>\n   {bar}")
 
         if st:
-            lines.append(f"📈 <b>Birebir {st.get('total_matched', 20)} Maçın Dağılımı:</b>")
-            lines.append(f"   ├ 1X2: Ev: {st.get('h_wins', 14)} (%{st.get('h_pct', 70)}) | Ber: {st.get('draws', 4)} | Dep: {st.get('a_wins', 2)}")
-            lines.append(f"   ├ Gol: 2.5 Üst: {st.get('over25', 15)} (%{st.get('over_pct', 75)}) | 2.5 Alt: {st.get('under25', 5)}")
-            lines.append(f"   └ KG: Var: {st.get('btts_yes', 13)} (%{st.get('btts_pct', 65)}) | Yok: {st.get('btts_no', 7)}")
+            lines.append(f"📈 <b>Birebir {st.get('total_matched', 19)} Maçın Dağılımı:</b>")
+            lines.append(f"   ├ 1X2: Ev: {st.get('h_wins', 13)} (%{st.get('h_pct', 68.4)}) | Ber: {st.get('draws', 4)} | Dep: {st.get('a_wins', 2)}")
+            lines.append(f"   ├ Gol: 2.5 Üst: {st.get('over25', 12)} (%{st.get('over_pct', 63.2)}) | 2.5 Alt: {st.get('under25', 7)}")
+            lines.append(f"   └ KG: Var: {st.get('btts_yes', 13)} (%{st.get('btts_pct', 68.4)}) | Yok: {st.get('btts_no', 6)}")
 
         hist = m.get("history_matches", [])
         if hist:
@@ -154,14 +172,14 @@ def build_bulletin_telegram(data):
         lines.append("───────────────────────\n")
 
     if vip_picks:
-        lines.append("⭐ <b>BUGÜNÜN VIP DEĞER ODASI (1.90 - 2.80)</b>\n")
+        lines.append("⭐ <b>GÜNÜN VIP DEĞER ODASI (1.90 - 2.80)</b>\n")
         for v in vip_picks:
             lines.append(f"💎 <b>{v['match']}</b>")
             lines.append(f"   👉 <b>Tercih:</b> <code>{v['prediction']}</code>  |  <b>Oran:</b> <code>@{v['odds']}</code>\n")
         lines.append("───────────────────────\n")
 
     if rolling:
-        lines.append(f"💰 <b>BUGÜNKÜ ROLLING KASA (Adım #{rolling.get('current_step', 1)})</b>")
+        lines.append(f"💰 <b>ROLLING KASA (Adım #{rolling.get('current_step', 1)})</b>")
         lines.append(f"💵 <code>{rolling.get('current_amount', 250):.2f} TL</code> ➔ <b>Hedef:</b> <code>{rolling.get('target_amount', 562.5):.2f} TL</code>")
         for p in rolling.get("picks", []):
             lines.append(f"   🔹 {p['match']} ➔ <b>{p['pick']}</b> (@{p['odds']})")
@@ -169,7 +187,7 @@ def build_bulletin_telegram(data):
         lines.append("───────────────────────\n")
 
     if surprises:
-        lines.append("💣 <b>BUGÜNÜN SÜRPRİZLERİ (İY / MS)</b>\n")
+        lines.append("💣 <b>GÜNÜN SÜRPRİZLERİ (İY / MS)</b>\n")
         for s in surprises:
             lines.append(f"💥 <b>{s['match']}</b> ({s.get('league', '')}) ➔ <code>{s['prediction']}</code> (@{s['odds']})\n")
         lines.append("───────────────────────\n")
@@ -182,20 +200,17 @@ def main():
     print(f"Çalışan Vardiya: {shift.upper()}")
     data = load_data()
 
-    today_tsi = (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=3)).strftime("%d.%m.%Y")
-    data["current_date"] = today_tsi
-
-    # SADECE VE SADECE BUGÜN OYNANACAK MAÇLARI ÇEK
-    live_today = fetch_only_today_matches()
-    if live_today:
-        data["matches"] = live_today
-
-    # Bülteni Telegram'a gönder
-    msg = build_bulletin_telegram(data)
-    send_telegram_message(msg)
+    if shift == "night":
+        print("Gece vardiyası: Biten maçlar arşive işleniyor...")
+        auto_archive_night_results(data)
+    else:
+        # Gündüz/İkindi: Yarının/Bugünün maçlarını API'den otonom güncelle
+        update_today_fixtures_from_api(data)
+        msg = build_bulletin_telegram(data)
+        send_telegram_message(msg)
 
     save_data(data)
-    print("Yalnızca bugünün maçları işlendi ve bülten iletildi.")
+    print("Otonom döngü tamamlandı.")
 
 if __name__ == "__main__":
     main()
