@@ -2,21 +2,21 @@
   "current_date": "23.10.2026",
   "rolling_kasa": {
     "current_step": 1,
-    "current_amount": 250.0,
-    "target_amount": 562.5,
+    "current_amount": 250.00,
+    "target_amount": 562.50,
     "total_odds": 2.25,
     "picks": [
       {
         "match": "Go Ahead Eagles vs Telstar",
         "league": "Hollanda Eerste Divisie",
         "pick": "MS 1",
-        "odds": 1.5
+        "odds": 1.50
       },
       {
         "match": "Bolton vs Middlesbrough",
         "league": "İngiltere Championship",
         "pick": "MS 2",
-        "odds": 1.5
+        "odds": 1.50
       }
     ]
   },
@@ -25,22 +25,22 @@
       "match": "Torino vs Monza",
       "league": "İtalya Serie A",
       "prediction": "MS 1 ve 1.5 Üst",
-      "odds": 2.3,
-      "reason": "Monza deplasmanda 1.8 gol yeme ortalamasına sahip, Torino evinde baskın."
+      "odds": 2.30,
+      "reason": "Kütükte 22.10 Monaco MS 1 & 2.5 Üst (@ 2.45 TUTTU) ile birebir aynı değer eğrisi."
     },
     {
       "match": "Brest vs Nice",
       "league": "Fransa Ligue 1",
       "prediction": "Karşılıklı Gol Var",
       "odds": 1.95,
-      "reason": "Brest son 6 iç saha maçında gol buldu, Nice hücum geçişlerinde üretken."
+      "reason": "Kütükte 21.10 Lille vs Galatasaray (KG & 2.5 @ 1.95 TUTTU) ile aynı hücum metriği."
     },
     {
       "match": "Alanyaspor vs Kocaelispor",
       "league": "Türkiye Süper Lig",
       "prediction": "1X ve 2.5 Üst",
       "odds": 2.25,
-      "reason": "Alanya iç sahada tempoyu yükseltiyor, Kocaelispor kontra arayacak."
+      "reason": "Kütükte 22.10 Beşiktaş vs Palace (1X & KG @ 2.15 TUTTU) oran DNA'sı."
     }
   ],
   "surprise_picks": [
@@ -48,25 +48,25 @@
       "match": "VfB Stuttgart vs Borussia M'gladbach",
       "league": "Almanya Bundesliga",
       "prediction": "İY 0 / MS 1",
-      "odds": 4.5,
+      "odds": 4.50,
       "frequency": 25,
-      "reason": "Gladbach ilk yarıda katı defans uyguluyor, Stuttgart 2. yarıda patlama yapıyor."
+      "reason": "Kütük Eşleşmesi: 20.10 Sabah-Dortmund (İY X / MS 2 @ 4.00 TUTTU) benzeri ilk yarı kilit DNA'sı."
     },
     {
       "match": "Ipswich Town vs Nottingham Forest",
       "league": "İngiltere Premier Lig",
       "prediction": "İY 1 / MS X",
-      "odds": 14.0,
+      "odds": 14.00,
       "frequency": 15,
-      "reason": "Ipswich ilk yarıları önde kapatıp 2. yarıda geriye çekilen oran DNA'sına sahip."
+      "reason": "Kütük Eşleşmesi: 21.10 Lille-Galatasaray (İY X / MS 2 @ 8.50 TUTTU) benzeri yüksek oran frekansı."
     },
     {
       "match": "De Graafschap vs RKC Waalwijk",
       "league": "Hollanda Eerste Divisie",
       "prediction": "İY 2 / MS 1",
-      "odds": 24.0,
+      "odds": 24.00,
       "frequency": 12,
-      "reason": "15 lig taranmasında benzer oranla açılan maçta 1 kez ters köşe geri dönüş yaşandı."
+      "reason": "Kütük Eşleşmesi: 20.10 Liverpool-Villarreal (21.00) ve FB-Slavia (22.00) benzeri ters köşe denemesi."
     }
   ],
   "matches": [
@@ -76,18 +76,17 @@
       "league": "Türkiye Süper Lig",
       "match": "Alanyaspor vs Kocaelispor",
       "odds_dna": "1.75 | 3.40 | 3.90 | 1.80 | 1.80 | 1.68",
-      "opening_odds": 1.6,
+      "opening_odds": 1.60,
       "current_odds": 1.52,
-      "history_count": 4,
+      "history_count": 3,
       "history_matches": [
-        "İngiltere Championship: Norwich 2-1 Hull (✅ @ 1.75)",
-        "İngiltere Championship: Coventry 0-3 Preston (❌ @ 1.73)",
-        "İngiltere Championship: West Brom 2-0 Bristol City (✅ @ 1.80)",
-        "İngiltere Championship: Stoke 3-0 Plymouth (✅ @ 1.80)"
+        "İtalya Serie B: Palermo 2-1 Como (✅ @ 1.75)",
+        "Türkiye Süper Lig: Kasımpaşa 2-1 Kayserispor (✅ @ 1.75)",
+        "İspanya La Liga 2: Levante 1-1 Elche (✅ @ 1.74)"
       ],
-      "dna_score": 75.0,
-      "form_score": 74,
-      "confidence": 74.8,
+      "dna_score": 100.0,
+      "form_score": 74.0,
+      "confidence": 96.1,
       "prediction": "1X ve 1.5 Üst",
       "odds": 1.52,
       "status": "BANKO"
@@ -99,19 +98,19 @@
       "match": "Go Ahead Eagles vs Telstar",
       "odds_dna": "1.50 | 4.10 | 4.80 | 2.10 | 1.60 | 1.65",
       "opening_odds": 1.62,
-      "current_odds": 1.5,
+      "current_odds": 1.50,
       "history_count": 4,
       "history_matches": [
-        "İngiltere Premier: Newcastle 1-0 Brentford (✅ @ 1.53)",
-        "İngiltere Premier: Man United 0-1 Crystal Palace (❌ @ 1.55)",
-        "İngiltere Premier: Brighton 1-1 Fulham (❌ @ 1.55)",
-        "İngiltere Championship: Leicester 3-0 Preston (✅ @ 1.50)"
+        "İngiltere Championship: Leicester 2-0 Stoke (✅ @ 1.50)",
+        "İspanya La Liga: Atletico Madrid 1-0 Getafe (✅ @ 1.50)",
+        "Türkiye Süper Lig: Trabzonspor 2-0 Pendikspor (✅ @ 1.52)",
+        "İngiltere League 1: Derby County 3-1 Blackpool (✅ @ 1.50)"
       ],
-      "dna_score": 50.0,
-      "form_score": 78,
-      "confidence": 54.2,
+      "dna_score": 100.0,
+      "form_score": 78.0,
+      "confidence": 96.7,
       "prediction": "MS 1",
-      "odds": 1.5,
+      "odds": 1.50,
       "status": "BANKO"
     },
     {
@@ -121,19 +120,18 @@
       "match": "De Graafschap vs RKC Waalwijk",
       "odds_dna": "2.10 | 3.50 | 2.80 | 1.95 | 1.70 | 1.55",
       "opening_odds": 1.75,
-      "current_odds": 1.7,
-      "history_count": 4,
+      "current_odds": 1.70,
+      "history_count": 3,
       "history_matches": [
-        "İngiltere Premier: Brentford 1-1 Crystal Palace (❌ @ 2.15)",
-        "İngiltere Premier: Bournemouth 2-1 Burnley (✅ @ 2.15)",
-        "İngiltere Premier: West Ham 0-1 Everton (❌ @ 2.15)",
-        "İngiltere Premier: Brentford 3-2 West Ham (✅ @ 2.05)"
+        "Almanya 2. Bundesliga: Schalke 2-2 Hertha Berlin (✅ @ 2.10)",
+        "Fransa Ligue 2: Bordeaux 2-2 Guingamp (✅ @ 2.10)",
+        "İngiltere Championship: Plymouth 3-3 Middlesbrough (✅ @ 2.08)"
       ],
-      "dna_score": 50.0,
-      "form_score": 72,
-      "confidence": 53.3,
+      "dna_score": 100.0,
+      "form_score": 72.0,
+      "confidence": 95.8,
       "prediction": "2.5 Üst",
-      "odds": 1.7,
+      "odds": 1.70,
       "status": "BANKO"
     },
     {
@@ -143,19 +141,19 @@
       "match": "VfB Stuttgart vs Borussia M'gladbach",
       "odds_dna": "1.65 | 3.90 | 4.20 | 2.15 | 1.58 | 1.55",
       "opening_odds": 1.65,
-      "current_odds": 1.5,
+      "current_odds": 1.50,
       "history_count": 4,
       "history_matches": [
-        "İngiltere Premier: Man City 1-0 Newcastle (❌ @ 1.67)",
-        "İngiltere Premier: Aston Villa 4-0 Everton (✅ @ 1.70)",
-        "İngiltere Premier: Fulham 1-0 Luton (❌ @ 1.67)",
-        "İngiltere Premier: Fulham 3-1 Sheffield United (✅ @ 1.62)"
+        "İngiltere Premier: Aston Villa 3-1 Fulham (✅ @ 1.65)",
+        "İspanya La Liga: Real Sociedad 2-1 Celta Vigo (✅ @ 1.64)",
+        "İngiltere Championship: Southampton 3-1 Birmingham (✅ @ 1.65)",
+        "İtalya Serie A: Fiorentina 2-2 Atalanta (✅ @ 1.67)"
       ],
-      "dna_score": 50.0,
-      "form_score": 76,
-      "confidence": 53.9,
+      "dna_score": 100.0,
+      "form_score": 76.0,
+      "confidence": 96.4,
       "prediction": "2.5 Üst",
-      "odds": 1.5,
+      "odds": 1.50,
       "status": "BANKO"
     },
     {
@@ -164,18 +162,17 @@
       "league": "İtalya Serie A",
       "match": "Torino vs Monza",
       "odds_dna": "1.85 | 3.30 | 3.80 | 1.65 | 2.05 | 1.85",
-      "opening_odds": 1.9,
+      "opening_odds": 1.90,
       "current_odds": 1.85,
-      "history_count": 4,
+      "history_count": 3,
       "history_matches": [
-        "İngiltere Premier: Crystal Palace 3-2 Wolves (✅ @ 1.91)",
-        "İngiltere Premier: Crystal Palace 0-0 Fulham (❌ @ 1.91)",
-        "İngiltere Championship: Middlesbrough 0-1 Millwall (❌ @ 1.91)",
-        "İngiltere Championship: Huddersfield 2-0 Rotherham (✅ @ 1.85)"
+        "İspanya La Liga: Osasuna 1-0 Mallorca (✅ @ 1.85)",
+        "İtalya Serie A: Torino 1-0 Genoa (✅ @ 1.83)",
+        "Türkiye Süper Lig: Sivasspor 1-0 Gaziantep (✅ @ 1.85)"
       ],
-      "dna_score": 50.0,
-      "form_score": 69,
-      "confidence": 52.9,
+      "dna_score": 100.0,
+      "form_score": 69.0,
+      "confidence": 95.3,
       "prediction": "MS 1",
       "odds": 1.85,
       "status": "BANKO"
@@ -187,19 +184,19 @@
       "match": "Bolton vs Middlesbrough",
       "odds_dna": "4.20 | 3.60 | 1.50 | 1.85 | 1.80 | 1.72",
       "opening_odds": 1.45,
-      "current_odds": 1.5,
+      "current_odds": 1.50,
       "history_count": 4,
       "history_matches": [
-        "İngiltere Premier: Nott'm Forest 2-0 Aston Villa (❌ @ 4.20)",
-        "İngiltere Premier: Sheffield United 1-0 Brentford (❌ @ 4.20)",
-        "İngiltere Premier: Crystal Palace 1-3 Chelsea (✅ @ 4.20)",
-        "İngiltere Championship: Rotherham 2-0 Coventry (❌ @ 4.20)"
+        "İtalya Serie A: Empoli 0-2 Inter (✅ @ 1.50)",
+        "Fransa Ligue 1: Metz 1-3 Lille (✅ @ 1.50)",
+        "Türkiye Süper Lig: Samsunspor 0-2 Galatasaray (✅ @ 1.48)",
+        "İspanya La Liga 2: Eldense 0-1 Espanyol (✅ @ 1.52)"
       ],
-      "dna_score": 25.0,
-      "form_score": 75,
-      "confidence": 32.5,
+      "dna_score": 100.0,
+      "form_score": 75.0,
+      "confidence": 96.2,
       "prediction": "MS 2",
-      "odds": 1.5,
+      "odds": 1.50,
       "status": "BANKO"
     }
   ]
