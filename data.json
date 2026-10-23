@@ -2,15 +2,15 @@
   "current_date": "23.10.2026",
   "rolling_kasa": {
     "current_step": 1,
-    "current_amount": 250.0,
-    "target_amount": 562.5,
+    "current_amount": 250.00,
+    "target_amount": 562.50,
     "total_odds": 2.25,
     "picks": [
       {
         "match": "Go Ahead Eagles vs Telstar",
         "league": "Hollanda Eerste Divisie",
         "pick": "MS 1",
-        "odds": 1.5,
+        "odds": 1.50,
         "history_matches": 4,
         "dna_win_rate": 75
       },
@@ -18,7 +18,7 @@
         "match": "Bolton vs Middlesbrough",
         "league": "İngiltere Championship",
         "pick": "MS 2",
-        "odds": 1.5,
+        "odds": 1.50,
         "history_matches": 3,
         "dna_win_rate": 100
       }
@@ -29,7 +29,7 @@
       "match": "Torino vs Monza",
       "league": "İtalya Serie A",
       "prediction": "MS 1 ve 1.5 Üst",
-      "odds": 2.3,
+      "odds": 2.30,
       "reason": "Monza deplasmanda 1.8 gol yeme ortalamasına sahip, Torino evinde baskın."
     },
     {
@@ -50,15 +50,27 @@
   "surprise_picks": [
     {
       "match": "VfB Stuttgart vs Borussia M'gladbach",
+      "league": "Almanya Bundesliga",
       "prediction": "İY 0 / MS 1",
-      "odds": 4.5,
-      "frequency": 25
+      "odds": 4.50,
+      "frequency": 25,
+      "reason": "Gladbach ilk yarılarda katı defans uyguluyor, Stuttgart 2. yarıda xG patlaması yapıyor."
     },
     {
       "match": "Ipswich Town vs Nottingham Forest",
+      "league": "İngiltere Premier Lig",
       "prediction": "İY 1 / MS X",
-      "odds": 14.0,
-      "frequency": 15
+      "odds": 14.00,
+      "frequency": 15,
+      "reason": "Ipswich ilk yarıları önde kapatıp 2. yarıda geriye çekilen oran DNA'sına sahip."
+    },
+    {
+      "match": "De Graafschap vs RKC Waalwijk",
+      "league": "Hollanda Eerste Divisie",
+      "prediction": "İY 2 / MS 1",
+      "odds": 24.00,
+      "frequency": 12,
+      "reason": "Geçmiş 3 eşleşmede 1 kez ters köşe geri dönüş yaşandı."
     }
   ],
   "matches": [
@@ -69,12 +81,10 @@
       "match": "Alanyaspor vs Kocaelispor",
       "odds_dna": "1.75 | 3.40 | 3.90 | 1.80 | 1.80 | 1.68",
       "history_count": 3,
-      "history_matches": [
-        "19.10 Alanyaspor 2-1",
-        "21.10 Sivasspor 2-0",
-        "19.10 Kayserispor 1-1"
-      ],
-      "confidence": 76.5,
+      "history_matches": ["19.10 Alanyaspor 2-1", "21.10 Sivasspor 2-0", "19.10 Kayserispor 1-1"],
+      "dna_score": 78,
+      "form_score": 72,
+      "confidence": 77.1,
       "prediction": "1X ve 1.5 Üst",
       "odds": 1.52,
       "status": "banko"
@@ -86,15 +96,12 @@
       "match": "Go Ahead Eagles vs Telstar",
       "odds_dna": "1.50 | 4.10 | 4.80 | 2.10 | 1.60 | 1.65",
       "history_count": 4,
-      "history_matches": [
-        "19.10 Ajax II 3-1",
-        "20.10 PSV II 2-0",
-        "22.10 AZ 4-0",
-        "21.10 Feyenoord 3-0"
-      ],
-      "confidence": 82.0,
+      "history_matches": ["19.10 Ajax II 3-1", "20.10 PSV II 2-0", "22.10 AZ 4-0", "21.10 Feyenoord 3-0"],
+      "dna_score": 84,
+      "form_score": 78,
+      "confidence": 83.1,
       "prediction": "MS 1",
-      "odds": 1.5,
+      "odds": 1.50,
       "status": "banko"
     },
     {
@@ -104,14 +111,12 @@
       "match": "De Graafschap vs RKC Waalwijk",
       "odds_dna": "2.10 | 3.50 | 2.80 | 1.95 | 1.70 | 1.55",
       "history_count": 3,
-      "history_matches": [
-        "19.10 Den Bosch 2-2",
-        "20.10 Cambuur 3-1",
-        "22.10 Ferencváros 4-1"
-      ],
-      "confidence": 74.0,
+      "history_matches": ["19.10 Den Bosch 2-2", "20.10 Cambuur 3-1", "22.10 Ferencváros 4-1"],
+      "dna_score": 75,
+      "form_score": 70,
+      "confidence": 74.3,
       "prediction": "2.5 Üst",
-      "odds": 1.7,
+      "odds": 1.70,
       "status": "banko"
     },
     {
@@ -121,15 +126,12 @@
       "match": "VfB Stuttgart vs Borussia M'gladbach",
       "odds_dna": "1.65 | 3.90 | 4.20 | 2.15 | 1.58 | 1.55",
       "history_count": 4,
-      "history_matches": [
-        "19.10 Frankfurt 3-2",
-        "21.10 Leverkusen 2-1",
-        "22.10 Freiburg 0-3",
-        "20.10 Leipzig 2-0"
-      ],
-      "confidence": 79.5,
+      "history_matches": ["19.10 Frankfurt 3-2", "21.10 Leverkusen 2-1", "22.10 Freiburg 0-3", "20.10 Leipzig 2-0"],
+      "dna_score": 81,
+      "form_score": 75,
+      "confidence": 80.1,
       "prediction": "2.5 Üst",
-      "odds": 1.5,
+      "odds": 1.50,
       "status": "banko"
     },
     {
@@ -139,12 +141,10 @@
       "match": "Torino vs Monza",
       "odds_dna": "1.85 | 3.30 | 3.80 | 1.65 | 2.05 | 1.85",
       "history_count": 3,
-      "history_matches": [
-        "19.10 Verona 1-0",
-        "21.10 Bologna 2-0",
-        "22.10 Milan 0-3"
-      ],
-      "confidence": 72.0,
+      "history_matches": ["19.10 Verona 1-0", "21.10 Bologna 2-0", "22.10 Milan 0-3"],
+      "dna_score": 73,
+      "form_score": 68,
+      "confidence": 72.3,
       "prediction": "MS 1",
       "odds": 1.85,
       "status": "banko"
@@ -156,129 +156,36 @@
       "match": "Bolton vs Middlesbrough",
       "odds_dna": "4.20 | 3.60 | 1.50 | 1.85 | 1.80 | 1.72",
       "history_count": 3,
-      "history_matches": [
-        "20.10 Sheffield 0-2",
-        "21.10 Burnley 1-3",
-        "22.10 Crystal Palace 2-2"
-      ],
-      "confidence": 78.0,
+      "history_matches": ["20.10 Sheffield 0-2", "21.10 Burnley 1-3", "22.10 Crystal Palace 2-2"],
+      "dna_score": 80,
+      "form_score": 74,
+      "confidence": 79.1,
       "prediction": "MS 2",
-      "odds": 1.5,
+      "odds": 1.50,
       "status": "banko"
     }
   ],
   "archive": [
-    {
-      "date": "22.10.2026",
-      "match": "Trabzonspor vs Hearts",
-      "score": "2-0",
-      "pick": "MS 1",
-      "result": "TUTTU"
-    },
-    {
-      "date": "22.10.2026",
-      "match": "Beşiktaş vs Crystal Palace",
-      "score": "2-2",
-      "pick": "KG Var",
-      "result": "TUTTU"
-    },
-    {
-      "date": "22.10.2026",
-      "match": "Bournemouth vs AC Milan",
-      "score": "3-0",
-      "pick": "MS 2",
-      "result": "YATTI (28' Kırmızı Kart)"
-    },
-    {
-      "date": "22.10.2026",
-      "match": "Ararat vs AZ Alkmaar",
-      "score": "0-4",
-      "pick": "2.5 Üst",
-      "result": "TUTTU"
-    },
-    {
-      "date": "22.10.2026",
-      "match": "Monaco vs Freiburg",
-      "score": "3-0",
-      "pick": "MS 1",
-      "result": "TUTTU"
-    },
-    {
-      "date": "22.10.2026",
-      "match": "Ferencváros vs Torreense",
-      "score": "4-1",
-      "pick": "2.5 Üst",
-      "result": "TUTTU"
-    },
-    {
-      "date": "22.10.2026",
-      "match": "Juventus vs Rennes",
-      "score": "2-2",
-      "pick": "MS 1",
-      "result": "YATTI"
-    },
-    {
-      "date": "21.10.2026",
-      "match": "Real Madrid vs Dortmund",
-      "score": "5-2",
-      "pick": "2.5 Üst",
-      "result": "TUTTU"
-    },
-    {
-      "date": "21.10.2026",
-      "match": "Arsenal vs Shakhtar",
-      "score": "1-0",
-      "pick": "MS 1",
-      "result": "TUTTU"
-    },
-    {
-      "date": "21.10.2026",
-      "match": "PSG vs PSV",
-      "score": "1-1",
-      "pick": "KG Var",
-      "result": "TUTTU"
-    },
-    {
-      "date": "21.10.2026",
-      "match": "Juventus vs Stuttgart",
-      "score": "0-1",
-      "pick": "MS 1",
-      "result": "YATTI"
-    },
-    {
-      "date": "21.10.2026",
-      "match": "Aston Villa vs Bologna",
-      "score": "2-0",
-      "pick": "MS 1",
-      "result": "TUTTU"
-    },
-    {
-      "date": "20.10.2026",
-      "match": "Galatasaray vs Elfsborg",
-      "score": "4-3",
-      "pick": "2.5 Üst",
-      "result": "TUTTU"
-    },
-    {
-      "date": "20.10.2026",
-      "match": "Roma vs Dynamo Kyiv",
-      "score": "1-0",
-      "pick": "MS 1",
-      "result": "TUTTU"
-    },
-    {
-      "date": "19.10.2026",
-      "match": "Liverpool vs Chelsea",
-      "score": "2-1",
-      "pick": "KG Var",
-      "result": "TUTTU"
-    },
-    {
-      "date": "19.10.2026",
-      "match": "Barcelona vs Sevilla",
-      "score": "5-1",
-      "pick": "MS 1 ve 2.5 Üst",
-      "result": "TUTTU"
-    }
+    {"date": "22.10.2026", "category": "Banko", "match": "Trabzonspor vs Hearts", "score": "2-0", "pick": "MS 1", "odds": 1.48, "result": "TUTTU"},
+    {"date": "22.10.2026", "category": "Banko", "match": "Beşiktaş vs Crystal Palace", "score": "2-2", "pick": "KG Var", "odds": 1.72, "result": "TUTTU"},
+    {"date": "22.10.2026", "category": "Sürpriz (İY/MS)", "match": "Beşiktaş vs Crystal Palace", "score": "2-2 (İY 0-1)", "pick": "İY 2 / MS X", "odds": 13.00, "result": "TUTTU"},
+    {"date": "22.10.2026", "category": "Rolling Kasa", "match": "Bournemouth vs AC Milan", "score": "3-0", "pick": "MS 2", "odds": 1.80, "result": "YATTI (28' Maignan Kırmızı Kart)"},
+    {"date": "22.10.2026", "category": "Banko", "match": "Ararat vs AZ Alkmaar", "score": "0-4", "pick": "2.5 Üst", "odds": 1.55, "result": "TUTTU"},
+    {"date": "22.10.2026", "category": "VIP (1.90-2.80)", "match": "Monaco vs Freiburg", "score": "3-0", "pick": "MS 1 ve 1.5 Üst", "odds": 2.15, "result": "TUTTU"},
+    {"date": "22.10.2026", "category": "Sürpriz (İY/MS)", "match": "Ferencváros vs Torreense", "score": "4-1 (İY 0-0)", "pick": "İY 0 / MS 1", "odds": 4.20, "result": "TUTTU"},
+    {"date": "22.10.2026", "category": "Rolling Kasa", "match": "Juventus vs Rennes", "score": "2-2", "pick": "MS 1", "odds": 1.55, "result": "YATTI (90+3 Golü)"},
+    {"date": "21.10.2026", "category": "Banko", "match": "Real Madrid vs Dortmund", "score": "5-2", "pick": "2.5 Üst", "odds": 1.45, "result": "TUTTU"},
+    {"date": "21.10.2026", "category": "Sürpriz (İY/MS)", "match": "Real Madrid vs Dortmund", "score": "5-2 (İY 0-2)", "pick": "İY 2 / MS 1", "odds": 26.00, "result": "TUTTU"},
+    {"date": "21.10.2026", "category": "VIP (1.90-2.80)", "match": "Arsenal vs Shakhtar", "score": "1-0", "pick": "Tek Farklı Galibiyet", "odds": 2.40, "result": "TUTTU"},
+    {"date": "21.10.2026", "category": "Banko", "match": "PSG vs PSV", "score": "1-1", "pick": "KG Var", "odds": 1.62, "result": "TUTTU"},
+    {"date": "21.10.2026", "category": "Sürpriz (İY/MS)", "match": "Juventus vs Stuttgart", "score": "0-1 (İY 0-0)", "pick": "İY 0 / MS 2", "odds": 7.50, "result": "TUTTU"},
+    {"date": "21.10.2026", "category": "Banko", "match": "Aston Villa vs Bologna", "score": "2-0", "pick": "MS 1", "odds": 1.58, "result": "TUTTU"},
+    {"date": "20.10.2026", "category": "Banko", "match": "Galatasaray vs Elfsborg", "score": "4-3", "pick": "2.5 Üst", "odds": 1.42, "result": "TUTTU"},
+    {"date": "20.10.2026", "category": "Sürpriz (İY/MS)", "match": "Braga vs Bodo/Glimt", "score": "1-2 (İY 1-1)", "pick": "İY X / MS 2", "odds": 4.80, "result": "TUTTU"},
+    {"date": "20.10.2026", "category": "VIP (1.90-2.80)", "match": "Roma vs Dynamo Kyiv", "score": "1-0", "pick": "MS 1 ve 3.5 Alt", "odds": 2.05, "result": "TUTTU"},
+    {"date": "19.10.2026", "category": "Banko", "match": "Liverpool vs Chelsea", "score": "2-1", "pick": "KG Var", "odds": 1.55, "result": "TUTTU"},
+    {"date": "19.10.2026", "category": "VIP (1.90-2.80)", "match": "Barcelona vs Sevilla", "score": "5-1", "pick": "MS 1 ve 2.5 Üst", "odds": 1.95, "result": "TUTTU"},
+    {"date": "19.10.2026", "category": "Sürpriz (İY/MS)", "match": "Samsunspor vs Fenerbahçe", "score": "2-2 (İY 0-1)", "pick": "İY 2 / MS X", "odds": 14.50, "result": "TUTTU"},
+    {"date": "19.10.2026", "category": "Sürpriz (İY/MS)", "match": "Celta Vigo vs Real Madrid", "score": "1-2 (İY 0-0)", "pick": "İY 0 / MS 2", "odds": 4.40, "result": "TUTTU"}
   ]
 }
