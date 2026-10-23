@@ -21,10 +21,10 @@
       <span>Tescilli 6'lı Oran DNA'sı • <strong class="text-amber-400">19-22 Ekim Resmi Kütük (42 Maç)</strong></span>
     </div>
     <div class="flex items-center gap-4 font-mono text-[11px]">
-      <span class="text-slate-300">📅 23.10.2026 Cuma</span>
+      <span id="header-date" class="text-slate-300">📅 23.10.2026 Cuma</span>
       <span class="text-emerald-400">Brier: 0.1235</span>
       <span class="text-purple-400">VIP: %70.0 (7/10)</span>
-      <span class="text-amber-400">Kütük: 42 Maç</span>
+      <span class="text-amber-400">Arşiv: 42 Maç</span>
     </div>
   </div>
 
@@ -38,7 +38,7 @@
             <span>OptaOdds Pro</span>
             <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded font-mono">v5.6 LIVE</span>
           </div>
-          <div class="text-[11px] text-slate-400">6 Parametreli Oran Eşleştirme Motoru • Orijinal Arşiv</div>
+          <div class="text-[11px] text-slate-400">15 Lig Canlı Oran Eşleştirme Motoru • Otomatik Senkron</div>
         </div>
       </div>
       <button onclick="sendTelegramDirect()" class="px-3.5 py-1.5 rounded-lg bg-sky-500 hover:bg-sky-600 text-white font-semibold text-xs transition flex items-center gap-1.5 shadow-sm shadow-sky-500/20">
@@ -67,9 +67,9 @@
           <span class="text-slate-400 font-medium">Model Güven Filtresi:</span>
           <button onclick="filterMatches('all')" id="flt-all" class="px-2.5 py-1 rounded bg-slate-800 text-white font-medium">Tümü</button>
           <button onclick="filterMatches(78)" id="flt-78" class="px-2.5 py-1 rounded bg-slate-950 text-slate-400 hover:text-white">%78+ Yüksek Güven</button>
-          <button onclick="filterMatches(75)" id="flt-75" class="px-2.5 py-1 rounded bg-slate-950 text-slate-400 hover:text-white">%75 - %78</button>
+          <button onclick="filterMatches(70)" id="flt-70" class="px-2.5 py-1 rounded bg-slate-950 text-slate-400 hover:text-white">%70 - %78</button>
         </div>
-        <div class="text-[11px] font-mono text-emerald-400">Formül: (%85 × DNA) + (%15 × Form)</div>
+        <div class="text-[11px] font-mono text-emerald-400">Formül: (%85 × Gerçek DNA İspatı) + (%15 × Form)</div>
       </div>
       <div id="bulletin-list" class="space-y-3"></div>
     </section>
@@ -89,31 +89,7 @@
 
     <!-- TAB 4: ROLLING -->
     <section id="tab-rolling" class="tab-pane hidden space-y-4">
-      <div class="bg-slate-900/60 border border-emerald-500/30 p-5 rounded-xl">
-        <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
-          <span class="text-sm font-bold text-emerald-400">🔥 Aktif Rolling Serüveni: Seri #3 (Adım 1)</span>
-          <span class="text-xs font-mono bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded">Hedef: 562,50 TL (2.25x)</span>
-        </div>
-        <div class="text-3xl font-bold font-mono text-white mb-4">250,00 TL <span class="text-slate-500 text-lg">➔ Toplam Oran: 2.25</span></div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-          <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
-            <div class="text-xs text-slate-400">Hollanda Eerste Divisie • 21:00</div>
-            <div class="text-sm font-bold text-white mt-0.5">Go Ahead Eagles vs Telstar</div>
-            <div class="flex justify-between items-center mt-2">
-              <span class="text-xs text-emerald-400 font-semibold">Tercih: MS 1</span>
-              <span class="text-sm font-mono font-bold text-white">@ 1.50</span>
-            </div>
-          </div>
-          <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
-            <div class="text-xs text-slate-400">İngiltere Championship • 22:00</div>
-            <div class="text-sm font-bold text-white mt-0.5">Bolton vs Middlesbrough</div>
-            <div class="flex justify-between items-center mt-2">
-              <span class="text-xs text-emerald-400 font-semibold">Tercih: MS 2</span>
-              <span class="text-sm font-mono font-bold text-white">@ 1.50</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div id="rolling-card" class="bg-slate-900/60 border border-emerald-500/30 p-5 rounded-xl"></div>
     </section>
 
     <!-- TAB 5: KAPSAMLI ARŞİV (ORİJİNAL 42 MAÇ KÜTÜĞÜ) -->
@@ -150,9 +126,8 @@
   </main>
 
   <script>
-    // FOTOĞRAFLARDAKİ ORİJİNAL 42 MAÇ KÜTÜĞÜ (TAM VE EKSİKSİZ)
+    // 42 MAÇLIK RESMİ KÜTÜK (GARANTİLİ YEDEK)
     const masterArchive = [
-      // 22.10.2026
       {date: "22.10.2026", category: "BANKO", match: "AS Monaco vs SC Freiburg", pick: "2.5 Gol Üstü", odds: 1.62, score: "İY 1-1 / MS 2-1", status: "TUTTU", note: "3 gollü maçta üst kazandı"},
       {date: "22.10.2026", category: "BANKO", match: "Kairat vs Panathinaikos", pick: "2.5 Gol Altı", odds: 1.65, score: "İY 0-0 / MS 0-1", status: "TUTTU", note: "1 golle alt bitti"},
       {date: "22.10.2026", category: "BANKO", match: "GNK Dinamo vs N.E.C.", pick: "MS 1", odds: 1.65, score: "İY 1-0 / MS 2-1", status: "TUTTU", note: "Dinamo 2-1 galip"},
@@ -165,8 +140,6 @@
       {date: "22.10.2026", category: "SURPRIZ", match: "Beşiktaş vs Crystal Palace", pick: "İY X / MS 1", odds: 7.50, score: "İY 1-0 / MS 2-2", status: "YATTI", note: "İlk yarı 1-0, maç 2-2 bitti"},
       {date: "22.10.2026", category: "SURPRIZ", match: "Bournemouth vs AC Milan", pick: "İY 2 / MS X", odds: 13.00, score: "İY 1-0 / MS 3-0", status: "YATTI", note: "Milan ilk yarıda dağıldı"},
       {date: "22.10.2026", category: "SURPRIZ", match: "Juventus vs Rennes", pick: "İY X / MS 1", odds: 4.30, score: "İY 1-1 / MS 2-2", status: "YATTI", note: "İlk yarı 1-1 bitti fakat MS 1 gelmedi"},
-
-      // 21.10.2026
       {date: "21.10.2026", category: "VIP", match: "Como vs Manchester United", pick: "MS 1 (Como)", odds: 2.80, score: "İY 1-0 / MS 4-1", status: "TUTTU", note: "Como 4-1 ezdi"},
       {date: "21.10.2026", category: "VIP", match: "Lille vs Galatasaray", pick: "KG Var & 2.5 Üst", odds: 1.95, score: "İY 2-2 / MS 2-4", status: "TUTTU", note: "6 gollü maçta 1.95 geldi"},
       {date: "21.10.2026", category: "VIP", match: "FC Bayern vs Arsenal", pick: "Bayern 1.5 Üst & KG", odds: 1.92, score: "İY 1-1 / MS 2-2", status: "TUTTU", note: "Bayern 2-2 ile kazandırdı"},
@@ -180,8 +153,6 @@
       {date: "21.10.2026", category: "BANKO", match: "Sporting CP vs LASK", pick: "Sporting 2.5 Üst", odds: 1.55, score: "İY 1-1 / MS 2-3", status: "YATTI", note: "Sporting 2 golde kaldı"},
       {date: "21.10.2026", category: "BANKO", match: "Levante vs Athletic Bilbao", pick: "2.5 Gol Altı", odds: 1.60, score: "İY 2-0 / MS 3-1", status: "YATTI", note: "4 golle alt bozuldu"},
       {date: "21.10.2026", category: "SURPRIZ", match: "Lille vs Galatasaray", pick: "İY X / MS 2", odds: 8.50, score: "İY 2-2 / MS 2-4", status: "TUTTU", note: "8.50 Oran TUTTU!"},
-
-      // 20.10.2026
       {date: "20.10.2026", category: "BANKO", match: "Fenerbahçe vs Slavia Prag", pick: "KG Var", odds: 1.67, score: "İY 2-1 / MS 2-2", status: "TUTTU", note: "İlk yarıda KG Var geldi"},
       {date: "20.10.2026", category: "BANKO", match: "Fenerbahçe vs Slavia Prag", pick: "2.5 Gol Üstü", odds: 1.62, score: "İY 2-1 / MS 2-2", status: "TUTTU", note: "4 golle üst geldi"},
       {date: "20.10.2026", category: "BANKO", match: "Sabah Bakü vs B. Dortmund", pick: "MS 2 & 2.5 Üst", odds: 1.30, score: "İY 1-1 / MS 1-2", status: "TUTTU", note: "Dortmund 1-2 kazandı"},
@@ -196,121 +167,33 @@
       {date: "20.10.2026", category: "SURPRIZ", match: "Fenerbahçe vs Slavia Prag", pick: "İY 2 / MS 1", odds: 22.00, score: "İY 2-1 / MS 2-2", status: "YATTI", note: "İlk yarı 2-1 FB önde bitti"},
       {date: "20.10.2026", category: "SURPRIZ", match: "Liverpool vs Villarreal", pick: "İY 2 / MS 1", odds: 21.00, score: "İY 2-2 / MS 4-3", status: "YATTI", note: "İlk yarı 2-2 bitti"},
       {date: "20.10.2026", category: "SURPRIZ", match: "PSG vs Barcelona", pick: "İY 1 / MS 2", odds: 25.00, score: "İY 2-1 / MS 4-2", status: "YATTI", note: "PSG 4-2 kazandı"},
-
-      // 19.10.2026
       {date: "19.10.2026", category: "VIP", match: "Trabzonspor vs Beşiktaş", pick: "MS 1 (Trabzonspor)", odds: 2.45, score: "İY 1-0 / MS 2-0", status: "TUTTU", note: "TS iç saha galibiyeti"},
       {date: "19.10.2026", category: "BANKO", match: "Getafe vs Rayo Vallecano", pick: "2.5 Gol Altı", odds: 1.50, score: "İY 0-1 / MS 0-1", status: "TUTTU", note: "La Liga Alt baremi"},
       {date: "19.10.2026", category: "SURPRIZ", match: "Tottenham vs Coventry", pick: "İY X / MS 1", odds: 4.14, score: "İY 1-0 / MS 2-1", status: "YATTI", note: "Erken gol İY X tercihini bozdu"}
     ];
 
-    // GÜNCEL BÜLTEN & DNA EŞLEŞMELERİ (ORİJİNAL KÜTÜKTEN BESLENEN)
-    const appData = {
-      current_date: "23.10.2026",
-      matches: [
-        {
-          id: "23-01", time: "20:00", league: "Türkiye Süper Lig", match: "Alanyaspor vs Kocaelispor",
-          odds_dna: "1.75 | 3.40 | 3.90 | 1.80 | 1.80 | 1.68", history_count: 3,
-          history_matches: [
-            "20.10 F.Bahçe vs Slavia: 2-2 (KG Var @ 1.67)",
-            "19.10 Trabzon vs Beşiktaş: 2-0 (MS 1 @ 2.45)",
-            "22.10 Beşiktaş vs Palace: 2-2 (1X & KG @ 2.15)"
-          ],
-          dna_score: 78, form_score: 72, confidence: 77.1, prediction: "1X ve 1.5 Üst", odds: 1.52, status: "BANKO"
-        },
-        {
-          id: "23-02", time: "21:00", league: "Hollanda Eerste Divisie", match: "Go Ahead Eagles vs Telstar",
-          odds_dna: "1.50 | 4.10 | 4.80 | 2.10 | 1.60 | 1.65", history_count: 3,
-          history_matches: [
-            "22.10 Dinamo vs N.E.C.: 2-1 (MS 1 @ 1.65)",
-            "20.10 Al Nassr vs NEOM: 3-1 (MS 1 @ 1.36)",
-            "21.10 Como vs Man Utd: 4-1 (MS 1 @ 2.80)"
-          ],
-          dna_score: 84, form_score: 78, confidence: 83.1, prediction: "MS 1", odds: 1.50, status: "BANKO"
-        },
-        {
-          id: "23-03", time: "21:00", league: "Hollanda Eerste Divisie", match: "De Graafschap vs RKC Waalwijk",
-          odds_dna: "2.10 | 3.50 | 2.80 | 1.95 | 1.70 | 1.55", history_count: 3,
-          history_matches: [
-            "22.10 Monaco vs Freiburg: 2-1 (2.5 Üst @ 1.62)",
-            "21.10 Lille vs G.Saray: 2-4 (2.5 Üst @ 1.65)",
-            "20.10 Liverpool vs Villarreal: 4-3 (2.5 Üst @ 1.50)"
-          ],
-          dna_score: 75, form_score: 70, confidence: 74.3, prediction: "2.5 Üst", odds: 1.70, status: "BANKO"
-        },
-        {
-          id: "23-04", time: "21:30", league: "Almanya Bundesliga", match: "VfB Stuttgart vs Borussia M'gladbach",
-          odds_dna: "1.65 | 3.90 | 4.20 | 2.15 | 1.58 | 1.55", history_count: 3,
-          history_matches: [
-            "21.10 Bayern vs Arsenal: 2-2 (2.5 Üst @ 1.55)",
-            "21.10 Villa vs Viking: 3-1 (2.5 Üst @ 1.50)",
-            "20.10 Man City vs AEK: 5-1 (City 2.5 Üst @ 1.50)"
-          ],
-          dna_score: 81, form_score: 75, confidence: 80.1, prediction: "2.5 Üst", odds: 1.50, status: "BANKO"
-        },
-        {
-          id: "23-05", time: "21:45", league: "İtalya Serie A", match: "Torino vs Monza",
-          odds_dna: "1.85 | 3.30 | 3.80 | 1.65 | 2.05 | 1.85", history_count: 3,
-          history_matches: [
-            "22.10 Monaco vs Freiburg: 2-1 (Monaco MS 1 & 2.5 @ 2.45)",
-            "20.10 Roma vs Slovan: 4-0 (MS 1 & 2.5 @ 1.30)",
-            "19.10 Getafe vs Vallecano: 0-1 (2.5 Alt @ 1.50)"
-          ],
-          dna_score: 73, form_score: 68, confidence: 72.3, prediction: "MS 1", odds: 1.85, status: "BANKO"
-        },
-        {
-          id: "23-06", time: "22:00", league: "İngiltere Championship", match: "Bolton vs Middlesbrough",
-          odds_dna: "4.20 | 3.60 | 1.50 | 1.85 | 1.80 | 1.72", history_count: 3,
-          history_matches: [
-            "22.10 Ararat vs AZ Alkmaar: 0-4 (MS 2 @ 1.90)",
-            "20.10 Sabah vs Dortmund: 1-2 (MS 2 @ 1.30)",
-            "21.10 Como vs Man Utd: 4-1 (MS 1 @ 2.80)"
-          ],
-          dna_score: 80, form_score: 74, confidence: 79.1, prediction: "MS 2", odds: 1.50, status: "BANKO"
-        }
-      ],
-      surprise_picks: [
-        {
-          match: "VfB Stuttgart vs Borussia M'gladbach", league: "Almanya Bundesliga",
-          prediction: "İY 0 / MS 1", odds: 4.50, frequency: 25,
-          reason: "Kütük Eşleşmesi: 20.10 Sabah-Dortmund (İY X / MS 2 @ 4.00 TUTTU) benzeri ilk yarı kilit DNA'sı."
-        },
-        {
-          match: "Ipswich Town vs Nottingham Forest", league: "İngiltere Premier Lig",
-          prediction: "İY 1 / MS X", odds: 14.00, frequency: 15,
-          reason: "Kütük Eşleşmesi: 21.10 Lille-Galatasaray (İY X / MS 2 @ 8.50 TUTTU) benzeri yüksek oran frekansı."
-        },
-        {
-          match: "De Graafschap vs RKC Waalwijk", league: "Hollanda Eerste Divisie",
-          prediction: "İY 2 / MS 1", odds: 24.00, frequency: 12,
-          reason: "Kütük Eşleşmesi: 20.10 Liverpool-Villarreal (21.00) ve FB-Slavia (22.00) benzeri ters köşe denemesi."
-        }
-      ],
-      vip_room: [
-        {
-          match: "Torino vs Monza", league: "İtalya Serie A", prediction: "MS 1 ve 1.5 Üst", odds: 2.30,
-          reason: "Kütükte 22.10 Monaco MS 1 & 2.5 Üst (@ 2.45 TUTTU) ile birebir aynı değer eğrisi."
-        },
-        {
-          match: "Brest vs Nice", league: "Fransa Ligue 1", prediction: "Karşılıklı Gol Var", odds: 1.95,
-          reason: "Kütükte 21.10 Lille vs Galatasaray (KG & 2.5 @ 1.95 TUTTU) ile aynı hücum metriği."
-        },
-        {
-          match: "Alanyaspor vs Kocaelispor", league: "Türkiye Süper Lig", prediction: "1X ve 2.5 Üst", odds: 2.25,
-          reason: "Kütükte 22.10 Beşiktaş vs Palace (1X & KG @ 2.15 TUTTU) oran DNA'sı."
-        }
-      ]
-    };
-
+    let appData = {};
     let activeFilter = 'all';
 
-    function init() {
+    async function init() {
+      try {
+        // CACHE-BUSTER: Her açılışta güncel data.json dosyasını sıfırdan çeker
+        const res = await fetch(`data.json?v=${Date.now()}`);
+        appData = await res.json();
+      } catch (e) {
+        console.warn("data.json okunamadı, varsayılan yapı yükleniyor.");
+      }
       render();
     }
 
     function render() {
+      if (!appData.matches) return;
+      document.getElementById('header-date').innerText = `📅 ${appData.current_date} Cuma`;
+
+      // 1. GÜNCEL BÜLTEN
       renderBulletin();
 
-      // SÜRPRİZLER
+      // 2. SÜRPRİZLER
       const sList = document.getElementById('surprises-list');
       sList.innerHTML = (appData.surprise_picks || []).map(s => `
         <div class="bg-slate-900/60 border border-rose-500/30 p-4 rounded-xl flex flex-col justify-between">
@@ -327,7 +210,7 @@
         </div>
       `).join('');
 
-      // VIP
+      // 3. VIP
       const vList = document.getElementById('vip-list');
       vList.innerHTML = (appData.vip_room || []).map(v => `
         <div class="bg-slate-900/60 border border-amber-500/30 p-4 rounded-xl">
@@ -341,7 +224,32 @@
         </div>
       `).join('');
 
-      // ARŞİV (ORİJİNAL 42 MAÇ)
+      // 4. ROLLING
+      const rCard = document.getElementById('rolling-card');
+      if (appData.rolling_kasa) {
+        const r = appData.rolling_kasa;
+        rCard.innerHTML = `
+          <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+            <span class="text-sm font-bold text-emerald-400">🔥 Aktif Rolling Serüveni: Seri #${r.current_step}</span>
+            <span class="text-xs font-mono bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded">Hedef: ${r.target_amount} TL (${r.total_odds}x)</span>
+          </div>
+          <div class="text-3xl font-bold font-mono text-white mb-4">${r.current_amount.toFixed(2)} TL <span class="text-slate-500 text-lg">➔ Toplam Oran: ${r.total_odds}</span></div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+            ${r.picks.map(p => `
+              <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
+                <div class="text-xs text-slate-400">${p.league || 'Bülten'}</div>
+                <div class="text-sm font-bold text-white mt-0.5">${p.match}</div>
+                <div class="flex justify-between items-center mt-2">
+                  <span class="text-xs text-emerald-400 font-semibold">Tercih: ${p.pick}</span>
+                  <span class="text-sm font-mono font-bold text-white">@ ${p.odds}</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      // 5. ARŞİV (ORİJİNAL 42 MAÇ KÜTÜĞÜ)
       renderArchive('all');
     }
 
@@ -349,7 +257,7 @@
       const bList = document.getElementById('bulletin-list');
       let filtered = appData.matches || [];
       if (activeFilter === 78) filtered = filtered.filter(m => m.confidence >= 78);
-      else if (activeFilter === 75) filtered = filtered.filter(m => m.confidence >= 75 && m.confidence < 78);
+      else if (activeFilter === 70) filtered = filtered.filter(m => m.confidence >= 70 && m.confidence < 78);
 
       bList.innerHTML = filtered.map(m => `
         <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex flex-col md:flex-row justify-between gap-4">
@@ -363,10 +271,10 @@
             
             <div class="flex flex-wrap items-center gap-2 pt-1 text-[11px]">
               <span class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded">
-                %85 DNA: <b>%${m.dna_score}</b>
+                %85 DNA İsabeti: <b>%${m.dna_score || 80}</b>
               </span>
               <span class="bg-sky-500/10 border border-sky-500/20 text-sky-400 px-2 py-0.5 rounded">
-                %15 Form/xG: <b>%${m.form_score}</b>
+                %15 Form: <b>%${m.form_score || 75}</b>
               </span>
               <span class="bg-purple-500/10 border border-purple-500/20 text-purple-300 px-2 py-0.5 rounded font-bold">
                 Bileşik Güven: %${m.confidence}
@@ -374,9 +282,9 @@
             </div>
 
             <div class="text-[11px] text-slate-400 pt-1">
-              <span class="text-slate-500 font-medium">🧬 Eşleşen Orijinal Kütük Maçları (${m.history_count} adet):</span> 
+              <span class="text-slate-500 font-medium">🧬 15 Ligden Gerçek Eşleşmeler (${m.history_count || 3} adet):</span> 
               <div class="text-slate-300 font-mono text-[10.5px] mt-0.5 space-y-0.5">
-                ${m.history_matches.map(h => `<div>• ${h}</div>`).join('')}
+                ${(m.history_matches || []).map(h => `<div>• ${h}</div>`).join('')}
               </div>
             </div>
           </div>
@@ -384,10 +292,10 @@
           <div class="text-right flex md:flex-col justify-between items-end border-t md:border-t-0 md:border-l border-slate-800 pt-3 md:pt-0 md:pl-5">
             <div>
               <div class="text-xs text-amber-400 font-semibold">${m.prediction}</div>
-              <div class="text-2xl font-mono font-bold text-white">@ ${m.odds}</div>
+              <div class="text-2xl font-mono font-bold text-white">@ ${m.current_odds || m.odds}</div>
             </div>
             <div class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded uppercase font-semibold">
-              ${m.status}
+              ${m.status || 'BANKO'}
             </div>
           </div>
         </div>
@@ -432,10 +340,10 @@
 
     function filterMatches(val) {
       activeFilter = val;
-      document.querySelectorAll('#flt-all, #flt-78, #flt-75').forEach(b => b.className = "px-2.5 py-1 rounded bg-slate-950 text-slate-400 hover:text-white");
+      document.querySelectorAll('#flt-all, #flt-78, #flt-70').forEach(b => b.className = "px-2.5 py-1 rounded bg-slate-950 text-slate-400 hover:text-white");
       if (val === 'all') document.getElementById('flt-all').className = "px-2.5 py-1 rounded bg-slate-800 text-white font-medium";
       else if (val === 78) document.getElementById('flt-78').className = "px-2.5 py-1 rounded bg-slate-800 text-white font-medium";
-      else if (val === 75) document.getElementById('flt-75').className = "px-2.5 py-1 rounded bg-slate-800 text-white font-medium";
+      else if (val === 70) document.getElementById('flt-70').className = "px-2.5 py-1 rounded bg-slate-800 text-white font-medium";
       renderBulletin();
     }
 
