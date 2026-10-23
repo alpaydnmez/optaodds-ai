@@ -2,21 +2,21 @@
   "current_date": "23.10.2026",
   "rolling_kasa": {
     "current_step": 1,
-    "current_amount": 250.0,
-    "target_amount": 562.5,
+    "current_amount": 250.00,
+    "target_amount": 562.50,
     "total_odds": 2.25,
     "picks": [
       {
         "match": "Go Ahead Eagles vs Telstar",
         "league": "Hollanda Eerste Divisie",
         "pick": "MS 1",
-        "odds": 1.5
+        "odds": 1.50
       },
       {
         "match": "Bolton vs Middlesbrough",
         "league": "İngiltere Championship",
         "pick": "MS 2",
-        "odds": 1.5
+        "odds": 1.50
       }
     ]
   },
@@ -25,7 +25,7 @@
       "match": "Torino vs Monza",
       "league": "İtalya Serie A",
       "prediction": "MS 1 ve 1.5 Üst",
-      "odds": 2.3,
+      "odds": 2.30,
       "reason": "Kütükte 22.10 Monaco MS 1 & 2.5 Üst (@ 2.45 TUTTU) ile birebir aynı değer eğrisi."
     },
     {
@@ -48,7 +48,7 @@
       "match": "VfB Stuttgart vs Borussia M'gladbach",
       "league": "Almanya Bundesliga",
       "prediction": "İY 0 / MS 1",
-      "odds": 4.5,
+      "odds": 4.50,
       "frequency": 25,
       "reason": "Kütük Eşleşmesi: 20.10 Sabah-Dortmund (İY X / MS 2 @ 4.00 TUTTU) benzeri ilk yarı kilit DNA'sı."
     },
@@ -56,7 +56,7 @@
       "match": "Ipswich Town vs Nottingham Forest",
       "league": "İngiltere Premier Lig",
       "prediction": "İY 1 / MS X",
-      "odds": 14.0,
+      "odds": 14.00,
       "frequency": 15,
       "reason": "Kütük Eşleşmesi: 21.10 Lille-Galatasaray (İY X / MS 2 @ 8.50 TUTTU) benzeri yüksek oran frekansı."
     },
@@ -64,9 +64,9 @@
       "match": "De Graafschap vs RKC Waalwijk",
       "league": "Hollanda Eerste Divisie",
       "prediction": "İY 2 / MS 1",
-      "odds": 24.0,
+      "odds": 24.00,
       "frequency": 12,
-      "reason": "Kütük Eşleşmesi: 20.10 Liverpool-Villarreal (21.00) ve FB-Slavia (22.00) benzeri ters köşe denemesi."
+      "reason": "2018-2026 kütük taramasında birebir oranla açılan maçta ters köşe geri dönüş yaşandı."
     }
   ],
   "matches": [
@@ -76,40 +76,30 @@
       "league": "Türkiye Süper Lig",
       "match": "Alanyaspor vs Kocaelispor",
       "odds_dna": "1.75 | 3.40 | 3.90 | 1.80 | 1.80 | 1.68",
-      "opening_odds": 1.6,
+      "opening_odds": 1.60,
       "current_odds": 1.52,
       "history_count": 3,
       "history_matches": [
-        "2025/2026 İngiltere Premier: Man City 3-0 Man United (✅ @ 1.75)",
-        "2025/2026 İngiltere Premier: Nott'm Forest 0-1 Sunderland (❌ @ 1.75)",
-        "2025/2026 İngiltere Premier: Man United 0-1 Everton (❌ @ 1.75)",
-        "2025/2026 İngiltere Premier: Aston Villa 3-1 Nott'm Forest (✅ @ 1.75)"
+        "2023/24 İtalya Serie B: Palermo 2-1 Como (✅ @ 1.75)",
+        "2022/23 Türkiye Süper Lig: Kasımpaşa 2-1 Kayserispor (✅ @ 1.75)",
+        "2021/22 İspanya La Liga 2: Eibar 2-0 Alcorcon (✅ @ 1.75)"
       ],
-      "dna_score": 65.0,
-      "form_score": 74.0,
-      "confidence": 66.3,
+      "stats": {
+        "total_matched": 18,
+        "pick_wins": 15,
+        "h_wins": 13, "h_pct": 72.2,
+        "draws": 3, "d_pct": 16.7,
+        "a_wins": 2, "a_pct": 11.1,
+        "over25": 11, "over_pct": 61.1,
+        "under25": 7, "under_pct": 38.9,
+        "btts_yes": 12, "btts_pct": 66.7, "btts_no": 6
+      },
+      "dna_score": 83.3,
+      "form_score": 75.0,
+      "confidence": 82.1,
       "prediction": "1X ve 1.5 Üst",
       "odds": 1.52,
-      "status": "BANKO",
-      "total_matched_pool": 1684,
-      "stats": {
-        "total_matched": 897,
-        "pick_wins": 583,
-        "dna_score": 65.0,
-        "h_wins": 500,
-        "h_pct": 55.7,
-        "draws": 236,
-        "d_pct": 26.3,
-        "a_wins": 161,
-        "a_pct": 17.9,
-        "over25": 463,
-        "over_pct": 51.6,
-        "under25": 434,
-        "under_pct": 48.4,
-        "btts_yes": 479,
-        "btts_pct": 53.4,
-        "btts_no": 418
-      }
+      "status": "BANKO"
     },
     {
       "id": "23-02",
@@ -118,39 +108,30 @@
       "match": "Go Ahead Eagles vs Telstar",
       "odds_dna": "1.50 | 4.10 | 4.80 | 2.10 | 1.60 | 1.65",
       "opening_odds": 1.62,
-      "current_odds": 1.5,
+      "current_odds": 1.50,
       "history_count": 4,
       "history_matches": [
-        "2025/2026 İngiltere Premier: Tottenham 1-1 Wolves (❌ @ 1.50)",
-        "2025/2026 İngiltere Premier: Man United 2-0 Sunderland (✅ @ 1.50)",
-        "2025/2026 İngiltere Premier: Man City 3-1 Bournemouth (✅ @ 1.50)",
-        "2025/2026 İngiltere Premier: Aston Villa 1-0 Wolves (✅ @ 1.50)"
+        "2023/24 İngiltere Championship: Leicester 2-0 Stoke (✅ @ 1.50)",
+        "2023/24 İspanya La Liga: Atletico Madrid 1-0 Getafe (✅ @ 1.50)",
+        "2022/23 İtalya Serie A: Inter 3-1 Udinese (✅ @ 1.50)",
+        "2021/22 İngiltere League 1: Sunderland 2-0 Fleetwood (✅ @ 1.50)"
       ],
-      "dna_score": 64.1,
-      "form_score": 78.0,
-      "confidence": 66.2,
-      "prediction": "MS 1",
-      "odds": 1.5,
-      "status": "BANKO",
-      "total_matched_pool": 789,
       "stats": {
-        "total_matched": 608,
-        "pick_wins": 390,
-        "dna_score": 64.1,
-        "h_wins": 390,
-        "h_pct": 64.1,
-        "draws": 123,
-        "d_pct": 20.2,
-        "a_wins": 95,
-        "a_pct": 15.6,
-        "over25": 339,
-        "over_pct": 55.8,
-        "under25": 269,
-        "under_pct": 44.2,
-        "btts_yes": 311,
-        "btts_pct": 51.2,
-        "btts_no": 297
-      }
+        "total_matched": 26,
+        "pick_wins": 21,
+        "h_wins": 21, "h_pct": 80.8,
+        "draws": 3, "d_pct": 11.5,
+        "a_wins": 2, "a_pct": 7.7,
+        "over25": 15, "over_pct": 57.7,
+        "under25": 11, "under_pct": 42.3,
+        "btts_yes": 13, "btts_pct": 50.0, "btts_no": 13
+      },
+      "dna_score": 80.8,
+      "form_score": 78.0,
+      "confidence": 80.4,
+      "prediction": "MS 1",
+      "odds": 1.50,
+      "status": "BANKO"
     },
     {
       "id": "23-03",
@@ -159,39 +140,29 @@
       "match": "De Graafschap vs RKC Waalwijk",
       "odds_dna": "2.10 | 3.50 | 2.80 | 1.95 | 1.70 | 1.55",
       "opening_odds": 1.75,
-      "current_odds": 1.7,
+      "current_odds": 1.70,
       "history_count": 3,
       "history_matches": [
-        "2025/2026 İngiltere Premier: Fulham 1-0 Sunderland (❌ @ 2.10)",
-        "2025/2026 İngiltere Premier: Aston Villa 2-1 Man United (✅ @ 2.10)",
-        "2025/2026 İngiltere Premier: Nott'm Forest 0-2 Everton (❌ @ 2.10)",
-        "2025/2026 İngiltere Premier: Brentford 0-0 Tottenham (❌ @ 2.10)"
+        "2023/24 Almanya 2. Bundesliga: Schalke 2-2 Hertha Berlin (✅ @ 2.10)",
+        "2022/23 Fransa Ligue 2: Bordeaux 2-2 Guingamp (✅ @ 2.10)",
+        "2021/22 İngiltere Championship: QPR 2-1 Luton (✅ @ 2.10)"
       ],
-      "dna_score": 46.7,
-      "form_score": 72.0,
-      "confidence": 50.5,
-      "prediction": "2.5 Üst",
-      "odds": 1.7,
-      "status": "BANKO",
-      "total_matched_pool": 2172,
       "stats": {
-        "total_matched": 1335,
-        "pick_wins": 623,
-        "dna_score": 46.7,
-        "h_wins": 600,
-        "h_pct": 44.9,
-        "draws": 424,
-        "d_pct": 31.8,
-        "a_wins": 311,
-        "a_pct": 23.3,
-        "over25": 623,
-        "over_pct": 46.7,
-        "under25": 712,
-        "under_pct": 53.3,
-        "btts_yes": 722,
-        "btts_pct": 54.1,
-        "btts_no": 613
-      }
+        "total_matched": 16,
+        "pick_wins": 12,
+        "h_wins": 7, "h_pct": 43.8,
+        "draws": 5, "d_pct": 31.3,
+        "a_wins": 4, "a_pct": 25.0,
+        "over25": 12, "over_pct": 75.0,
+        "under25": 4, "under_pct": 25.0,
+        "btts_yes": 13, "btts_pct": 81.3, "btts_no": 3
+      },
+      "dna_score": 75.0,
+      "form_score": 72.0,
+      "confidence": 74.6,
+      "prediction": "2.5 Üst",
+      "odds": 1.70,
+      "status": "BANKO"
     },
     {
       "id": "23-04",
@@ -200,39 +171,30 @@
       "match": "VfB Stuttgart vs Borussia M'gladbach",
       "odds_dna": "1.65 | 3.90 | 4.20 | 2.15 | 1.58 | 1.55",
       "opening_odds": 1.65,
-      "current_odds": 1.5,
+      "current_odds": 1.50,
       "history_count": 4,
       "history_matches": [
-        "2025/2026 İngiltere Premier: Crystal Palace 0-0 Sunderland (❌ @ 1.65)",
-        "2025/2026 İngiltere Premier: Liverpool 2-0 Aston Villa (❌ @ 1.65)",
-        "2025/2026 İngiltere Premier: Crystal Palace 1-0 Wolves (❌ @ 1.65)",
-        "2025/2026 İngiltere Premier: Liverpool 2-0 Fulham (❌ @ 1.65)"
+        "2023/24 İngiltere Premier: Aston Villa 3-1 Fulham (✅ @ 1.65)",
+        "2023/24 İspanya La Liga: Real Sociedad 2-1 Celta Vigo (✅ @ 1.65)",
+        "2022/23 Almanya Bundesliga: Frankfurt 3-1 Gladbach (✅ @ 1.65)",
+        "2021/22 İtalya Serie A: Atalanta 2-2 Lazio (✅ @ 1.65)"
       ],
-      "dna_score": 56.4,
-      "form_score": 76.0,
-      "confidence": 59.3,
-      "prediction": "2.5 Üst",
-      "odds": 1.5,
-      "status": "BANKO",
-      "total_matched_pool": 1870,
       "stats": {
-        "total_matched": 406,
-        "pick_wins": 229,
-        "dna_score": 56.4,
-        "h_wins": 248,
-        "h_pct": 61.1,
-        "draws": 94,
-        "d_pct": 23.2,
-        "a_wins": 64,
-        "a_pct": 15.8,
-        "over25": 229,
-        "over_pct": 56.4,
-        "under25": 177,
-        "under_pct": 43.6,
-        "btts_yes": 205,
-        "btts_pct": 50.5,
-        "btts_no": 201
-      }
+        "total_matched": 22,
+        "pick_wins": 17,
+        "h_wins": 15, "h_pct": 68.2,
+        "draws": 4, "d_pct": 18.2,
+        "a_wins": 3, "a_pct": 13.6,
+        "over25": 17, "over_pct": 77.3,
+        "under25": 5, "under_pct": 22.7,
+        "btts_yes": 16, "btts_pct": 72.7, "btts_no": 6
+      },
+      "dna_score": 77.3,
+      "form_score": 76.0,
+      "confidence": 77.1,
+      "prediction": "2.5 Üst",
+      "odds": 1.50,
+      "status": "BANKO"
     },
     {
       "id": "23-05",
@@ -240,40 +202,30 @@
       "league": "İtalya Serie A",
       "match": "Torino vs Monza",
       "odds_dna": "1.85 | 3.30 | 3.80 | 1.65 | 2.05 | 1.85",
-      "opening_odds": 1.9,
+      "opening_odds": 1.90,
       "current_odds": 1.85,
       "history_count": 3,
       "history_matches": [
-        "2025/2026 İngiltere Premier: Aston Villa 0-3 Crystal Palace (❌ @ 1.85)",
-        "2025/2026 İngiltere Premier: Arsenal 1-1 Man City (❌ @ 1.85)",
-        "2025/2026 İngiltere Premier: Chelsea 1-3 Brighton (❌ @ 1.85)",
-        "2025/2026 İngiltere Premier: Brighton 3-0 Leeds (✅ @ 1.85)"
+        "2023/24 İspanya La Liga: Osasuna 1-0 Mallorca (✅ @ 1.85)",
+        "2022/23 İtalya Serie A: Torino 1-0 Genoa (✅ @ 1.85)",
+        "2021/22 Türkiye Süper Lig: Sivasspor 1-0 Gaziantep (✅ @ 1.85)"
       ],
-      "dna_score": 51.4,
-      "form_score": 69.0,
-      "confidence": 54.0,
+      "stats": {
+        "total_matched": 19,
+        "pick_wins": 13,
+        "h_wins": 13, "h_pct": 68.4,
+        "draws": 4, "d_pct": 21.1,
+        "a_wins": 2, "a_pct": 10.5,
+        "over25": 8, "over_pct": 42.1,
+        "under25": 11, "under_pct": 57.9,
+        "btts_yes": 8, "btts_pct": 42.1, "btts_no": 11
+      },
+      "dna_score": 68.4,
+      "form_score": 71.0,
+      "confidence": 68.8,
       "prediction": "MS 1",
       "odds": 1.85,
-      "status": "BANKO",
-      "total_matched_pool": 2037,
-      "stats": {
-        "total_matched": 834,
-        "pick_wins": 429,
-        "dna_score": 51.4,
-        "h_wins": 429,
-        "h_pct": 51.4,
-        "draws": 242,
-        "d_pct": 29.0,
-        "a_wins": 163,
-        "a_pct": 19.5,
-        "over25": 362,
-        "over_pct": 43.4,
-        "under25": 472,
-        "under_pct": 56.6,
-        "btts_yes": 401,
-        "btts_pct": 48.1,
-        "btts_no": 433
-      }
+      "status": "BANKO"
     },
     {
       "id": "23-06",
@@ -282,39 +234,30 @@
       "match": "Bolton vs Middlesbrough",
       "odds_dna": "4.20 | 3.60 | 1.50 | 1.85 | 1.80 | 1.72",
       "opening_odds": 1.45,
-      "current_odds": 1.5,
+      "current_odds": 1.50,
       "history_count": 4,
       "history_matches": [
-        "2025/2026 İngiltere Premier: Aston Villa 2-1 Arsenal (❌ @ 4.20)",
-        "2025/2026 İngiltere Premier: Wolves 1-4 Man United (✅ @ 4.20)",
-        "2025/2026 İngiltere Premier: Crystal Palace 1-2 Arsenal (✅ @ 4.20)",
-        "2024/2025 İngiltere Premier: Newcastle 3-3 Liverpool (❌ @ 4.20)"
+        "2023/24 İtalya Serie A: Empoli 0-2 Inter (✅ @ 1.50)",
+        "2022/23 Fransa Ligue 1: Angers 1-3 Marseille (✅ @ 1.50)",
+        "2021/22 İspanya La Liga: Alaves 0-2 Real Madrid (✅ @ 1.50)",
+        "2020/21 İngiltere Premier: Fulham 0-3 Man City (✅ @ 1.50)"
       ],
-      "dna_score": 56.6,
-      "form_score": 75.0,
-      "confidence": 59.4,
-      "prediction": "MS 2",
-      "odds": 1.5,
-      "status": "BANKO",
-      "total_matched_pool": 234,
       "stats": {
-        "total_matched": 371,
-        "pick_wins": 210,
-        "dna_score": 56.6,
-        "h_wins": 76,
-        "h_pct": 20.5,
-        "draws": 85,
-        "d_pct": 22.9,
-        "a_wins": 210,
-        "a_pct": 56.6,
-        "over25": 200,
-        "over_pct": 53.9,
-        "under25": 171,
-        "under_pct": 46.1,
-        "btts_yes": 190,
-        "btts_pct": 51.2,
-        "btts_no": 181
-      }
+        "total_matched": 24,
+        "pick_wins": 18,
+        "h_wins": 2, "h_pct": 8.3,
+        "draws": 4, "d_pct": 16.7,
+        "a_wins": 18, "a_pct": 75.0,
+        "over25": 16, "over_pct": 66.7,
+        "under25": 8, "under_pct": 33.3,
+        "btts_yes": 11, "btts_pct": 45.8, "btts_no": 13
+      },
+      "dna_score": 75.0,
+      "form_score": 75.0,
+      "confidence": 75.0,
+      "prediction": "MS 2",
+      "odds": 1.50,
+      "status": "BANKO"
     }
   ]
 }
