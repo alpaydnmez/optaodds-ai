@@ -3,8 +3,8 @@ import json
 import datetime
 import requests
 
-TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "8922109226:AAGCEVmDNyCf2DMLhnOi1Mh2hYLp5WdV_tc")
-TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "867372590")
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN") or "8922109226:AAGCEVmDNyCf2DMLhnOi1Mh2hYLp5WdV_tc"
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID") or "867372590"
 DATA_FILE = "data.json"
 
 def get_current_shift():
