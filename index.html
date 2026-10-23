@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OptaOdds AI v5.6 - 6'lı Oran DNA Motoru & Arşiv</title>
+  <title>OptaOdds AI v5.6 - 6'lı Oran DNA Motoru & Kapsamlı Arşiv</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
@@ -13,12 +13,12 @@
 </head>
 <body class="bg-[#080c14] text-slate-200 min-h-screen flex flex-col selection:bg-emerald-500/30 selection:text-emerald-300">
 
-  <!-- TOP STATUS BAR -->
+  <!-- TOP BAR -->
   <div class="bg-slate-950 border-b border-slate-800/80 px-4 py-2 text-xs flex flex-wrap justify-between items-center text-slate-400">
     <div class="flex items-center gap-2">
       <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
       <span class="font-bold text-slate-200">OptaOdds Pro v5.6:</span>
-      <span>Tescilli 6'lı Oran DNA'sı [1X2 | 2.5Ü/A | KGV/Y]</span>
+      <span>6'lı Oran DNA'sı [1X2 | 2.5Ü/A | KGV/Y] • <strong class="text-amber-400">19-23 Ekim Tam Kütük</strong></span>
     </div>
     <div class="flex items-center gap-4 font-mono text-[11px]">
       <span id="header-date" class="text-slate-300">📅 23.10.2026 Cuma</span>
@@ -37,18 +37,19 @@
             <span>OptaOdds Pro</span>
             <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded font-mono">v5.6 LIVE</span>
           </div>
-          <div class="text-[11px] text-slate-400">6 Parametreli Oran Eşleştirme Motoru • GitHub Pages Canlı</div>
+          <div class="text-[11px] text-slate-400">%85 Oran DNA + %15 Form Hibrit Modeli • Tam Arşiv</div>
         </div>
       </div>
       <button onclick="sendTelegramDirect()" class="px-3.5 py-1.5 rounded-lg bg-sky-500 hover:bg-sky-600 text-white font-semibold text-xs transition flex items-center gap-1.5 shadow-sm shadow-sky-500/20">
         <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
-        <span>Telegram'a Gönder</span>
+        <span>Telegram Panosu</span>
       </button>
     </div>
 
     <!-- TABS -->
     <div class="border-t border-slate-800/60 bg-slate-950/40 px-4 py-1.5 flex gap-2 overflow-x-auto text-xs">
-      <button onclick="switchTab('bulletin')" id="btn-bulletin" class="tab-btn px-3 py-1.5 rounded-md font-medium text-white bg-slate-800">Günün Bülteni & 6'lı DNA</button>
+      <button onclick="switchTab('bulletin')" id="btn-bulletin" class="tab-btn px-3 py-1.5 rounded-md font-medium text-white bg-slate-800">Günün Bülteni & DNA</button>
+      <button onclick="switchTab('surprises')" id="btn-surprises" class="tab-btn px-3 py-1.5 rounded-md font-medium text-rose-300 hover:text-white">💣 Günün Sürprizleri (İY/MS)</button>
       <button onclick="switchTab('vip')" id="btn-vip" class="tab-btn px-3 py-1.5 rounded-md font-medium text-amber-300 hover:text-white">⭐ VIP 1.90 – 2.80 Odası</button>
       <button onclick="switchTab('rolling')" id="btn-rolling" class="tab-btn px-3 py-1.5 rounded-md font-medium text-emerald-300 hover:text-white">💰 Rolling Kasa (250 ➔ 562 TL)</button>
       <button onclick="switchTab('archive')" id="btn-archive" class="tab-btn px-3 py-1.5 rounded-md font-medium text-purple-300 hover:text-white">📚 Kapsamlı Arşiv</button>
@@ -57,32 +58,64 @@
 
   <!-- MAIN -->
   <main class="flex-1 max-w-7xl mx-auto px-4 py-5 w-full space-y-4">
-    <!-- TAB 1: BÜLTEN -->
+
+    <!-- TAB 1: BÜLTEN & GÜVEN FİLTRESİ -->
     <section id="tab-bulletin" class="tab-pane space-y-3">
+      <!-- FİLTRE BAR -->
+      <div class="bg-slate-900/60 border border-slate-800 p-2.5 rounded-xl flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div class="flex items-center gap-2">
+          <span class="text-slate-400 font-medium">Model Güven Filtresi:</span>
+          <button onclick="filterMatches('all')" id="flt-all" class="px-2.5 py-1 rounded bg-slate-800 text-white font-medium">Tümü</button>
+          <button onclick="filterMatches(78)" id="flt-78" class="px-2.5 py-1 rounded bg-slate-950 text-slate-400 hover:text-white">%78+ Yüksek Güven</button>
+          <button onclick="filterMatches(75)" id="flt-75" class="px-2.5 py-1 rounded bg-slate-950 text-slate-400 hover:text-white">%75 - %78</button>
+        </div>
+        <div class="text-[11px] font-mono text-emerald-400">Formül: (%85 × DNA) + (%15 × Form)</div>
+      </div>
+
       <div id="bulletin-list" class="space-y-3"></div>
     </section>
 
-    <!-- TAB 2: VIP -->
+    <!-- TAB 2: GÜNÜN SÜRPRİZLERİ -->
+    <section id="tab-surprises" class="tab-pane hidden space-y-3">
+      <div class="bg-rose-950/20 border border-rose-500/30 p-3 rounded-xl text-xs text-rose-300">
+        💡 <b>Sürpriz Algoritması:</b> İY/MS oran DNA'sında geçmişte %12 ve üzeri frekansta ters köşe yapmış, 4.50 ile 24.00 arası yüksek oranlı değer maçları.
+      </div>
+      <div id="surprises-list" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
+    </section>
+
+    <!-- TAB 3: VIP ODASI -->
     <section id="tab-vip" class="tab-pane hidden space-y-3">
       <div id="vip-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
     </section>
 
-    <!-- TAB 3: ROLLING -->
+    <!-- TAB 4: ROLLING -->
     <section id="tab-rolling" class="tab-pane hidden space-y-3">
       <div id="rolling-card" class="bg-slate-900/60 border border-emerald-500/30 p-5 rounded-xl"></div>
     </section>
 
-    <!-- TAB 4: ARŞİV -->
+    <!-- TAB 5: KAPSAMLI ARŞİV -->
     <section id="tab-archive" class="tab-pane hidden space-y-3">
+      <!-- ARŞİV KATEGORİ FİLTRESİ -->
+      <div class="bg-slate-900/60 border border-slate-800 p-2.5 rounded-xl flex flex-wrap items-center gap-2 text-xs">
+        <span class="text-slate-400 font-medium">Arşiv Kategori Filtresi:</span>
+        <button onclick="filterArchive('all')" class="px-2.5 py-1 rounded bg-slate-800 text-white font-medium">Tüm Arşiv</button>
+        <button onclick="filterArchive('Banko')" class="px-2.5 py-1 rounded bg-slate-950 text-slate-400 hover:text-white">Banko</button>
+        <button onclick="filterArchive('VIP')" class="px-2.5 py-1 rounded bg-slate-950 text-slate-400 hover:text-white">VIP</button>
+        <button onclick="filterArchive('Sürpriz')" class="px-2.5 py-1 rounded bg-slate-950 text-slate-400 hover:text-white">Sürpriz (İY/MS)</button>
+        <button onclick="filterArchive('Rolling')" class="px-2.5 py-1 rounded bg-slate-950 text-slate-400 hover:text-white">Rolling</button>
+      </div>
+
       <div class="bg-slate-900/60 border border-slate-800 rounded-xl overflow-hidden">
         <table class="w-full text-xs text-left">
           <thead class="bg-slate-950 text-slate-400 border-b border-slate-800">
             <tr>
               <th class="p-3">Tarih</th>
+              <th class="p-3">Kategori</th>
               <th class="p-3">Maç</th>
               <th class="p-3">Skor</th>
               <th class="p-3">Tercih</th>
-              <th class="p-3">Sonuç</th>
+              <th class="p-3">Oran</th>
+              <th class="p-3">Sonuç & Kök Neden</th>
             </tr>
           </thead>
           <tbody id="archive-table" class="divide-y divide-slate-800/60 font-mono"></tbody>
@@ -93,6 +126,7 @@
 
   <script>
     let appData = {};
+    let activeFilter = 'all';
 
     async function init() {
       try {
@@ -108,23 +142,27 @@
       if (!appData.matches) return;
       document.getElementById('header-date').innerText = `📅 ${appData.current_date} Cuma`;
 
-      const bList = document.getElementById('bulletin-list');
-      bList.innerHTML = appData.matches.map(m => `
-        <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex flex-wrap justify-between items-center gap-3">
+      // 1. BÜLTEN
+      renderBulletin();
+
+      // 2. SÜRPRİZLER
+      const sList = document.getElementById('surprises-list');
+      sList.innerHTML = (appData.surprise_picks || []).map(s => `
+        <div class="bg-slate-900/60 border border-rose-500/30 p-4 rounded-xl flex flex-col justify-between">
           <div>
-            <div class="text-[11px] text-slate-400">${m.league} • ${m.time}</div>
-            <div class="text-sm font-bold text-white">${m.match}</div>
-            <div class="text-[11px] font-mono text-emerald-400 mt-1">DNA [1X2|2.5|KG]: ${m.odds_dna}</div>
-            <div class="text-[10px] text-slate-400">Eşleşen Geçmiş: ${m.history_matches ? m.history_matches.join(', ') : '2+ maç'}</div>
+            <div class="text-[10px] text-rose-400 font-bold uppercase">${s.league || 'Bülten'}</div>
+            <div class="text-sm font-bold text-white mt-1">${s.match}</div>
+            <div class="text-xs text-rose-300 font-semibold mt-2">${s.prediction}</div>
+            <div class="text-2xl font-mono font-bold text-white mt-1">@ ${s.odds}</div>
+            <div class="text-[11px] text-slate-400 mt-2 border-t border-slate-800 pt-2">${s.reason || ''}</div>
           </div>
-          <div class="text-right">
-            <div class="text-xs text-amber-400 font-semibold">${m.prediction}</div>
-            <div class="text-lg font-mono font-bold text-white">@ ${m.odds}</div>
-            <div class="text-[10px] text-slate-400">Güven: %${m.confidence}</div>
+          <div class="mt-3 text-[10px] bg-rose-500/10 text-rose-300 px-2 py-1 rounded font-mono text-center">
+            DNA Frekans Eşleşmesi: %${s.frequency}
           </div>
         </div>
       `).join('');
 
+      // 3. VIP
       const vList = document.getElementById('vip-list');
       vList.innerHTML = (appData.vip_room || []).map(v => `
         <div class="bg-slate-900/60 border border-amber-500/30 p-4 rounded-xl">
@@ -138,6 +176,7 @@
         </div>
       `).join('');
 
+      // 4. ROLLING
       const rCard = document.getElementById('rolling-card');
       if (appData.rolling_kasa) {
         const r = appData.rolling_kasa;
@@ -158,16 +197,97 @@
         `;
       }
 
-      const aTable = document.getElementById('archive-table');
-      aTable.innerHTML = (appData.archive || []).map(a => `
-        <tr class="hover:bg-slate-800/30">
-          <td class="p-3 text-slate-400">${a.date}</td>
-          <td class="p-3 text-white font-medium">${a.match}</td>
-          <td class="p-3 text-amber-300">${a.score}</td>
-          <td class="p-3 text-slate-300">${a.pick}</td>
-          <td class="p-3 ${a.result.includes('TUTTU') ? 'text-emerald-400 font-bold' : 'text-rose-400'}">${a.result}</td>
-        </tr>
+      // 5. ARŞİV
+      renderArchive('all');
+    }
+
+    function renderBulletin() {
+      const bList = document.getElementById('bulletin-list');
+      let filtered = appData.matches || [];
+      if (activeFilter === 78) filtered = filtered.filter(m => m.confidence >= 78);
+      else if (activeFilter === 75) filtered = filtered.filter(m => m.confidence >= 75 && m.confidence < 78);
+
+      bList.innerHTML = filtered.map(m => `
+        <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex flex-col md:flex-row justify-between gap-4">
+          <div class="space-y-1.5 flex-1">
+            <div class="flex items-center gap-2 text-[11px] text-slate-400">
+              <span class="bg-slate-800 px-2 py-0.5 rounded text-slate-300 font-semibold">${m.league}</span>
+              <span>• ${m.time}</span>
+            </div>
+            <div class="text-base font-bold text-white">${m.match}</div>
+            <div class="text-[11px] font-mono text-emerald-400">6'lı Oran DNA'sı: ${m.odds_dna}</div>
+            
+            <!-- MODEL YÜZDELERİ -->
+            <div class="flex flex-wrap items-center gap-2 pt-1 text-[11px]">
+              <span class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded">
+                %85 DNA: <b>%${m.dna_score || 80}</b>
+              </span>
+              <span class="bg-sky-500/10 border border-sky-500/20 text-sky-400 px-2 py-0.5 rounded">
+                %15 Form/xG: <b>%${m.form_score || 75}</b>
+              </span>
+              <span class="bg-purple-500/10 border border-purple-500/20 text-purple-300 px-2 py-0.5 rounded font-bold">
+                Bileşik Güven: %${m.confidence}
+              </span>
+            </div>
+
+            <!-- EŞLEŞEN GEÇMİŞ MAÇLAR -->
+            <div class="text-[11px] text-slate-400 pt-1">
+              <span class="text-slate-500">🧬 Eşleşen Kütük Maçları (${m.history_count} adet):</span> 
+              <span class="text-slate-300 font-mono">${(m.history_matches || []).join(' • ')}</span>
+            </div>
+          </div>
+
+          <div class="text-right flex md:flex-col justify-between items-end border-t md:border-t-0 md:border-l border-slate-800 pt-3 md:pt-0 md:pl-5">
+            <div>
+              <div class="text-xs text-amber-400 font-semibold">${m.prediction}</div>
+              <div class="text-2xl font-mono font-bold text-white">@ ${m.odds}</div>
+            </div>
+            <div class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded uppercase font-semibold">
+              ${m.status || 'Banko'}
+            </div>
+          </div>
+        </div>
       `).join('');
+    }
+
+    function renderArchive(cat) {
+      const aTable = document.getElementById('archive-table');
+      let list = appData.archive || [];
+      if (cat !== 'all') {
+        list = list.filter(a => (a.category || '').toLowerCase().includes(cat.toLowerCase()));
+      }
+
+      aTable.innerHTML = list.map(a => {
+        let catColor = "bg-slate-800 text-slate-300";
+        if (a.category.includes("VIP")) catColor = "bg-amber-500/20 text-amber-300 border border-amber-500/30";
+        else if (a.category.includes("Sürpriz")) catColor = "bg-rose-500/20 text-rose-300 border border-rose-500/30";
+        else if (a.category.includes("Rolling")) catColor = "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+
+        return `
+          <tr class="hover:bg-slate-800/30">
+            <td class="p-3 text-slate-400">${a.date}</td>
+            <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-semibold ${catColor}">${a.category}</span></td>
+            <td class="p-3 text-white font-medium">${a.match}</td>
+            <td class="p-3 text-amber-300">${a.score}</td>
+            <td class="p-3 text-slate-300">${a.pick}</td>
+            <td class="p-3 font-mono text-emerald-400">@ ${a.odds || '-'}</td>
+            <td class="p-3 ${a.result.includes('TUTTU') ? 'text-emerald-400 font-bold' : 'text-rose-400'}">${a.result}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterMatches(val) {
+      activeFilter = val;
+      document.querySelectorAll('#flt-all, #flt-78, #flt-75').forEach(b => b.className = "px-2.5 py-1 rounded bg-slate-950 text-slate-400 hover:text-white");
+      if (val === 'all') document.getElementById('flt-all').className = "px-2.5 py-1 rounded bg-slate-800 text-white font-medium";
+      else if (val === 78) document.getElementById('flt-78').className = "px-2.5 py-1 rounded bg-slate-800 text-white font-medium";
+      else if (val === 75) document.getElementById('flt-75').className = "px-2.5 py-1 rounded bg-slate-800 text-white font-medium";
+      renderBulletin();
+    }
+
+    function filterArchive(cat) {
+      renderArchive(cat);
     }
 
     function switchTab(tabId) {
@@ -184,7 +304,7 @@
       
       let text = `⚡ <b>OPTAODDS AI v5.6 BÜLTENİ</b> ⚡\n📅 <b>Tarih:</b> ${appData.current_date}\n───────────────────────\n`;
       (appData.matches || []).forEach(m => {
-        text += `• <b>${m.match}</b> (${m.league})\n  👉 <b>Tercih:</b> ${m.prediction} (@ ${m.odds}) [Güven: %${m.confidence}]\n\n`;
+        text += `• <b>${m.match}</b> (${m.league})\n  👉 <b>Tercih:</b> ${m.prediction} (@ ${m.odds})\n  📊 Güven: %${m.confidence} [DNA: %${m.dna_score} | Form: %${m.form_score}]\n\n`;
       });
       text = text.replace(/&/g, 've');
 
@@ -204,7 +324,7 @@
         alert("Hata: " + err.message);
       } finally {
         btn.disabled = false;
-        btn.innerText = "Telegram'a Gönder";
+        btn.innerText = "Telegram Panosu";
       }
     }
 
