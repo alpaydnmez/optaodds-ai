@@ -38,8 +38,7 @@ def download_and_build_cache():
     for league_name, url in LEAGUES_TO_SCAN:
         try:
             res = requests.get(url, timeout=5)
-            if res.status_code != 200:
-                continue
+            if res.status_code != 200: continue
             reader = csv.DictReader(io.StringIO(res.text))
             for row in reader:
                 try:
@@ -47,15 +46,14 @@ def download_and_build_cache():
                     d = float(row.get('B365D') or row.get('AvgD') or row.get('BbAvD') or 0)
                     a = float(row.get('B365A') or row.get('AvgA') or row.get('BbAvA') or 0)
                     if h <= 1.0: continue
-                    date = row.get('Date', '')
                     home = row.get('HomeTeam', '')
                     away = row.get('AwayTeam', '')
-                    hg = row.get('FTHG', '')
-                    ag = row.get('FTAG', '')
-                    if home and away and hg != '' and ag != '':
+                    hg = int(row.get('FTHG', -1))
+                    ag = int(row.get('FTAG', -1))
+                    if home and away and hg >= 0 and ag >= 0:
                         records.append({
-                            "league": league_name, "date": date, "home": home,
-                            "away": away, "score": f"{hg}-{ag}", "h": h, "d": d, "a": a
+                            "league": league_name, "home": home, "away": away,
+                            "hg": hg, "ag": ag, "score": f"{hg}-{ag}", "h": h, "d": d, "a": a
                         })
                 except Exception:
                     continue
@@ -65,20 +63,70 @@ def download_and_build_cache():
     GLOBAL_DATABASE_CACHE = records
     return records
 
-def scan_real_matches_for_odds(target_h, target_d, target_a, tolerance=0.06, max_matches=3):
+# TERCİHİN SKORA GÖRE GELİP GELMEDİĞİNİ MATEMATİKSEL DOĞRULAYAN FONKSİYON
+def check_pick_success(hg, ag, pick_str):
+    pick = pick_str.upper()
+    total_goals = hg + ag
+    
+    # 2.5 Üst / Alt
+    if "2.5 ÜST" in pick or "2.5 GOL ÜSTÜ" in pick:
+        return total_goals >= 3
+    if "2.5 ALT" in pick or "2.5 GOL ALTI" in pick:
+        return total_goals < 3
+        
+    # 1.5 Üst
+    if "1.5 ÜST" in pick:
+        if "1X" in pick:
+            return (hg >= ag) and (total_goals >= 2)
+        return total_goals >= 2
+        
+    # Karşılıklı Gol
+    if "KG VAR" in pick:
+        return (hg > 0 and ag > 0)
+        
+    # Maç Sonu 1, X, 2
+    if pick == "MS 1":
+        return hg > ag
+    if pick == "MS 2":
+        return ag > hg
+    if pick == "MS X":
+        return hg == ag
+        
+    # Çifte Şans
+    if "1X" in pick:
+        return hg >= ag
+    if "X2" in pick:
+        return ag >= hg
+        
+    return False
+
+# MAÇLARI VE GERÇEK KAZANMA ORANINI HESAPLAYAN MOTOR
+def evaluate_real_dna(target_h, target_d, target_a, prediction, tolerance=0.06, max_matches=4):
     records = download_and_build_cache()
-    matches_found = []
+    matched_games = []
+    success_count = 0
+
     for r in records:
         if abs(r["h"] - target_h) <= tolerance and abs(r["d"] - target_d) <= 0.20:
-            matches_found.append(f"{r['league']}: {r['home']} {r['score']} {r['away']} (@ {r['h']:.2f})")
-            if len(matches_found) >= max_matches:
+            is_win = check_pick_success(r["hg"], r["ag"], prediction)
+            if is_win:
+                success_count += 1
+            
+            durum_isareti = "✅" if is_win else "❌"
+            str_rep = f"{r['league']}: {r['home']} {r['score']} {r['away']} ({durum_isareti} @ {r['h']:.2f})"
+            matched_games.append(str_rep)
+            
+            if len(matched_games) >= max_matches:
                 break
-    return matches_found
+
+    total = len(matched_games)
+    # GERÇEK DNA BAŞARI SKORU HESABI
+    dna_score = (success_count / total * 100.0) if total > 0 else 50.0
+    return matched_games, dna_score
 
 def get_current_shift():
     manual = os.getenv("MANUAL_SHIFT")
-    if manual in ["night", "midday", "afternoon"]:
-        return manual
+    if manual in ["night", "midday", "afternoon"]: return manual
     now_utc = datetime.datetime.now(datetime.timezone.utc)
     tsi_hour = (now_utc.hour + 3) % 24
     if 0 <= tsi_hour < 6: return "night"
@@ -108,40 +156,7 @@ def get_progress_bar(percent):
     filled = int(round(percent / 10))
     return "🟩" * filled + "⬜" * (10 - filled)
 
-# 12:15 ORTA ANALİZ (ŞIK KART DÜZENİ)
-def build_midday_report(data):
-    today = data.get("current_date", "23.10.2026")
-    matches = data.get("matches", [])
-
-    lines = []
-    lines.append("╔════════════════════════╗")
-    lines.append("  🔍 <b>OPTAODDS ORTA ANALİZ & TUZAK SÜZGECİ</b>")
-    lines.append(f"  📅 <b>{today}</b> | ⏰ <b>12:15 TSİ Raporu</b>")
-    lines.append("╚════════════════════════╝\n")
-
-    for m in matches:
-        open_odds = m.get("opening_odds", m["odds"])
-        live_odds = m.get("current_odds", m["odds"])
-        delta = live_odds - open_odds
-
-        if delta <= -0.04:
-            durum = "🟢 <b>OYNANABİLİR</b> (Akıllı Para Düşüşü)"
-        elif -0.03 <= delta <= 0.03:
-            durum = "🟢 <b>OYNANABİLİR</b> (Stabil Değer)"
-        else:
-            durum = "🔴 <b>TUZAK ORAN / RİSKLİ</b> (Şüpheli Yükseliş)"
-
-        lines.append(f"⚽ <b>{m['match'].upper()}</b>")
-        lines.append(f"🏆 <i>{m['league']}</i> | ⏰ {m['time']}")
-        lines.append(f"🎯 <b>Tercih:</b> <code>{m['prediction']}</code>")
-        lines.append(f"📈 <b>Oran Hareketi:</b> <code>{open_odds:.2f}</code> ➔ <b><code>{live_odds:.2f}</code></b>")
-        lines.append(f"⚖️ <b>Karar:</b> {durum}")
-        lines.append("───────────────────────\n")
-
-    lines.append("<i>💡 Kırmızı etiketli maçlar saat 16:15 resmi bültenine alınmaz.</i>")
-    return "\n".join(lines).replace("& ", "ve ").replace(" &", " ve")
-
-# 16:15 RESMİ GÜNLÜK BÜLTEN (GÖZ ALICI KART DÜZENİ)
+# 16:15 RESMİ GÜNLÜK BÜLTEN
 def build_afternoon_bulletin(data):
     today = data.get("current_date", "23.10.2026")
     matches = data.get("matches", [])
@@ -149,7 +164,9 @@ def build_afternoon_bulletin(data):
     vip_picks = data.get("vip_room", [])
     surprises = data.get("surprise_picks", [])
 
-    # Canlı 15 ligden gerçek eşleşmeleri tara ve bağla
+    valid_banko_matches = []
+
+    print("Eşleşen maçların skorları taranıyor ve gerçek başarı yüzdesi hesaplanıyor...")
     for m in matches:
         parts = m.get("odds_dna", "").split("|")
         if len(parts) >= 3:
@@ -157,22 +174,34 @@ def build_afternoon_bulletin(data):
                 target_h = float(parts[0].strip())
                 target_d = float(parts[1].strip())
                 target_a = float(parts[2].strip())
-                real_h = scan_real_matches_for_odds(target_h, target_d, target_a)
+                
+                # GERÇEK MAÇLARI VE SKORA GÖRE TUTMA YÜZDESİNİ ÇEK
+                real_h, calc_dna_score = evaluate_real_dna(target_h, target_d, target_a, m["prediction"])
+                
                 if real_h:
                     m["history_matches"] = real_h
                     m["history_count"] = len(real_h)
-            except Exception:
-                pass
+                    m["dna_score"] = round(calc_dna_score, 1)
+                    
+                    # Form skoru ile bileşik güven: %85 DNA + %15 Form
+                    form_score = m.get("form_score", 75.0)
+                    m["confidence"] = round((0.85 * m["dna_score"]) + (0.15 * form_score), 1)
+
+                    # KATILIK KURALI: DNA Başarısı %65'in altında olan maç asla Banko Kupona GİREMEZ!
+                    if m["dna_score"] >= 65.0:
+                        valid_banko_matches.append(m)
+            except Exception as e:
+                print(f"Hata: {e}")
 
     lines = []
     lines.append("╔════════════════════════╗")
     lines.append("  ⚡ <b>OPTAODDS AI v5.6 RESMİ BÜLTENİ</b> ⚡")
-    lines.append(f"  📅 <b>{today}</b> | 🔬 <b>15 Lig Küresel DNA Modeli</b>")
+    lines.append(f"  📅 <b>{today}</b> | 🔬 <b>Doğrulanmış DNA Modeli</b>")
     lines.append("╚════════════════════════╝\n")
 
-    # 1. BANKO MAÇLAR
-    lines.append("👑 <b>RESMİ ONAYLI BANKO SEÇİMLER</b>\n")
-    for m in matches:
+    # 1. KANITLANMIŞ BANKO MAÇLAR
+    lines.append("👑 <b>DOĞRULANMIŞ BANKO SEÇİMLER (DNA İSPATLI)</b>\n")
+    for m in valid_banko_matches:
         bar = get_progress_bar(m['confidence'])
         hist_lines = ""
         for h in m.get("history_matches", []):
@@ -181,9 +210,9 @@ def build_afternoon_bulletin(data):
         lines.append(f"⚽ <b>{m['match'].upper()}</b>")
         lines.append(f"🏆 <i>{m['league']}</i> | ⏰ {m['time']}")
         lines.append(f"🎯 <b>Tercih:</b> <code>{m['prediction']}</code>  |  <b>Oran:</b> <code>@{m.get('current_odds', m['odds']):.2f}</code>")
-        lines.append(f"📊 <b>Bileşik Güven:</b> <b>%{m['confidence']}</b>")
+        lines.append(f"📊 <b>Gerçek DNA İsabeti:</b> %{m['dna_score']} ➔ <b>Bileşik Güven:</b> <b>%{m['confidence']}</b>")
         lines.append(f"   {bar}")
-        lines.append(f"🧬 <b>15 Ligden Gerçek Eşleşmeler:</b>\n{hist_lines}")
+        lines.append(f"🧬 <b>Eşleşen Maçlar & Tercih Doğrulaması:</b>\n{hist_lines}")
         lines.append("───────────────────────\n")
 
     # 2. VIP DEĞER ODASI
@@ -216,18 +245,24 @@ def build_afternoon_bulletin(data):
     lines.append("🌐 <b>Canlı Web Paneli:</b> alpaydnmez.github.io/optaodds-ai")
     return "\n".join(lines).replace("& ", "ve ").replace(" &", " ve")
 
+# 12:15 ORTA ANALİZ
+def build_midday_report(data):
+    today = data.get("current_date", "23.10.2026")
+    matches = data.get("matches", [])
+    lines = [f"🔍 <b>OPTAODDS ORTA ANALİZ & TUZAK SÜZGECİ ({today})</b>\n"]
+    for m in matches:
+        open_odds = m.get("opening_odds", m["odds"])
+        live_odds = m.get("current_odds", m["odds"])
+        delta = live_odds - open_odds
+        durum = "🟢 OYNANABİLİR" if delta <= 0.03 else "🔴 TUZAK ORAN"
+        lines.append(f"• <b>{m['match']}</b> | {m['prediction']}\n  Açılış: {open_odds} ➔ Anlık: {live_odds} | {durum}\n")
+    return "\n".join(lines).replace("& ", "ve ")
+
 # 01:15 GECE KARNESİ
 def build_night_audit_bulletin(data):
     today = data.get("current_date", "23.10.2026")
-    lines = []
-    lines.append("╔════════════════════════╗")
-    lines.append("  🌙 <b>OPTAODDS GECE 01:15 KARNESİ</b>")
-    lines.append(f"  📅 <b>{today}</b> | 🎯 <b>Günlük Değerlendirme</b>")
-    lines.append("╚════════════════════════╝\n")
-    lines.append("✅ <b>Biten maçlar kütüğe işlendi.</b>")
-    lines.append("📈 <b>Brier Kalibrasyonu:</b> <code>0.1235</code>")
-    lines.append("💰 <b>Rolling Kasa Tabanı:</b> <code>250,00 TL</code> korundu.")
-    return "\n".join(lines).replace("& ", "ve ").replace(" &", " ve")
+    lines = [f"🌙 <b>OPTAODDS GECE 01:15 KARNESİ ({today})</b>\n", "✅ Biten maçlar kütüğe işlendi."]
+    return "\n".join(lines)
 
 def main():
     shift = get_current_shift()
