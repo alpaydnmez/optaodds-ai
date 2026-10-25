@@ -304,4 +304,4 @@ jobs:
           git config user.name "OptaOdds AI Bot"
           git config user.email "bot@optaodds.ai"
           git add data.json
-          git diff --staged --quiet || (git commit -m "Auto-update: 25.10.2026 Pazar bulletin + 24.10.2026 archive" && git pull --rebase -X theirs origin main && git push origin main)
+          git diff --staged --quiet || (git commit -m "Auto-update: 25.10.2026 Pazar bulletin + 24.10.2026 archive" && git pull --rebase -X theirs origin main && git pull --rebase origin main && git push origin main)
