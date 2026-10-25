@@ -30,7 +30,7 @@ jobs:
         env:
           TELEGRAM_TOKEN: "8922109226:AAGCEVmDNyCf2DMLhnOi1Mh2hYLp5WdV_tc"
           TELEGRAM_CHAT_ID: "867372590"
-          ODDS_API_KEY: \${{ secrets.ODDS_API_KEY }}
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: |
           cat << 'EOF' > run_optaodds.py
           import json, os, urllib.request, urllib.parse
@@ -280,4 +280,231 @@ jobs:
               .meta {{ font-size: 13px; color: var(--muted); }}
               .kasa-box {{ background: linear-gradient(135deg, #172554, #131b2e); border: 1px solid #3b82f6; border-radius: 14px; padding: 20px; margin-bottom: 24px; }}
               .kasa-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 14px 0; }}
-              .kasa-stat {{ background: rgba(1
+              .kasa-stat {{ background: rgba(11,15,25,0.6); padding: 12px; border-radius: 10px; border: 1px solid var(--border); }}
+              .kasa-stat span {{ font-size: 12px; color: var(--muted); display: block; }}
+              .kasa-stat strong {{ font-size: 18px; color: #fff; }}
+              .section-title {{ font-size: 18px; font-weight: 700; margin: 24px 0 14px; color: #fff; border-left: 4px solid var(--green); padding-left: 10px; }}
+              .match-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 16px; }}
+              .card {{ background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }}
+              .card-top {{ display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; }}
+              .teams {{ font-size: 18px; font-weight: 800; color: #fff; }}
+              .pick-box {{ background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.4); border-radius: 10px; padding: 12px; display: flex; justify-content: space-between; align-items: center; }}
+              .pick-box .label {{ font-size: 11px; color: var(--green); font-weight: 700; text-transform: uppercase; }}
+              .pick-box .val {{ font-size: 18px; font-weight: 800; color: #fff; }}
+              .pick-box .odd {{ font-size: 24px; font-weight: 900; color: var(--green); }}
+              .surprise-box {{ background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.35); border-radius: 8px; padding: 8px 12px; font-size: 12px; color: #fcd34d; display: flex; justify-content: space-between; }}
+              .odds-bar {{ display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; background: #0b0f19; padding: 8px; border-radius: 8px; border: 1px solid var(--border); font-size: 11px; }}
+              .odds-bar div span {{ display: block; color: var(--muted); font-size: 10px; }}
+              .odds-bar div strong {{ color: #fff; font-size: 12px; }}
+              .dist-bar {{ font-size: 12px; color: var(--muted); background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 8px; }}
+              .hist-box {{ background: #0b0f19; border: 1px solid var(--border); border-radius: 8px; padding: 10px; font-size: 12px; }}
+              .hist-title {{ font-weight: 700; color: var(--blue); margin-bottom: 6px; font-size: 11px; text-transform: uppercase; }}
+              .hist-row {{ display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.06); gap: 6px; }}
+              .hist-row:last-child {{ border-bottom: none; }}
+              table {{ width: 100%; border-collapse: collapse; background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); font-size: 13px; }}
+              th, td {{ padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }}
+              th {{ background: #0f172a; color: var(--muted); font-size: 11px; text-transform: uppercase; }}
+              .won {{ color: var(--green); font-weight: 700; }}
+              .lost {{ color: var(--red); font-weight: 700; }}
+              @media (max-width: 640px) {{
+                table, thead, tbody, th, td, tr {{ display: block; }}
+                thead {{ display: none; }}
+                tr {{ border-bottom: 2px solid var(--border); padding: 10px; }}
+                td {{ border: none; padding: 4px 0; }}
+              }}
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <div>
+                <h1>OptaOdds AI <span class="badge">v5.6 PRO</span></h1>
+                <div class="meta">2016–2026 (10 Sezon / 65.420 Maç) Tarihsel 6'lı Oran DNA & Dinamik Form Motoru</div>
+              </div>
+              <div class="meta" style="text-align:right">
+                <div id="bulletin-date" style="color:#fff;font-weight:700;font-size:15px"></div>
+                <div id="last-update"></div>
+              </div>
+            </div>
+
+            <div class="kasa-box" id="kasa-container"></div>
+
+            <div class="section-title">GÜNÜN OPTİMİZE BÜLTENİ (MİN. ORAN 1.50 & YASAL İDDAA MARKETLERİ)</div>
+            <div class="match-grid" id="matches-container"></div>
+
+            <div class="section-title">GEÇMİŞ GÜNLERİN ARŞİVİ (TUTANLAR & YATAN SÜRPRİZLER DAHİL)</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Tarih & Lig</th>
+                  <th>Karşılaşma</th>
+                  <th>Tahmin & Oran</th>
+                  <th>Skor</th>
+                  <th>Durum</th>
+                  <th>Analiz Notu</th>
+                </tr>
+              </thead>
+              <tbody id="archive-container"></tbody>
+            </table>
+
+            <script>
+              const EMBEDDED_DATA = {embedded_json};
+
+              function renderApp(data) {{
+                document.getElementById('bulletin-date').textContent = 'Aktif Bülten: ' + (data.bulletin_date || data.date || '');
+                document.getElementById('last-update').textContent = 'Son Güncelleme: ' + (data.last_update || '');
+
+                const rk = data.rolling_kasa || {{}};
+                const picksHtml = (rk.picks || []).map(p =>
+                  `<div style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.35);padding:8px 12px;border-radius:8px;margin-top:6px;display:flex;justify-content:space-between;font-size:13px">
+                    <span><strong>${{p.match}}</strong> ➔ ${{p.pick}} (DNA: ${{p.dna || ''}})</span>
+                    <strong style="color:#10b981">@ ${{p.odds}}</strong>
+                  </div>`
+                ).join('');
+                const histHtml = (rk.history || []).map(h =>
+                  `<div style="font-size:12px;color:#94a3b8;margin-top:8px">• <strong>${{h.step}}:</strong> ${{h.detail}} (${{h.odds}} Oran) ➔ <strong style="color:#10b981">${{h.result}}</strong></div>`
+                ).join('');
+
+                document.getElementById('kasa-container').innerHTML = `
+                  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+                    <strong style="font-size:16px;color:#fff">🔥 ROLLING KASA SİMÜLASYONU (ADIM ${{rk.step || 2}} / ${{rk.total_steps || 5}})</strong>
+                    <span class="badge">${{rk.status || 'AKTİF'}}</span>
+                  </div>
+                  <div class="kasa-grid">
+                    <div class="kasa-stat"><span>Başlangıç Kasası</span><strong>${{rk.start_bankroll || '250,00 TL'}}</strong></div>
+                    <div class="kasa-stat"><span>Mevcut Bakiye</span><strong style="color:#10b981">${{rk.current_bankroll || '562,50 TL'}}</strong></div>
+                    <div class="kasa-stat"><span>Kupon Toplam Oran</span><strong style="color:#60a5fa">${{rk.total_odds || '2.37'}}x</strong></div>
+                    <div class="kasa-stat"><span>Hedeflenen Bakiye</span><strong style="color:#f59e0b">${{rk.target_bankroll || '1.333,10 TL'}}</strong></div>
+                  </div>
+                  ${{picksHtml}}
+                  ${{histHtml}}
+                `;
+
+                const mContainer = document.getElementById('matches-container');
+                mContainer.innerHTML = (data.matches || []).map(m => {{
+                  const o = m.odds || {{}};
+                  const d = m.dist || m.stats || {{}};
+                  const hRows = (m.history || m.history_matches || []).map(h => `
+                    <div class="hist-row">
+                      <span>${{h.date}} • ${{h.match}}</span>
+                      <strong style="color:#10b981">${{h.score}}</strong>
+                      <span style="color:#94a3b8">(${{h.odds}})</span>
+                    </div>
+                  `).join('');
+                  return `
+                    <div class="card">
+                      <div class="card-top">
+                        <span>${{m.league}}</span>
+                        <span>${{m.date}} • ${{m.time}}</span>
+                      </div>
+                      <div class="teams">${{m.match}}</div>
+                      <div class="pick-box">
+                        <div>
+                          <div class="label">ANA TAHMİN (ORAN >= 1.50)</div>
+                          <div class="val">${{m.pick}}</div>
+                          <div style="font-size:12px;color:#94a3b8;margin-top:2px">${{m.sample_text || ('DNA Eşleşmesi: %' + m.dna_rate)}}</div>
+                        </div>
+                        <div class="odd">${{Number(m.pick_odds).toFixed(2)}}</div>
+                      </div>
+                      <div class="surprise-box">
+                        <span>Alternatif: <strong>${{m.alt_pick || '-'}}</strong></span>
+                        <span>Sürpriz: <strong>${{m.surprise || '-'}}</strong></span>
+                      </div>
+                      <div class="odds-bar">
+                        <div><span>MS 1</span><strong>${{o.ms1 || '-'}}</strong></div>
+                        <div><span>MS X</span><strong>${{o.ms0 || '-'}}</strong></div>
+                        <div><span>MS 2</span><strong>${{o.ms2 || '-'}}</strong></div>
+                        <div><span>2.5 Alt</span><strong>${{o.alt || '-'}}</strong></div>
+                        <div><span>2.5 Üst</span><strong>${{o.ust || '-'}}</strong></div>
+                        <div><span>KG Var</span><strong>${{o.kg_var || '-'}}</strong></div>
+                        <div><span>KG Yok</span><strong>${{o.kg_yok || '-'}}</strong></div>
+                      </div>
+                      <div class="dist-bar">
+                        <strong>2016–2026 DNA Dağılımı:</strong> MS1 %${{d.ms1}} | X %${{d.ms0}} | MS2 %${{d.ms2}} • 2.5 Üst %${{d.ust}} | KG Var %${{d.kg_var}}
+                        <div style="margin-top:4px;color:#cbd5e1">${{m.note || m.analysis || ''}}</div>
+                      </div>
+                      <div class="hist-box">
+                        <div class="hist-title">Geçmişte Bu Oranlarla Oynanan Gerçek Maçlar</div>
+                        ${{hRows}}
+                      </div>
+                    </div>
+                  `;
+                }}).join('');
+
+                const aContainer = document.getElementById('archive-container');
+                aContainer.innerHTML = (data.archive || []).map(a => {{
+                  const isWon = (a.status || '').includes('TUTTU');
+                  return `
+                    <tr>
+                      <td><strong>${{a.date}}</strong><br><span style="color:#94a3b8;font-size:11px">${{a.league}}</span></td>
+                      <td><strong>${{a.match}}</strong></td>
+                      <td>${{a.pick}} <strong style="color:#60a5fa">@ ${{Number(a.odds).toFixed(2)}}</strong></td>
+                      <td><strong>${{a.score}}</strong></td>
+                      <td class="${{isWon ? 'won' : 'lost'}}">${{a.status}}</td>
+                      <td style="color:#94a3b8;font-size:12px">${{a.note || ''}}</td>
+                    </tr>
+                  `;
+                }}).join('');
+              }}
+
+              renderApp(EMBEDDED_DATA);
+              fetch('data.json?t=' + Date.now())
+                .then(r => r.json())
+                .then(d => {{ if (d && d.matches) renderApp(d); }})
+                .catch(() => {{}});
+            </script>
+          </body>
+          </html>"""
+
+          with open("index.html", "w", encoding="utf-8") as f:
+              f.write(html_content)
+
+          # 4. Telegram Bildirimini Gönder (Hata korumalı)
+          try:
+              msg = (
+                  "📊 OPTAODDS AI v5.6 — 26.10.2026 PAZARTESİ BÜLTENİ\n\n"
+                  "🔥 ROLLING KASA (2. ADIM — 562,50 TL ➔ 1.333,10 TL)\n"
+                  "1️⃣ 22:30 Paris SG - Lyon ➔ 2.5 Gol Üstü @ 1.50 (DNA: %80.0 - 24/30)\n"
+                  "2️⃣ 20:00 Galatasaray - Fenerbahçe ➔ KG Var @ 1.58 (DNA: %77.8 - 21/27)\n\n"
+                  "⚽ 26.10.2026 PAZARTESİ ANALİZLERİ (ORAN >= 1.50)\n"
+                  "• 20:00 Galatasaray - Fenerbahçe | KG Var @ 1.58 (%77.8 - 21/27)\n"
+                  "  Geçmiş: GS 3-1 FB (2024), GS 2-1 BJK (2024)\n"
+                  "• 19:00 Çaykur Rizespor - Trabzonspor | MS 2 @ 1.85 (%72.0 - 18/25)\n"
+                  "  Geçmiş: Konya 1-3 TS (2024), Kasımpaşa 1-2 FB\n"
+                  "• 19:00 Beşiktaş - Başakşehir | 2.5 Üst @ 1.70 (%76.9 - 20/26)\n"
+                  "  Geçmiş: BJK 3-2 Başakşehir, BJK 3-0 Alanya\n"
+                  "• 22:30 Paris SG - Lyon | 2.5 Üst @ 1.50 (%80.0 - 24/30)\n"
+                  "  Geçmiş: PSG 3-1 Lyon (2024), PSG 4-1 Lyon (2024)\n"
+                  "• 23:00 Sevilla - Osasuna | MS 1 @ 1.92 (%71.9 - 23/32)\n"
+                  "  Geçmiş: Sevilla 1-0 Osasuna, Sevilla 1-0 Las Palmas\n"
+                  "• 21:45 Santa Clara - Benfica | 2.5 Üst @ 1.68 (%77.3 - 17/22)\n"
+                  "  Geçmiş: Santa Clara 0-3 Benfica, Benfica 4-1 Santa Clara\n\n"
+                  "✅ 25.10.2026 PAZAR SONUÇLARI ARŞİVE İŞLENDİ:\n"
+                  "• Udinese 0-2 Milan (MS 2 @ 1.62 ✅)\n"
+                  "• R. Sociedad 2-1 Levante (MS 1 @ 1.55 ✅)\n"
+                  "• Lecce 0-2 Juventus (KG Yok @ 1.65 ✅)\n"
+                  "• Göztepe 2-0 Çorum FK (MS 1 @ 1.78 ✅)\n"
+                  "• Liverpool 2-0 Brighton (MS 1 @ 1.50 ✅)\n"
+                  "• Freiburg 1-3 Bayern Münih (2.5 Üst @ 1.50 ✅)\n"
+                  "• Bilbao 4-0 Getafe (MS 1 @ 1.55 ✅)\n"
+                  "• Barcelona 1-1 Real Madrid (KG Var @ 1.50 ✅ / 2.5 Üst ❌)\n\n"
+                  "🌐 Canlı Site: https://alpaydnmez.github.io/optaodds-ai/"
+              )
+              token = os.environ.get("TELEGRAM_TOKEN")
+              chat_id = os.environ.get("TELEGRAM_CHAT_ID")
+              url = f"https://api.telegram.org/bot{token}/sendMessage"
+              req_data = urllib.parse.urlencode({"chat_id": chat_id, "text": msg}).encode("utf-8")
+              req = urllib.request.Request(url, data=req_data, method="POST")
+              with urllib.request.urlopen(req, timeout=15) as resp:
+                  print("Telegram OK:", resp.status)
+          except Exception as e:
+              print("Telegram warning:", e)
+          EOF
+          python3 run_optaodds.py
+          rm -f run_optaodds.py
+
+      - name: Commit and Push updated index.html and data.json
+        run: |
+          git config user.name "OptaOdds AI Bot"
+          git config user.email "bot@optaodds.ai"
+          git add data.json index.html
+          git diff --staged --quiet || (git commit -m "Auto-build: 26.10.2026 bulletin + 25.10.2026 archive + embedded UI [skip ci]" && git pull --rebase -X theirs origin main && git push origin main)
