@@ -1,22 +1,23 @@
-name: OptaOdds AI Daily Engine
+name: OptaOdds Auto Bulletin & Telegram Bot
 
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
+    paths:
+      - 'data.json'
+      - '.github/workflows/optaodds.yml'
   schedule:
-    - cron: '15 22 * * *'
-    - cron: '15 9 * * *'
-    - cron: '15 13 * * *'
+    - cron: '0 9 * * *'
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  build-and-deploy:
+  run-bot:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -26,485 +27,77 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Run Engine, Rebuild data.json + index.html & Send Telegram
+      - name: Sync & Push Repository Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+          git add -A
+          git diff --staged --quiet || (git commit -m "chore: auto-sync OptaOdds bulletin" && git push origin main)
+
+      - name: Send Automated Telegram Notification from data.json
         env:
-          TELEGRAM_TOKEN: "8922109226:AAGCEVmDNyCf2DMLhnOi1Mh2hYLp5WdV_tc"
-          TELEGRAM_CHAT_ID: "867372590"
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          TG_TOKEN: "8922109226:AAGCEVmDNyCf2DMLhnOi1Mh2hYLp5WdV_tc"
+          TG_CHAT_ID: "867372590"
         run: |
-          cat << 'EOF' > run_optaodds.py
-          import json, os, urllib.request, urllib.parse
-          from datetime import datetime, timedelta, timezone
+          python3 - << 'EOF'
+          import json, os, urllib.request
 
-          tsi = timezone(timedelta(hours=3))
-          now_tsi = datetime.now(tsi)
-          today_str = now_tsi.strftime("%d.%m.%Y")
+          with open("data.json", "r", encoding="utf-8") as f:
+              data = json.load(f)
 
-          # 1. Mevcut arşivi oku ve 19-25 Ekim gerçek sonuçlarını koru
-          existing_archive = []
-          if os.path.exists("data.json"):
-              try:
-                  with open("data.json", "r", encoding="utf-8") as f:
-                      old_data = json.load(f)
-                      if isinstance(old_data.get("archive"), list):
-                          existing_archive = old_data["archive"]
-              except Exception:
-                  pass
+          b_date = data.get("bulletin_date", data.get("date", "Güncel Bülten"))
+          matches = data.get("matches", [])
+          rk = data.get("rolling_kasa", {})
+          archive = data.get("archive", [])
 
-          core_archive = [
-              # 25.10.2026 Pazar Sonuçları
-              {"date": "25.10.2026", "league": "Serie A", "match": "Udinese - AC Milan", "pick": "MS 2", "odds": 1.62, "score": "0-2 (İY 0-1)", "status": "TUTTU ✅", "note": "Oran DNA %75.0 (21/28) eşleşmesiyle Milan net kazandı."},
-              {"date": "25.10.2026", "league": "La Liga", "match": "Barcelona - Real Madrid", "pick": "KG Var / 2.5 Üst", "odds": 1.52, "score": "1-1 (İY 0-1)", "status": "YATTI ❌", "note": "KG Var (@1.50) 61. dakikada geldi ancak maç 1-1 bittiği için 2.5 Üst (@1.52) yattı."},
-              {"date": "25.10.2026", "league": "La Liga", "match": "Real Sociedad - Levante", "pick": "MS 1", "odds": 1.55, "score": "2-1 (İY 1-0)", "status": "TUTTU ✅", "note": "Oran DNA %74.2 (23/31) eşleşmesiyle ev sahibi kazandı."},
-              {"date": "25.10.2026", "league": "Serie A", "match": "Lecce - Juventus", "pick": "KG Yok", "odds": 1.65, "score": "0-2 (İY 0-1)", "status": "TUTTU ✅", "note": "Oran DNA %76.9 (20/26) KG Yok kalıbı birebir çalıştı."},
-              {"date": "25.10.2026", "league": "Süper Lig", "match": "Göztepe - Çorum FK", "pick": "MS 1", "odds": 1.78, "score": "2-0 (İY 2-0)", "status": "TUTTU ✅", "note": "Göztepe ilk yarıdan 2-0 ile fişi çekti."},
-              {"date": "25.10.2026", "league": "Premier League", "match": "Liverpool - Brighton", "pick": "MS 1", "odds": 1.50, "score": "2-0 (İY 1-0)", "status": "TUTTU ✅", "note": "Anfield favori DNA'sı (%77.3) hatasız çalıştı."},
-              {"date": "25.10.2026", "league": "Bundesliga", "match": "Freiburg - Bayern Münih", "pick": "2.5 Gol Üstü", "odds": 1.50, "score": "1-3 (İY 0-2)", "status": "TUTTU ✅", "note": "%80.0 (20/25) 2.5 Üst DNA kalıbı rahat geldi."},
-              {"date": "25.10.2026", "league": "La Liga", "match": "Athletic Bilbao - Getafe", "pick": "MS 1", "odds": 1.55, "score": "4-0 (İY 2-0)", "status": "TUTTU ✅", "note": "Akıllı para girişiyle desteklenen Bilbao farklı kazandı."},
-              {"date": "25.10.2026", "league": "Premier League", "match": "Sunderland - Leeds United", "pick": "KG Var", "odds": 1.72, "score": "0-0 (İY 0-0)", "status": "YATTI ❌", "note": "Sürpriz alternatif olan MS X (@3.10) gerçekleşti, gol çıkmadı."},
-              {"date": "25.10.2026", "league": "Premier League", "match": "Man United - Bournemouth", "pick": "MS 1", "odds": 2.10, "score": "0-3 (İY 0-1)", "status": "YATTI ❌", "note": "Deplasman sürprizi (MS 2 @ 3.00) gerçekleşti."},
-              # 24.10.2026 Cumartesi Sonuçları
-              {"date": "24.10.2026", "league": "Premier League", "match": "Arsenal - Everton", "pick": "MS 1", "odds": 1.52, "score": "2-0 (İY 1-0)", "status": "TUTTU ✅", "note": "Banko DNA eşleşmesiyle rahat kazandı."},
-              {"date": "24.10.2026", "league": "Premier League", "match": "Aston Villa - Man City", "pick": "2.5 Gol Üstü", "odds": 1.58, "score": "2-1 (İY 1-0)", "status": "TUTTU ✅", "note": "2.5 Üst ve KG Var geldi; MS 2 (@1.75) yattı."},
-              {"date": "24.10.2026", "league": "Premier League", "match": "Chelsea - Tottenham", "pick": "2.5 Gol Üstü", "odds": 1.55, "score": "0-2 (İY 0-1)", "status": "YATTI ❌", "note": "Sürpriz MS 2 (@3.40) geldi, 2.5 Üst yattı."},
-              {"date": "24.10.2026", "league": "Bundesliga", "match": "Borussia Dortmund - E. Frankfurt", "pick": "MS 1", "odds": 1.65, "score": "1-0 (İY 0-0)", "status": "TUTTU ✅", "note": "Dortmund iç saha DNA kalıbıyla kazandı."},
-              {"date": "24.10.2026", "league": "Bundesliga", "match": "Mainz 05 - Werder Bremen", "pick": "KG Var", "odds": 1.62, "score": "2-3 (İY 1-1)", "status": "TUTTU ✅", "note": "İlk yarıdan KG Var tamamlandı."},
-              {"date": "24.10.2026", "league": "Serie A", "match": "Napoli - Roma", "pick": "KG Var", "odds": 1.80, "score": "3-3 (İY 1-2)", "status": "TUTTU ✅", "note": "6 gollü derbide KG Var rahat geldi."},
-              {"date": "24.10.2026", "league": "Serie A", "match": "Lazio - Parma", "pick": "MS 1", "odds": 1.55, "score": "2-1 (İY 1-0)", "status": "TUTTU ✅", "note": "Lazio iç saha favorisi olarak kazandı."},
-              {"date": "24.10.2026", "league": "La Liga", "match": "Valencia - Villarreal", "pick": "KG Var", "odds": 1.72, "score": "1-2 (İY 1-1)", "status": "TUTTU ✅", "note": "İlk yarıdan karşılıklı goller geldi."},
-              {"date": "24.10.2026", "league": "Ligue 1", "match": "Lens - Paris FC", "pick": "MS 1", "odds": 1.60, "score": "2-1 (İY 1-0)", "status": "TUTTU ✅", "note": "Ev sahibi DNA kalıbıyla kazandı."},
-              {"date": "24.10.2026", "league": "Süper Lig", "match": "Eyüpspor - Kasımpaşa", "pick": "2.5 Gol Üstü", "odds": 1.70, "score": "0-1 (İY 0-0)", "status": "YATTI ❌", "note": "Tek gollü maçta üst baremi yattı."},
-              {"date": "24.10.2026", "league": "Süper Lig", "match": "Gaziantep FK - Erzurumspor FK", "pick": "KG Var", "odds": 1.75, "score": "1-3 (İY 1-1)", "status": "TUTTU ✅", "note": "İlk yarıdan KG Var geldi."},
-              # 23.10.2026 Cuma Sonuçları (Yatan Sürprizler Dahil)
-              {"date": "23.10.2026", "league": "Bundesliga", "match": "VfB Stuttgart - B. M'gladbach", "pick": "2.5 Gol Üstü", "odds": 1.50, "score": "2-3 (İY 1-2)", "status": "TUTTU ✅", "note": "Rolling Kasa 1. Adım maçı kazandı | Sürpriz İY 0 / MS 1 (@4.50) YATTI ❌"},
-              {"date": "23.10.2026", "league": "Eredivisie", "match": "Go Ahead Eagles - Telstar", "pick": "MS 1", "odds": 1.50, "score": "3-2 (İY 2-1)", "status": "TUTTU ✅", "note": "Rolling Kasa 1. Adım maçı kazandı."},
-              {"date": "23.10.2026", "league": "Serie A", "match": "Torino - Monza", "pick": "MS 1", "odds": 1.85, "score": "3-2 (İY 1-1)", "status": "TUTTU ✅", "note": "Torino iç sahada 3 puanı aldı."},
-              {"date": "23.10.2026", "league": "Championship", "match": "Bolton - Middlesbrough", "pick": "MS 2", "odds": 1.50, "score": "1-5 (İY 0-3)", "status": "TUTTU ✅", "note": "Deplasman favorisi farklı kazandı."},
-              {"date": "23.10.2026", "league": "Ligue 1", "match": "Brest - Nice", "pick": "KG Var", "odds": 1.95, "score": "1-2 (İY 1-1)", "status": "TUTTU ✅", "note": "İlk yarıdan KG Var geldi."},
-              {"date": "23.10.2026", "league": "Primeira Liga", "match": "Vitória SC - Marítimo", "pick": "MS 1", "odds": 1.57, "score": "2-0 (İY 1-0)", "status": "TUTTU ✅", "note": "Ana tahmin tuttu | Sürpriz İY X / MS 1 (@4.20) YATTI ❌"},
-              {"date": "23.10.2026", "league": "Süper Lig", "match": "Alanyaspor - Kocaelispor", "pick": "MS 1", "odds": 1.80, "score": "1-2 (İY 0-1)", "status": "YATTI ❌", "note": "Kocaelispor deplasmanda sürpriz yaptı."},
-              {"date": "23.10.2026", "league": "La Liga", "match": "Deportivo Alavés - Málaga", "pick": "MS 1", "odds": 1.72, "score": "1-1 (İY 1-0)", "status": "YATTI ❌", "note": "Son dakika golüyle beraberlik çıktı."},
-              {"date": "23.10.2026", "league": "Premier League", "match": "Ipswich Town - Nottingham Forest", "pick": "Sürpriz İY 1 / MS X", "odds": 14.00, "score": "1-1 (İY 0-1)", "status": "YATTI ❌", "note": "Maç 1-1 bitti ancak ilk yarıyı Forest önde kapattığı için İY 1/MS X yattı."},
-              {"date": "23.10.2026", "league": "Eerste Divisie", "match": "De Graafschap - RKC Waalwijk", "pick": "2.5 Gol Üstü", "odds": 1.70, "score": "2-2 (İY 1-1)", "status": "TUTTU ✅", "note": "4 gollü maçta üst baremi rahat geldi."}
-          ]
+          lines = [f"📊 <b>OPTAODDS AI — {b_date.upper()} (ORAN DNA)</b>\n"]
 
-          seen_keys = set()
-          final_archive = []
-          for item in core_archive + existing_archive:
-              m_name = item.get("match") or f"{item.get('home', '')} - {item.get('away', '')}"
-              key = (item.get("date", ""), m_name)
-              if key not in seen_keys and m_name.strip(" -"):
-                  seen_keys.add(key)
-                  final_archive.append({
-                      "date": item.get("date", ""),
-                      "league": item.get("league", ""),
-                      "match": m_name,
-                      "pick": item.get("pick") or item.get("prediction", ""),
-                      "odds": item.get("odds") or item.get("pick_odds", 1.50),
-                      "score": item.get("score") or item.get("ft_score", "-"),
-                      "status": item.get("status", "TUTTU ✅" if item.get("won", True) else "YATTI ❌"),
-                      "note": item.get("note", "")
-                  })
+          if archive:
+              latest_date = archive[0].get("date", "")
+              latest_arch = [a for a in archive if a.get("date") == latest_date]
+              hits = sum(1 for a in latest_arch if a.get("won") or "✅" in str(a.get("status", "")))
+              lines.append(f"✅ <b>{latest_date} Arşiv Özeti ({hits}/{len(latest_arch)} İsabet):</b>")
+              for a in latest_arch[:12]:
+                  m_name = a.get("match") or f"{a.get('home','')} - {a.get('away','')}"
+                  score = a.get("score") or a.get("ft_score", "")
+                  pick = a.get("pick") or a.get("prediction", "")
+                  status = a.get("status") or ("TUTTU ✅" if a.get("won") else "YATTI ❌")
+                  lines.append(f"• {m_name} ({score}) | {pick} ➡️ {status}")
+              lines.append("")
 
-          # 2. Günün (26.10.2026 Pazartesi) Gerçek Maçları, 6'lı Oranları ve Geçmiş Eşleşme Maçları
-          matches_today = [
-              {
-                  "date": "26.10.2026",
-                  "time": "20:00",
-                  "league": "Trendyol Süper Lig",
-                  "match": "Galatasaray - Fenerbahçe",
-                  "pick": "KG Var",
-                  "pick_odds": 1.58,
-                  "alt_pick": "2.5 Gol Üstü @ 1.68",
-                  "surprise": "İY X / MS 1 @ 5.20",
-                  "dna_rate": 77.8,
-                  "sample_text": "27 Eşleşmede 21 Kez KG Var (%77.8)",
-                  "odds": {"ms1": 2.18, "ms0": 3.80, "ms2": 3.00, "alt": 2.15, "ust": 1.68, "kg_var": 1.58, "kg_yok": 2.25},
-                  "dist": {"ms1": 48, "ms0": 26, "ms2": 26, "ust": 70, "alt": 30, "kg_var": 78, "kg_yok": 22},
-                  "note": "2016-2026 kütüğünde 2.18 - 3.80 - 3.00 derbi oran kalıbıyla oynanan 27 maçın 21'inde (%77.8) karşılıklı gol (KG Var), 19'unda (%70.4) 2.5 Üst gerçekleşti.",
-                  "history": [
-                      {"date": "21.09.2024", "league": "Süper Lig", "match": "Galatasaray - Fenerbahçe", "score": "3-1 (İY 2-0)", "odds": "2.20 | 3.60 | 3.10"},
-                      {"date": "28.10.2024", "league": "Süper Lig", "match": "Galatasaray - Beşiktaş", "score": "2-1 (İY 1-0)", "odds": "2.15 | 3.75 | 3.05"},
-                      {"date": "28.04.2024", "league": "Premier League", "match": "Tottenham - Arsenal", "score": "2-3 (İY 0-3)", "odds": "3.00 | 3.80 | 2.15"},
-                      {"date": "28.04.2018", "league": "Serie A", "match": "Inter - Juventus", "score": "2-3 (İY 0-1)", "odds": "2.18 | 3.70 | 3.00"}
-                  ]
-              },
-              {
-                  "date": "26.10.2026",
-                  "time": "19:00",
-                  "league": "Trendyol Süper Lig",
-                  "match": "Çaykur Rizespor - Trabzonspor",
-                  "pick": "MS 2",
-                  "pick_odds": 1.85,
-                  "alt_pick": "KG Var @ 1.68",
-                  "surprise": "MS 2 & KG Var @ 3.40",
-                  "dna_rate": 72.0,
-                  "sample_text": "25 Eşleşmede 18 Kez MS 2 (%72.0)",
-                  "odds": {"ms1": 3.30, "ms0": 3.50, "ms2": 1.85, "alt": 2.00, "ust": 1.78, "kg_var": 1.68, "kg_yok": 2.08},
-                  "dist": {"ms1": 12, "ms0": 16, "ms2": 72, "ust": 68, "alt": 32, "kg_var": 76, "kg_yok": 24},
-                  "note": "3.30 - 3.50 - 1.85 Karadeniz ve Süper Lig deplasman favorisi DNA kalıbındaki 25 maçın 18'ini (%72.0) deplasman ekibi kazandı.",
-                  "history": [
-                      {"date": "03.04.2024", "league": "Süper Lig", "match": "Konyaspor - Trabzonspor", "score": "1-3 (İY 0-1)", "odds": "3.25 | 3.45 | 1.85"},
-                      {"date": "15.03.2021", "league": "Süper Lig", "match": "Kasımpaşa - Fenerbahçe", "score": "1-2 (İY 0-2)", "odds": "3.30 | 3.50 | 1.85"},
-                      {"date": "21.01.2024", "league": "Süper Lig", "match": "Hatayspor - Alanyaspor", "score": "1-2 (İY 1-1)", "odds": "3.30 | 3.50 | 1.85"}
-                  ]
-              },
-              {
-                  "date": "26.10.2026",
-                  "time": "19:00",
-                  "league": "Trendyol Süper Lig",
-                  "match": "Beşiktaş - Başakşehir",
-                  "pick": "2.5 Gol Üstü",
-                  "pick_odds": 1.70,
-                  "alt_pick": "MS 1 @ 1.52",
-                  "surprise": "İY 1 / MS 1 @ 2.25",
-                  "dna_rate": 76.9,
-                  "sample_text": "26 Eşleşmede 20 Kez 2.5 Üst (%76.9)",
-                  "odds": {"ms1": 1.52, "ms0": 4.75, "ms2": 6.00, "alt": 2.10, "ust": 1.70, "kg_var": 1.78, "kg_yok": 1.95},
-                  "dist": {"ms1": 73, "ms0": 15, "ms2": 12, "ust": 77, "alt": 23, "kg_var": 65, "kg_yok": 35},
-                  "note": "1.52 - 4.75 - 6.00 oran diziliminde oynanan 26 maçın 20'si (%76.9) en az 3 golle (2.5 Üst) tamamlandı.",
-                  "history": [
-                      {"date": "12.03.2021", "league": "Süper Lig", "match": "Beşiktaş - Başakşehir", "score": "3-2 (İY 1-0)", "odds": "1.55 | 4.20 | 5.50"},
-                      {"date": "27.01.2023", "league": "Süper Lig", "match": "Beşiktaş - Alanyaspor", "score": "3-0 (İY 1-0)", "odds": "1.52 | 4.50 | 5.75"},
-                      {"date": "07.01.2024", "league": "Süper Lig", "match": "Galatasaray - Konyaspor", "score": "3-0 (İY 0-0)", "odds": "1.50 | 4.60 | 6.00"}
-                  ]
-              },
-              {
-                  "date": "26.10.2026",
-                  "time": "22:30",
-                  "league": "Fransa Ligue 1",
-                  "match": "Paris SG - Lyon",
-                  "pick": "2.5 Gol Üstü",
-                  "pick_odds": 1.50,
-                  "alt_pick": "KG Var @ 1.62",
-                  "surprise": "İY 1 / MS 1 @ 2.10",
-                  "dna_rate": 80.0,
-                  "sample_text": "30 Eşleşmede 24 Kez 2.5 Üst (%80.0)",
-                  "odds": {"ms1": 1.45, "ms0": 5.10, "ms2": 6.20, "alt": 2.55, "ust": 1.50, "kg_var": 1.62, "kg_yok": 2.20},
-                  "dist": {"ms1": 77, "ms0": 13, "ms2": 10, "ust": 80, "alt": 20, "kg_var": 73, "kg_yok": 27},
-                  "note": "MS 1 oranı 1.45 ile 1.50 taban kuralının altında kaldığı için elendi; 1.45 - 5.10 - 6.20 kalıbındaki 30 maçın 24'ü (%80.0) 2.5 Üst bitti.",
-                  "history": [
-                      {"date": "15.12.2024", "league": "Ligue 1", "match": "Paris SG - Lyon", "score": "3-1 (İY 2-1)", "odds": "1.44 | 5.00 | 6.25"},
-                      {"date": "21.04.2024", "league": "Ligue 1", "match": "Paris SG - Lyon", "score": "4-1 (İY 4-1)", "odds": "1.45 | 5.10 | 6.00"},
-                      {"date": "03.02.2024", "league": "Bundesliga", "match": "Bayern Münih - M'gladbach", "score": "3-1 (İY 1-1)", "odds": "1.45 | 5.00 | 6.20"}
-                  ]
-              },
-              {
-                  "date": "26.10.2026",
-                  "time": "23:00",
-                  "league": "İspanya La Liga",
-                  "match": "Sevilla - Osasuna",
-                  "pick": "MS 1",
-                  "pick_odds": 1.92,
-                  "alt_pick": "2.5 Gol Altı @ 1.68",
-                  "surprise": "İY X / MS 1 @ 4.50",
-                  "dna_rate": 71.9,
-                  "sample_text": "32 Eşleşmede 23 Kez MS 1 (%71.9)",
-                  "odds": {"ms1": 1.92, "ms0": 3.40, "ms2": 4.30, "alt": 1.68, "ust": 2.12, "kg_var": 1.95, "kg_yok": 1.80},
-                  "dist": {"ms1": 72, "ms0": 19, "ms2": 9, "ust": 25, "alt": 75, "kg_var": 38, "kg_yok": 62},
-                  "note": "1.92 - 3.40 - 4.30 La Liga düşük baremli ev favorisi kalıbında 32 maçın 23'ünü (%71.9) ev sahibi kazandı, 24'ü (%75.0) 2.5 Alt bitti.",
-                  "history": [
-                      {"date": "07.11.2020", "league": "La Liga", "match": "Sevilla - Osasuna", "score": "1-0 (İY 0-0)", "odds": "1.90 | 3.40 | 4.33"},
-                      {"date": "16.09.2023", "league": "La Liga", "match": "Sevilla - Las Palmas", "score": "1-0 (İY 0-0)", "odds": "1.92 | 3.35 | 4.30"},
-                      {"date": "05.11.2023", "league": "La Liga", "match": "Valencia - Granada", "score": "1-0 (İY 1-0)", "odds": "1.90 | 3.40 | 4.25"}
-                  ]
-              },
-              {
-                  "date": "26.10.2026",
-                  "time": "21:45",
-                  "league": "Portekiz Primeira Liga",
-                  "match": "Santa Clara - Benfica",
-                  "pick": "2.5 Gol Üstü",
-                  "pick_odds": 1.68,
-                  "alt_pick": "KG Yok @ 1.80",
-                  "surprise": "İY 2 / MS 2 @ 1.95",
-                  "dna_rate": 77.3,
-                  "sample_text": "22 Eşleşmede 17 Kez 2.5 Üst (%77.3)",
-                  "odds": {"ms1": 8.50, "ms0": 4.50, "ms2": 1.36, "alt": 2.15, "ust": 1.68, "kg_var": 1.95, "kg_yok": 1.80},
-                  "dist": {"ms1": 5, "ms0": 13, "ms2": 82, "ust": 77, "alt": 23, "kg_var": 41, "kg_yok": 59},
-                  "note": "MS 2 oranı 1.36 ile <1.50 olduğu için elendi; aynı DNA kalıbındaki 22 maçın 17'si (%77.3) 2.5 Gol Üstü tamamlandı.",
-                  "history": [
-                      {"date": "21.01.2023", "league": "Primeira Liga", "match": "Santa Clara - Benfica", "score": "0-3 (İY 0-2)", "odds": "8.50 | 4.50 | 1.36"},
-                      {"date": "14.09.2024", "league": "Primeira Liga", "match": "Benfica - Santa Clara", "score": "4-1 (İY 2-1)", "odds": "1.35 | 4.60 | 8.50"},
-                      {"date": "20.02.2023", "league": "Primeira Liga", "match": "Chaves - Sporting CP", "score": "2-3 (İY 1-1)", "odds": "8.00 | 4.50 | 1.38"}
-                  ]
-              }
-          ]
+          lines.append("🔥 <b>GÜNÜN AKTİF BÜLTENİ:</b>")
+          for m in matches:
+              m_name = m.get("match") or f"{m.get('home','')} - {m.get('away','')}"
+              t = m.get("time", "")
+              lg = m.get("league", "")
+              pick = m.get("pick") or m.get("prediction", "")
+              odds = m.get("odds_val") or m.get("pick_odds") or (m.get("odds") if isinstance(m.get("odds"), (int, float)) else "")
+              dna = m.get("dna_rate") or m.get("confidence", "")
+              lines.append(f"• {t} | <b>{m_name}</b> ({lg})\n  🎯 <b>{pick} @ {odds}</b> | 🧬 DNA: <b>%{dna}</b>")
 
-          payload = {
-              "last_update": now_tsi.strftime("%d.%m.%Y %H:%M TSİ"),
-              "bulletin_date": "26 Ekim 2026 Pazartesi",
-              "total_analyzed": 65420,
-              "rolling_kasa": {
-                  "step": 2,
-                  "total_steps": 5,
-                  "start_bankroll": "250,00 TL",
-                  "current_bankroll": "562,50 TL",
-                  "target_bankroll": "1.333,10 TL",
-                  "total_odds": "2.37",
-                  "status": "AKTİF — 26.10.2026 KUPONU",
-                  "picks": [
-                      {"match": "Paris SG - Lyon (22:30)", "pick": "2.5 Gol Üstü", "odds": "1.50", "dna": "%80.0 (24/30)"},
-                      {"match": "Galatasaray - Fenerbahçe (20:00)", "pick": "KG Var", "odds": "1.58", "dna": "%77.8 (21/27)"}
-                  ],
-                  "history": [
-                      {"step": "Adım 1 (23.10.2026)", "detail": "Go Ahead Eagles MS 1 (1.50) + Stuttgart 2.5 Üst (1.50)", "odds": "2.25", "result": "250,00 TL ➔ 562,50 TL ✅"}
-                  ]
-              },
-              "matches": matches_today,
-              "archive": final_archive
-          }
+          if rk:
+              step = rk.get("step") or rk.get("current_step", 2)
+              curr_b = rk.get("current_bankroll") or rk.get("bankroll", 562.50)
+              targ_b = rk.get("target_bankroll", 1383.75)
+              t_odds = rk.get("total_odds", 2.46)
+              picks_str = " + ".join([f"{p.get('match')} ({p.get('pick')} @ {p.get('odds')})" for p in rk.get("picks", [])])
+              lines.append(f"\n💰 <b>ROLLING KASA — {step}. ADIM</b>")
+              lines.append(f"• Bakiye: <b>{curr_b} TL ➡️ Hedef: {targ_b} TL</b> (Oran: <b>{t_odds}</b>)")
+              if picks_str:
+                  lines.append(f"• Kupon: <b>{picks_str}</b>")
 
-          with open("data.json", "w", encoding="utf-8") as f:
-              json.dump(payload, f, ensure_ascii=False, indent=2)
+          lines.append("\n🌐 https://alpaydnmez.github.io/optaodds-ai/")
+          text = "\n".join(lines)
 
-          # 3. Veri Gömülü, Boş Ekran Vermesi İmkansız index.html Üretimi
-          embedded_json = json.dumps(payload, ensure_ascii=False)
-          html_content = f"""<!DOCTYPE html>
-          <html lang="tr">
-          <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>OptaOdds AI v5.6 — Tarihsel Oran DNA & Form Motoru</title>
-            <style>
-              :root {{
-                --bg: #0b0f19; --card: #131b2e; --border: #23304d;
-                --text: #e2e8f0; --muted: #94a3b8; --green: #10b981;
-                --red: #ef4444; --gold: #f59e0b; --blue: #3b82f6;
-              }}
-              * {{ box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }}
-              body {{ background: var(--bg); color: var(--text); padding: 16px; max-width: 1100px; margin: 0 auto; line-height: 1.5; }}
-              .header {{ background: linear-gradient(135deg, #131b2e, #0f172a); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }}
-              .header h1 {{ font-size: 22px; color: #fff; display: flex; align-items: center; gap: 10px; }}
-              .badge {{ background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.4); padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }}
-              .meta {{ font-size: 13px; color: var(--muted); }}
-              .kasa-box {{ background: linear-gradient(135deg, #172554, #131b2e); border: 1px solid #3b82f6; border-radius: 14px; padding: 20px; margin-bottom: 24px; }}
-              .kasa-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 14px 0; }}
-              .kasa-stat {{ background: rgba(11,15,25,0.6); padding: 12px; border-radius: 10px; border: 1px solid var(--border); }}
-              .kasa-stat span {{ font-size: 12px; color: var(--muted); display: block; }}
-              .kasa-stat strong {{ font-size: 18px; color: #fff; }}
-              .section-title {{ font-size: 18px; font-weight: 700; margin: 24px 0 14px; color: #fff; border-left: 4px solid var(--green); padding-left: 10px; }}
-              .match-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 16px; }}
-              .card {{ background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }}
-              .card-top {{ display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; }}
-              .teams {{ font-size: 18px; font-weight: 800; color: #fff; }}
-              .pick-box {{ background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.4); border-radius: 10px; padding: 12px; display: flex; justify-content: space-between; align-items: center; }}
-              .pick-box .label {{ font-size: 11px; color: var(--green); font-weight: 700; text-transform: uppercase; }}
-              .pick-box .val {{ font-size: 18px; font-weight: 800; color: #fff; }}
-              .pick-box .odd {{ font-size: 24px; font-weight: 900; color: var(--green); }}
-              .surprise-box {{ background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.35); border-radius: 8px; padding: 8px 12px; font-size: 12px; color: #fcd34d; display: flex; justify-content: space-between; }}
-              .odds-bar {{ display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; background: #0b0f19; padding: 8px; border-radius: 8px; border: 1px solid var(--border); font-size: 11px; }}
-              .odds-bar div span {{ display: block; color: var(--muted); font-size: 10px; }}
-              .odds-bar div strong {{ color: #fff; font-size: 12px; }}
-              .dist-bar {{ font-size: 12px; color: var(--muted); background: rgba(255,255,255,0.03); padding: 8px 10px; border-radius: 8px; }}
-              .hist-box {{ background: #0b0f19; border: 1px solid var(--border); border-radius: 8px; padding: 10px; font-size: 12px; }}
-              .hist-title {{ font-weight: 700; color: var(--blue); margin-bottom: 6px; font-size: 11px; text-transform: uppercase; }}
-              .hist-row {{ display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.06); gap: 6px; }}
-              .hist-row:last-child {{ border-bottom: none; }}
-              table {{ width: 100%; border-collapse: collapse; background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); font-size: 13px; }}
-              th, td {{ padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }}
-              th {{ background: #0f172a; color: var(--muted); font-size: 11px; text-transform: uppercase; }}
-              .won {{ color: var(--green); font-weight: 700; }}
-              .lost {{ color: var(--red); font-weight: 700; }}
-              @media (max-width: 640px) {{
-                table, thead, tbody, th, td, tr {{ display: block; }}
-                thead {{ display: none; }}
-                tr {{ border-bottom: 2px solid var(--border); padding: 10px; }}
-                td {{ border: none; padding: 4px 0; }}
-              }}
-            </style>
-          </head>
-          <body>
-            <div class="header">
-              <div>
-                <h1>OptaOdds AI <span class="badge">v5.6 PRO</span></h1>
-                <div class="meta">2016–2026 (10 Sezon / 65.420 Maç) Tarihsel 6'lı Oran DNA & Dinamik Form Motoru</div>
-              </div>
-              <div class="meta" style="text-align:right">
-                <div id="bulletin-date" style="color:#fff;font-weight:700;font-size:15px"></div>
-                <div id="last-update"></div>
-              </div>
-            </div>
+          url = f"https://api.telegram.org/bot{os.environ['TG_TOKEN']}/sendMessage"
+          payload = json.dumps({
+              "chat_id": os.environ["TG_CHAT_ID"],
+              "parse_mode": "HTML",
+              "text": text
+          }).encode("utf-8")
 
-            <div class="kasa-box" id="kasa-container"></div>
-
-            <div class="section-title">GÜNÜN OPTİMİZE BÜLTENİ (MİN. ORAN 1.50 & YASAL İDDAA MARKETLERİ)</div>
-            <div class="match-grid" id="matches-container"></div>
-
-            <div class="section-title">GEÇMİŞ GÜNLERİN ARŞİVİ (TUTANLAR & YATAN SÜRPRİZLER DAHİL)</div>
-            <table>
-              <thead>
-                <tr>
-                  <th>Tarih & Lig</th>
-                  <th>Karşılaşma</th>
-                  <th>Tahmin & Oran</th>
-                  <th>Skor</th>
-                  <th>Durum</th>
-                  <th>Analiz Notu</th>
-                </tr>
-              </thead>
-              <tbody id="archive-container"></tbody>
-            </table>
-
-            <script>
-              const EMBEDDED_DATA = {embedded_json};
-
-              function renderApp(data) {{
-                document.getElementById('bulletin-date').textContent = 'Aktif Bülten: ' + (data.bulletin_date || data.date || '');
-                document.getElementById('last-update').textContent = 'Son Güncelleme: ' + (data.last_update || '');
-
-                const rk = data.rolling_kasa || {{}};
-                const picksHtml = (rk.picks || []).map(p =>
-                  `<div style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.35);padding:8px 12px;border-radius:8px;margin-top:6px;display:flex;justify-content:space-between;font-size:13px">
-                    <span><strong>${{p.match}}</strong> ➔ ${{p.pick}} (DNA: ${{p.dna || ''}})</span>
-                    <strong style="color:#10b981">@ ${{p.odds}}</strong>
-                  </div>`
-                ).join('');
-                const histHtml = (rk.history || []).map(h =>
-                  `<div style="font-size:12px;color:#94a3b8;margin-top:8px">• <strong>${{h.step}}:</strong> ${{h.detail}} (${{h.odds}} Oran) ➔ <strong style="color:#10b981">${{h.result}}</strong></div>`
-                ).join('');
-
-                document.getElementById('kasa-container').innerHTML = `
-                  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
-                    <strong style="font-size:16px;color:#fff">🔥 ROLLING KASA SİMÜLASYONU (ADIM ${{rk.step || 2}} / ${{rk.total_steps || 5}})</strong>
-                    <span class="badge">${{rk.status || 'AKTİF'}}</span>
-                  </div>
-                  <div class="kasa-grid">
-                    <div class="kasa-stat"><span>Başlangıç Kasası</span><strong>${{rk.start_bankroll || '250,00 TL'}}</strong></div>
-                    <div class="kasa-stat"><span>Mevcut Bakiye</span><strong style="color:#10b981">${{rk.current_bankroll || '562,50 TL'}}</strong></div>
-                    <div class="kasa-stat"><span>Kupon Toplam Oran</span><strong style="color:#60a5fa">${{rk.total_odds || '2.37'}}x</strong></div>
-                    <div class="kasa-stat"><span>Hedeflenen Bakiye</span><strong style="color:#f59e0b">${{rk.target_bankroll || '1.333,10 TL'}}</strong></div>
-                  </div>
-                  ${{picksHtml}}
-                  ${{histHtml}}
-                `;
-
-                const mContainer = document.getElementById('matches-container');
-                mContainer.innerHTML = (data.matches || []).map(m => {{
-                  const o = m.odds || {{}};
-                  const d = m.dist || m.stats || {{}};
-                  const hRows = (m.history || m.history_matches || []).map(h => `
-                    <div class="hist-row">
-                      <span>${{h.date}} • ${{h.match}}</span>
-                      <strong style="color:#10b981">${{h.score}}</strong>
-                      <span style="color:#94a3b8">(${{h.odds}})</span>
-                    </div>
-                  `).join('');
-                  return `
-                    <div class="card">
-                      <div class="card-top">
-                        <span>${{m.league}}</span>
-                        <span>${{m.date}} • ${{m.time}}</span>
-                      </div>
-                      <div class="teams">${{m.match}}</div>
-                      <div class="pick-box">
-                        <div>
-                          <div class="label">ANA TAHMİN (ORAN >= 1.50)</div>
-                          <div class="val">${{m.pick}}</div>
-                          <div style="font-size:12px;color:#94a3b8;margin-top:2px">${{m.sample_text || ('DNA Eşleşmesi: %' + m.dna_rate)}}</div>
-                        </div>
-                        <div class="odd">${{Number(m.pick_odds).toFixed(2)}}</div>
-                      </div>
-                      <div class="surprise-box">
-                        <span>Alternatif: <strong>${{m.alt_pick || '-'}}</strong></span>
-                        <span>Sürpriz: <strong>${{m.surprise || '-'}}</strong></span>
-                      </div>
-                      <div class="odds-bar">
-                        <div><span>MS 1</span><strong>${{o.ms1 || '-'}}</strong></div>
-                        <div><span>MS X</span><strong>${{o.ms0 || '-'}}</strong></div>
-                        <div><span>MS 2</span><strong>${{o.ms2 || '-'}}</strong></div>
-                        <div><span>2.5 Alt</span><strong>${{o.alt || '-'}}</strong></div>
-                        <div><span>2.5 Üst</span><strong>${{o.ust || '-'}}</strong></div>
-                        <div><span>KG Var</span><strong>${{o.kg_var || '-'}}</strong></div>
-                        <div><span>KG Yok</span><strong>${{o.kg_yok || '-'}}</strong></div>
-                      </div>
-                      <div class="dist-bar">
-                        <strong>2016–2026 DNA Dağılımı:</strong> MS1 %${{d.ms1}} | X %${{d.ms0}} | MS2 %${{d.ms2}} • 2.5 Üst %${{d.ust}} | KG Var %${{d.kg_var}}
-                        <div style="margin-top:4px;color:#cbd5e1">${{m.note || m.analysis || ''}}</div>
-                      </div>
-                      <div class="hist-box">
-                        <div class="hist-title">Geçmişte Bu Oranlarla Oynanan Gerçek Maçlar</div>
-                        ${{hRows}}
-                      </div>
-                    </div>
-                  `;
-                }}).join('');
-
-                const aContainer = document.getElementById('archive-container');
-                aContainer.innerHTML = (data.archive || []).map(a => {{
-                  const isWon = (a.status || '').includes('TUTTU');
-                  return `
-                    <tr>
-                      <td><strong>${{a.date}}</strong><br><span style="color:#94a3b8;font-size:11px">${{a.league}}</span></td>
-                      <td><strong>${{a.match}}</strong></td>
-                      <td>${{a.pick}} <strong style="color:#60a5fa">@ ${{Number(a.odds).toFixed(2)}}</strong></td>
-                      <td><strong>${{a.score}}</strong></td>
-                      <td class="${{isWon ? 'won' : 'lost'}}">${{a.status}}</td>
-                      <td style="color:#94a3b8;font-size:12px">${{a.note || ''}}</td>
-                    </tr>
-                  `;
-                }}).join('');
-              }}
-
-              renderApp(EMBEDDED_DATA);
-              fetch('data.json?t=' + Date.now())
-                .then(r => r.json())
-                .then(d => {{ if (d && d.matches) renderApp(d); }})
-                .catch(() => {{}});
-            </script>
-          </body>
-          </html>"""
-
-          with open("index.html", "w", encoding="utf-8") as f:
-              f.write(html_content)
-
-          # 4. Telegram Bildirimini Gönder (Hata korumalı)
-          try:
-              msg = (
-                  "📊 OPTAODDS AI v5.6 — 26.10.2026 PAZARTESİ BÜLTENİ\n\n"
-                  "🔥 ROLLING KASA (2. ADIM — 562,50 TL ➔ 1.333,10 TL)\n"
-                  "1️⃣ 22:30 Paris SG - Lyon ➔ 2.5 Gol Üstü @ 1.50 (DNA: %80.0 - 24/30)\n"
-                  "2️⃣ 20:00 Galatasaray - Fenerbahçe ➔ KG Var @ 1.58 (DNA: %77.8 - 21/27)\n\n"
-                  "⚽ 26.10.2026 PAZARTESİ ANALİZLERİ (ORAN >= 1.50)\n"
-                  "• 20:00 Galatasaray - Fenerbahçe | KG Var @ 1.58 (%77.8 - 21/27)\n"
-                  "  Geçmiş: GS 3-1 FB (2024), GS 2-1 BJK (2024)\n"
-                  "• 19:00 Çaykur Rizespor - Trabzonspor | MS 2 @ 1.85 (%72.0 - 18/25)\n"
-                  "  Geçmiş: Konya 1-3 TS (2024), Kasımpaşa 1-2 FB\n"
-                  "• 19:00 Beşiktaş - Başakşehir | 2.5 Üst @ 1.70 (%76.9 - 20/26)\n"
-                  "  Geçmiş: BJK 3-2 Başakşehir, BJK 3-0 Alanya\n"
-                  "• 22:30 Paris SG - Lyon | 2.5 Üst @ 1.50 (%80.0 - 24/30)\n"
-                  "  Geçmiş: PSG 3-1 Lyon (2024), PSG 4-1 Lyon (2024)\n"
-                  "• 23:00 Sevilla - Osasuna | MS 1 @ 1.92 (%71.9 - 23/32)\n"
-                  "  Geçmiş: Sevilla 1-0 Osasuna, Sevilla 1-0 Las Palmas\n"
-                  "• 21:45 Santa Clara - Benfica | 2.5 Üst @ 1.68 (%77.3 - 17/22)\n"
-                  "  Geçmiş: Santa Clara 0-3 Benfica, Benfica 4-1 Santa Clara\n\n"
-                  "✅ 25.10.2026 PAZAR SONUÇLARI ARŞİVE İŞLENDİ:\n"
-                  "• Udinese 0-2 Milan (MS 2 @ 1.62 ✅)\n"
-                  "• R. Sociedad 2-1 Levante (MS 1 @ 1.55 ✅)\n"
-                  "• Lecce 0-2 Juventus (KG Yok @ 1.65 ✅)\n"
-                  "• Göztepe 2-0 Çorum FK (MS 1 @ 1.78 ✅)\n"
-                  "• Liverpool 2-0 Brighton (MS 1 @ 1.50 ✅)\n"
-                  "• Freiburg 1-3 Bayern Münih (2.5 Üst @ 1.50 ✅)\n"
-                  "• Bilbao 4-0 Getafe (MS 1 @ 1.55 ✅)\n"
-                  "• Barcelona 1-1 Real Madrid (KG Var @ 1.50 ✅ / 2.5 Üst ❌)\n\n"
-                  "🌐 Canlı Site: https://alpaydnmez.github.io/optaodds-ai/"
-              )
-              token = os.environ.get("TELEGRAM_TOKEN")
-              chat_id = os.environ.get("TELEGRAM_CHAT_ID")
-              url = f"https://api.telegram.org/bot{token}/sendMessage"
-              req_data = urllib.parse.urlencode({"chat_id": chat_id, "text": msg}).encode("utf-8")
-              req = urllib.request.Request(url, data=req_data, method="POST")
-              with urllib.request.urlopen(req, timeout=15) as resp:
-                  print("Telegram OK:", resp.status)
-          except Exception as e:
-              print("Telegram warning:", e)
+          req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"})
+          with urllib.request.urlopen(req) as resp:
+              print("Telegram response:", resp.read().decode("utf-8"))
           EOF
-          python3 run_optaodds.py
-          rm -f run_optaodds.py
-
-      - name: Commit and Push updated index.html and data.json
-        run: |
-          git config user.name "OptaOdds AI Bot"
-          git config user.email "bot@optaodds.ai"
-          git add data.json index.html
-          git diff --staged --quiet || (git commit -m "Auto-build: 26.10.2026 bulletin + 25.10.2026 archive + embedded UI [skip ci]" && git pull --rebase -X theirs origin main && git push origin main)
