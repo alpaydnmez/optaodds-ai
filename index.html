@@ -18,11 +18,11 @@
     <div class="flex items-center gap-2">
       <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
       <span class="font-bold text-slate-200">OptaOdds Pro v5.6 Quant:</span>
-      <span>Gerçek Oranlar • <strong class="text-amber-400">19-23 Ekim Arşivi (48 Maç)</strong> • Min 1.50 Oran</span>
+      <span>Gerçek Oranlar • <strong class="text-amber-400">19-24 Ekim Arşivi (60 Maç)</strong> • Min 1.50 Oran</span>
     </div>
     <div class="flex items-center gap-4 font-mono text-[11px]">
       <span id="header-date" class="text-slate-300">📅 24.10.2026 Cumartesi</span>
-      <span class="text-emerald-400">23 Ekim Karnesi: 5/6 ✅</span>
+      <span class="text-emerald-400">24 Ekim Karnesi: 10/12 ✅</span>
       <span class="text-purple-400">Rolling: 562,50 TL (Adım 2)</span>
       <span class="text-amber-400">Arşiv: 48 Maç</span>
     </div>
@@ -289,7 +289,7 @@
           <div class="text-right flex md:flex-col justify-between items-end border-t md:border-t-0 md:border-l border-slate-800 pt-3 md:pt-0 md:pl-5">
             <div>
               <div class="text-xs text-amber-400 font-semibold">${m.prediction}</div>
-              <div class="text-2xl font-mono font-bold text-white">@ ${m.odds.toFixed(2)}</div>
+              <div class="text-2xl font-mono font-bold text-white">@ ${(typeof m.odds === "number" ? m.odds : Number(m.odds_val || m.pick_odds || 1.50)).toFixed(2)}</div>
             </div>
             <div class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded uppercase font-semibold">
               ${m.status || 'BANKO'}
@@ -367,7 +367,7 @@
       
       let text = `⚡ <b>OPTAODDS AI v5.6 BÜLTENİ</b> ⚡\n📅 <b>Tarih:</b> ${appData.current_date}\n───────────────────────\n`;
       (appData.matches || []).forEach(m => {
-        text += `• <b>${m.match}</b> (${m.league})\n  👉 <b>Tercih:</b> ${m.prediction} (@ ${m.odds.toFixed(2)})\n  📊 Güven: %${m.confidence}\n\n`;
+        text += `• <b>${m.match}</b> (${m.league})\n  👉 <b>Tercih:</b> ${m.prediction} (@ ${(typeof m.odds === "number" ? m.odds : Number(m.odds_val || m.pick_odds || 1.50)).toFixed(2)})\n  📊 Güven: %${m.confidence}\n\n`;
       });
       text = text.replace(/&/g, 've');
 
