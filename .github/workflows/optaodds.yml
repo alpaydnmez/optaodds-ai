@@ -1,103 +1,21 @@
-name: OptaOdds Auto Bulletin & Telegram Bot
+name: OptaOdds AI Daily Engine
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - 'data.json'
-      - '.github/workflows/optaodds.yml'
-  schedule:
-    - cron: '0 9 * * *'
   workflow_dispatch:
+  schedule:
+    - cron: '15 22 * * *'
+    - cron: '15 9 * * *'
+    - cron: '15 13 * * *'
 
 permissions:
   contents: write
 
 jobs:
-  run-bot:
+  optaodds-sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout repo
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Sync & Push Repository Changes
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin main
-          git add -A
-          git diff --staged --quiet || (git commit -m "chore: auto-sync OptaOdds bulletin" && git push origin main)
-
-      - name: Send Automated Telegram Notification from data.json
-        env:
-          TG_TOKEN: "8922109226:AAGCEVmDNyCf2DMLhnOi1Mh2hYLp5WdV_tc"
-          TG_CHAT_ID: "867372590"
-        run: |
-          python3 - << 'EOF'
-          import json, os, urllib.request
-
-          with open("data.json", "r", encoding="utf-8") as f:
-              data = json.load(f)
-
-          b_date = data.get("bulletin_date", data.get("date", "Güncel Bülten"))
-          matches = data.get("matches", [])
-          rk = data.get("rolling_kasa", {})
-          archive = data.get("archive", [])
-
-          lines = [f"📊 <b>OPTAODDS AI — {b_date.upper()} (ORAN DNA)</b>\n"]
-
-          if archive:
-              latest_date = archive[0].get("date", "")
-              latest_arch = [a for a in archive if a.get("date") == latest_date]
-              hits = sum(1 for a in latest_arch if a.get("won") or "✅" in str(a.get("status", "")))
-              lines.append(f"✅ <b>{latest_date} Arşiv Özeti ({hits}/{len(latest_arch)} İsabet):</b>")
-              for a in latest_arch[:12]:
-                  m_name = a.get("match") or f"{a.get('home','')} - {a.get('away','')}"
-                  score = a.get("score") or a.get("ft_score", "")
-                  pick = a.get("pick") or a.get("prediction", "")
-                  status = a.get("status") or ("TUTTU ✅" if a.get("won") else "YATTI ❌")
-                  lines.append(f"• {m_name} ({score}) | {pick} ➡️ {status}")
-              lines.append("")
-
-          lines.append("🔥 <b>GÜNÜN AKTİF BÜLTENİ:</b>")
-          for m in matches:
-              m_name = m.get("match") or f"{m.get('home','')} - {m.get('away','')}"
-              t = m.get("time", "")
-              lg = m.get("league", "")
-              pick = m.get("pick") or m.get("prediction", "")
-              odds = m.get("odds_val") or m.get("pick_odds") or (m.get("odds") if isinstance(m.get("odds"), (int, float)) else "")
-              dna = m.get("dna_rate") or m.get("confidence", "")
-              lines.append(f"• {t} | <b>{m_name}</b> ({lg})\n  🎯 <b>{pick} @ {odds}</b> | 🧬 DNA: <b>%{dna}</b>")
-
-          if rk:
-              step = rk.get("step") or rk.get("current_step", 2)
-              curr_b = rk.get("current_bankroll") or rk.get("bankroll", 562.50)
-              targ_b = rk.get("target_bankroll", 1383.75)
-              t_odds = rk.get("total_odds", 2.46)
-              picks_str = " + ".join([f"{p.get('match')} ({p.get('pick')} @ {p.get('odds')})" for p in rk.get("picks", [])])
-              lines.append(f"\n💰 <b>ROLLING KASA — {step}. ADIM</b>")
-              lines.append(f"• Bakiye: <b>{curr_b} TL ➡️ Hedef: {targ_b} TL</b> (Oran: <b>{t_odds}</b>)")
-              if picks_str:
-                  lines.append(f"• Kupon: <b>{picks_str}</b>")
-
-          lines.append("\n🌐 https://alpaydnmez.github.io/optaodds-ai/")
-          text = "\n".join(lines)
-
-          url = f"https://api.telegram.org/bot{os.environ['TG_TOKEN']}/sendMessage"
-          payload = json.dumps({
-              "chat_id": os.environ["TG_CHAT_ID"],
-              "parse_mode": "HTML",
-              "text": text
-          }).encode("utf-8")
-
-          req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"})
-          with urllib.request.urlopen(req) as resp:
-              print("Telegram response:", resp.read().decode("utf-8"))
-          EOF
+      - name: Send Telegram Daily Bulletin
+        run: curl -s -X POST "https://api.telegram.org/bot8922109226:AAGCEVmDNyCf2DMLhnOi1Mh2hYLp5WdV_tc/sendMessage" -d "chat_id=867372590" --data-urlencode "text=💎 OPTAODDS AI v5.6 — VIP, SÜRPRİZ & GÜNLÜK BÜLTEN AKTİF! Canlı ekran: https://alpaydnmez.github.io/optaodds-ai/"
