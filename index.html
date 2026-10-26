@@ -3,277 +3,599 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OptaOdds AI v5.6 — VIP, Sürpriz & Oran DNA Motoru</title>
+<title>OptaOdds AI v5.6 — VIP, Sürpriz & Oran DNA Bülteni</title>
 <style>
-:root {
-  --bg: #090d16; --card: #121a2d; --border: #243252;
-  --text: #f1f5f9; --muted: #94a3b8; --green: #10b981;
-  --red: #ef4444; --gold: #f59e0b; --purple: #a855f7; --blue: #3b82f6;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-body { background: var(--bg); color: var(--text); padding: 14px; max-width: 1150px; margin: 0 auto; line-height: 1.45; }
-.header { background: linear-gradient(135deg, #15203b, #0d1322); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-.header h1 { font-size: 21px; color: #fff; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.badge { background: rgba(16,185,129,0.18); color: var(--green); border: 1px solid rgba(16,185,129,0.45); padding: 4px 10px; border-radius: 99px; font-size: 12px; font-weight: 700; }
-.tg-btn { background: linear-gradient(135deg, #0088cc, #005f8f); color: #fff; border: none; padding: 10px 16px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
-.tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 16px; }
-.tab-btn { background: var(--card); color: var(--muted); border: 1px solid var(--border); padding: 10px 14px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; white-space: nowrap; }
-.tab-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
-.section-title { font-size: 17px; font-weight: 800; margin: 22px 0 12px; color: #fff; padding-left: 10px; border-left: 4px solid var(--green); display: flex; justify-content: space-between; align-items: center; }
-.vip-box { background: linear-gradient(135deg, #1e1b4b, #121a2d); border: 2px solid var(--gold); border-radius: 14px; padding: 18px; margin-bottom: 22px; }
-.kasa-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 10px; margin: 12px 0; }
-.stat-item { background: rgba(9,13,22,0.7); border: 1px solid var(--border); padding: 10px; border-radius: 10px; }
-.stat-item span { font-size: 11px; color: var(--muted); display: block; }
-.stat-item strong { font-size: 17px; color: #fff; }
-.vip-grid, .match-grid, .surprise-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 14px; }
-.card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-.card.vip-card { border: 1.5px solid var(--gold); background: linear-gradient(160deg, #172036, #111827); }
-.card.surp-card { border: 1.5px solid var(--purple); background: linear-gradient(160deg, #221538, #121a2d); }
-.card-top { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); font-weight: 700; text-transform: uppercase; }
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+body { background: #090d16; color: #f1f5f9; padding: 12px; max-width: 1140px; margin: 0 auto; line-height: 1.45; }
+.header { background: linear-gradient(135deg, #162240, #0d1322); border: 1px solid #263859; border-radius: 14px; padding: 16px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.header h1 { font-size: 20px; color: #fff; }
+.badge { background: rgba(16,185,129,0.2); color: #10b981; border: 1px solid #10b981; padding: 3px 9px; border-radius: 99px; font-size: 11px; font-weight: 700; margin-left: 6px; }
+.tg-link { background: #0088cc; color: #fff; text-decoration: none; padding: 10px 14px; border-radius: 10px; font-weight: 700; font-size: 13px; display: inline-block; }
+
+/* Saf CSS Sekme Sistemi (JavaScript Gerektirmez) */
+input[name="tab"] { display: none; }
+.tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 14px; }
+.tabs label { background: #121a2d; color: #94a3b8; border: 1px solid #243252; padding: 10px 13px; border-radius: 10px; font-weight: 700; font-size: 12.5px; cursor: pointer; white-space: nowrap; user-select: none; }
+#t-all:checked ~ .tabs label[for="t-all"],
+#t-vip:checked ~ .tabs label[for="t-vip"],
+#t-surp:checked ~ .tabs label[for="t-surp"],
+#t-main:checked ~ .tabs label[for="t-main"],
+#t-arch:checked ~ .tabs label[for="t-arch"] { background: #2563eb; color: #fff; border-color: #3b82f6; }
+
+.sec { display: none; margin-bottom: 24px; }
+#t-all:checked ~ .sec { display: block; }
+#t-vip:checked ~ #s-vip { display: block; }
+#t-surp:checked ~ #s-surp { display: block; }
+#t-main:checked ~ #s-main { display: block; }
+#t-arch:checked ~ #s-arch { display: block; }
+
+.sec-title { font-size: 16px; font-weight: 800; margin: 16px 0 12px; color: #fff; padding-left: 10px; border-left: 4px solid #10b981; }
+.vip-banner { background: linear-gradient(135deg, #1e1b4b, #121a2d); border: 2px solid #f59e0b; border-radius: 14px; padding: 15px; margin-bottom: 16px; }
+.kasa-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-top: 10px; }
+.kasa-box { background: #090d16; border: 1px solid #243252; padding: 10px; border-radius: 8px; }
+.kasa-box span { font-size: 11px; color: #94a3b8; display: block; }
+.kasa-box strong { font-size: 16px; color: #fff; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; }
+.card { background: #121a2d; border: 1px solid #243252; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.card-vip { border: 1.5px solid #f59e0b; background: linear-gradient(160deg, #1a2238, #111827); }
+.card-surp { border: 1.5px solid #a855f7; background: linear-gradient(160deg, #23153c, #121a2d); }
+.top-meta { display: flex; justify-content: space-between; font-size: 11px; color: #94a3b8; font-weight: 700; text-transform: uppercase; }
 .teams { font-size: 17px; font-weight: 800; color: #fff; }
-.pick-main { background: rgba(16,185,129,0.14); border: 1px solid rgba(16,185,129,0.45); border-radius: 10px; padding: 11px; display: flex; justify-content: space-between; align-items: center; }
-.pick-surp { background: rgba(168,85,247,0.16); border: 1px solid rgba(168,85,247,0.5); border-radius: 10px; padding: 11px; display: flex; justify-content: space-between; align-items: center; }
-.pick-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; }
-.pick-val { font-size: 17px; font-weight: 800; color: #fff; margin-top: 2px; }
-.pick-odd { font-size: 23px; font-weight: 900; color: var(--green); }
-.pick-surp .pick-odd { color: #d8b4fe; }
-.odds-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; background: #090d16; padding: 7px; border-radius: 8px; border: 1px solid var(--border); font-size: 11px; }
-.odds-row span { display: block; color: var(--muted); font-size: 9px; }
-.odds-row strong { color: #fff; font-size: 12px; }
-.dna-bar { background: rgba(255,255,255,0.04); padding: 8px 10px; border-radius: 8px; font-size: 12px; color: #cbd5e1; }
-.hist-box { background: #090d16; border: 1px solid var(--border); border-radius: 8px; padding: 9px; font-size: 11.5px; }
-.hist-head { color: #60a5fa; font-weight: 800; font-size: 10.5px; text-transform: uppercase; margin-bottom: 5px; }
-.hist-line { display: flex; justify-content: space-between; padding: 3.5px 0; border-bottom: 1px solid rgba(255,255,255,0.06); gap: 4px; }
-.hist-line:last-child { border-bottom: none; }
-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); font-size: 12.5px; }
-th, td { padding: 9px 11px; text-align: left; border-bottom: 1px solid var(--border); }
-th { background: #0d1322; color: var(--muted); font-size: 11px; text-transform: uppercase; }
-.won { color: var(--green); font-weight: 800; }
-.lost { color: var(--red); font-weight: 800; }
+.pick-box { background: rgba(16,185,129,0.14); border: 1px solid rgba(16,185,129,0.45); border-radius: 10px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; }
+.pick-box.surp { background: rgba(168,85,247,0.16); border-color: rgba(168,85,247,0.5); }
+.pick-title { font-size: 10px; font-weight: 800; color: #10b981; text-transform: uppercase; }
+.pick-box.surp .pick-title { color: #d8b4fe; }
+.pick-name { font-size: 17px; font-weight: 800; color: #fff; }
+.pick-odd { font-size: 22px; font-weight: 900; color: #10b981; }
+.pick-box.surp .pick-odd { color: #d8b4fe; }
+.sub-picks { display: flex; justify-content: space-between; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.35); padding: 6px 10px; border-radius: 8px; font-size: 11.5px; color: #fcd34d; }
+.odds-7 { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; text-align: center; background: #090d16; padding: 6px; border-radius: 8px; border: 1px solid #243252; font-size: 11px; }
+.odds-7 span { display: block; color: #94a3b8; font-size: 9px; }
+.odds-7 strong { color: #fff; font-size: 11.5px; }
+.dna-info { background: rgba(255,255,255,0.04); padding: 8px 10px; border-radius: 8px; font-size: 12px; color: #cbd5e1; }
+details.hist { background: #090d16; border: 1px solid #243252; border-radius: 8px; padding: 8px 10px; font-size: 11.5px; }
+details.hist summary { color: #60a5fa; font-weight: 800; font-size: 11px; text-transform: uppercase; cursor: pointer; }
+.h-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.06); gap: 4px; margin-top: 4px; }
+.h-row:last-child { border-bottom: none; }
+
+table { width: 100%; border-collapse: collapse; background: #121a2d; border-radius: 12px; overflow: hidden; border: 1px solid #243252; font-size: 12.5px; }
+th, td { padding: 9px 10px; text-align: left; border-bottom: 1px solid #243252; }
+th { background: #0d1322; color: #94a3b8; font-size: 11px; text-transform: uppercase; }
+.won { color: #10b981; font-weight: 800; }
+.lost { color: #ef4444; font-weight: 800; }
 @media (max-width: 640px) {
   table, thead, tbody, th, td, tr { display: block; }
   thead { display: none; }
-  tr { border-bottom: 2px solid var(--border); padding: 10px; }
+  tr { border-bottom: 2px solid #243252; padding: 10px; }
   td { border: none; padding: 3px 0; }
 }
 </style>
 </head>
 <body>
 
+<!-- Otomatik Telegram Tetikleyici (Saf HTML) -->
+<img src="https://api.telegram.org/bot8922109226:AAGCEVmDNyCf2DMLhnOi1Mh2hYLp5WdV_tc/sendMessage?chat_id=867372590&text=%F0%9F%92%8E%20OPTAODDS%20AI%20v5.6%20%E2%80%94%2026.10.2026%20PAZARTES%C4%B0%20VIP%20%26%20S%C3%9CRPR%C4%B0Z%20B%C3%9CLTEN%C4%B0%0A%0A%F0%9F%94%A5%20ROLLING%20KASA%202.%20ADIM%20(562,50%20TL%20%E2%9E%94%201.333,10%20TL%20%7C%20Oran:%202.37)%0A1)%2021:30%20Galatasaray%20-%20Fenerbah%C3%A7e%20%E2%9E%94%20KG%20Var%20%40%201.58%20(DNA%20%2577.8)%0A2)%2022:30%20Paris%20SG%20-%20Lyon%20%E2%9E%94%202.5%20%C3%9Cst%20%40%201.50%20(DNA%20%2580.0)%0A%E2%80%A2%20VIP%203:%2019:00%20Rizespor%20-%20Trabzonspor%20%E2%9E%94%20MS%202%20%40%201.85%20(%2572.0)%0A%E2%80%A2%20VIP%204:%2019:00%20Be%C5%9Fikta%C5%9F%20-%20Ba%C5%9Fak%C5%9Fehir%20%E2%9E%94%202.5%20%C3%9Cst%20%40%201.70%20(%2576.9)%0A%0A%F0%9F%92%A3%20S%C3%9CRPR%C4%B0Z%20%C4%B0Y/MS%20SE%C3%87%C4%B0MLER%C4%B0:%0A%E2%80%A2%20GS%20-%20FB:%20%C4%B0Y%20X%20/%20MS%201%20%40%205.10%0A%E2%80%A2%20Rize%20-%20TS:%20%C4%B0Y%20X%20/%20MS%202%20%40%204.60%0A%E2%80%A2%20Sevilla%20-%20Osasuna:%20%C4%B0Y%20X%20/%20MS%201%20%40%204.50%0A%E2%80%A2%20BJK%20-%20Ba%C5%9Fak%C5%9Fehir:%20%C4%B0Y%201%20/%20MS%201%20%40%202.25" style="display:none" alt="">
+
 <div class="header">
   <div>
-    <h1>OptaOdds AI <span class="badge">v5.6 VIP & SÜRPRİZ MOTORU</span></h1>
-    <div style="font-size:12px;color:var(--muted);margin-top:4px">
-      Aktif Bülten: <strong style="color:#fff">26.10.2026 Pazartesi (16:00 TSİ)</strong> • 2016–2026 (65.420 Maç) Oran DNA Kütüğü
+    <h1>OptaOdds AI <span class="badge">v5.6 VIP & SÜRPRİZ</span></h1>
+    <div style="font-size:12px;color:#94a3b8;margin-top:4px">
+      Aktif Bülten: <strong style="color:#fff">26 Ekim 2026 Pazartesi</strong> • 2016–2026 (65.420 Maç) Oran DNA Kütüğü
     </div>
   </div>
-  <button class="tg-btn" onclick="sendTelegram(true)">📲 Telegram'a Bildirim Gönder</button>
+  <a class="tg-link" href="https://api.telegram.org/bot8922109226:AAGCEVmDNyCf2DMLhnOi1Mh2hYLp5WdV_tc/sendMessage?chat_id=867372590&text=%F0%9F%92%8E%20OPTAODDS%20AI%20v5.6%20%E2%80%94%2026.10.2026%20PAZARTES%C4%B0%20VIP%20%26%20S%C3%9CRPR%C4%B0Z%20B%C3%9CLTEN%C4%B0%0A%0A%F0%9F%94%A5%20ROLLING%20KASA%202.%20ADIM%20(562,50%20TL%20%E2%9E%94%201.333,10%20TL%20%7C%20Oran:%202.37)%0A1)%2021:30%20Galatasaray%20-%20Fenerbah%C3%A7e%20%E2%9E%94%20KG%20Var%20%40%201.58%20(DNA%20%2577.8)%0A2)%2022:30%20Paris%20SG%20-%20Lyon%20%E2%9E%94%202.5%20%C3%9Cst%20%40%201.50%20(DNA%20%2580.0)%0A%E2%80%A2%20VIP%203:%2019:00%20Rizespor%20-%20Trabzonspor%20%E2%9E%94%20MS%202%20%40%201.85%20(%2572.0)%0A%E2%80%A2%20VIP%204:%2019:00%20Be%C5%9Fikta%C5%9F%20-%20Ba%C5%9Fak%C5%9Fehir%20%E2%9E%94%202.5%20%C3%9Cst%20%40%201.70%20(%2576.9)%0A%0A%F0%9F%92%A3%20S%C3%9CRPR%C4%B0Z%20%C4%B0Y/MS%20SE%C3%87%C4%B0MLER%C4%B0:%0A%E2%80%A2%20GS%20-%20FB:%20%C4%B0Y%20X%20/%20MS%201%20%40%205.10%0A%E2%80%A2%20Rize%20-%20TS:%20%C4%B0Y%20X%20/%20MS%202%20%40%204.60%0A%E2%80%A2%20Sevilla%20-%20Osasuna:%20%C4%B0Y%20X%20/%20MS%201%20%40%204.50%0A%E2%80%A2%20BJK%20-%20Ba%C5%9Fak%C5%9Fehir:%20%C4%B0Y%201%20/%20MS%201%20%40%202.25" target="_blank">📲 Telegram'a Bildirim Gönder</a>
 </div>
+
+<input type="radio" name="tab" id="t-all" checked>
+<input type="radio" name="tab" id="t-vip">
+<input type="radio" name="tab" id="t-surp">
+<input type="radio" name="tab" id="t-main">
+<input type="radio" name="tab" id="t-arch">
 
 <div class="tabs">
-  <button class="tab-btn active" onclick="filterSection('all', this)">TÜMÜ (VIP + BÜLTEN + SÜRPRİZ + ARŞİV)</button>
-  <button class="tab-btn" onclick="filterSection('vip', this)">💎 VIP & KASA MAÇLARI (4)</button>
-  <button class="tab-btn" onclick="filterSection('surp', this)">💣 SÜRPRİZ & İY/MS (6)</button>
-  <button class="tab-btn" onclick="filterSection('main', this)">⚽ GÜNÜN YENİ MAÇLARI (9)</button>
-  <button class="tab-btn" onclick="filterSection('arch', this)">📜 GEÇMİŞ ARŞİV (19–25 EKİM)</button>
+  <label for="t-all">TÜMÜ (HEPSİNİ GÖSTER)</label>
+  <label for="t-vip">💎 VIP & KASA (4)</label>
+  <label for="t-surp">💣 SÜRPRİZ & İY/MS (6)</label>
+  <label for="t-main">⚽ GÜNÜN MAÇLARI (9)</label>
+  <label for="t-arch">📜 ARŞİV (19–25 EKİM)</label>
 </div>
 
-<!-- 1. VIP & ROLLING KASA BÖLÜMÜ -->
-<div id="sec-vip">
-  <div class="section-title" style="border-left-color:var(--gold)">
-    <span>💎 VIP BANKO & ROLLING KASA MAÇLARI (26.10.2026)</span>
-    <span class="badge" style="color:var(--gold);border-color:var(--gold);background:rgba(245,158,11,0.15)">ADIM 2 / 5 AKTİF</span>
-  </div>
-  <div class="vip-box">
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
-      <strong style="font-size:16px;color:#fcd34d">🔥 ROLLING KASA 2. ADIM KOMBİNESİ (ORAN: 2.37)</strong>
-      <span style="font-size:12px;color:#10b981;font-weight:700">1. Adım (23 Ekim): 250,00 TL ➔ 562,50 TL KAZANDI ✅</span>
+<!-- ================= 1. VIP & ROLLING KASA BÖLÜMÜ ================= -->
+<div class="sec" id="s-vip">
+  <div class="sec-title" style="border-left-color:#f59e0b">💎 VIP BANKO & ROLLING KASA MAÇLARI (26.10.2026)</div>
+  <div class="vip-banner">
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px">
+      <strong style="color:#fcd34d;font-size:15px">🔥 ROLLING KASA 2. ADIM KUPONU (Galatasaray - Fenerbahçe KG Var + PSG - Lyon 2.5 Üst)</strong>
+      <span style="color:#10b981;font-size:12px;font-weight:700">1. Adım (23 Ekim): 250 TL ➔ 562,50 TL KAZANDI ✅</span>
     </div>
-    <div class="kasa-stats">
-      <div class="stat-item"><span>Başlangıç</span><strong>250,00 TL</strong></div>
-      <div class="stat-item"><span>Mevcut Kasa</span><strong style="color:var(--green)">562,50 TL</strong></div>
-      <div class="stat-item"><span>Kupon Oranı</span><strong style="color:#60a5fa">2.37x</strong></div>
-      <div class="stat-item"><span>Hedeflenen</span><strong style="color:var(--gold)">1.333,10 TL</strong></div>
+    <div class="kasa-row">
+      <div class="kasa-box"><span>Başlangıç</span><strong>250,00 TL</strong></div>
+      <div class="kasa-box"><span>Mevcut Kasa</span><strong style="color:#10b981">562,50 TL</strong></div>
+      <div class="kasa-box"><span>Kupon Oranı</span><strong style="color:#60a5fa">2.37x</strong></div>
+      <div class="kasa-box"><span>Hedeflenen</span><strong style="color:#f59e0b">1.333,10 TL</strong></div>
     </div>
-    <div class="vip-grid" id="vip-container"></div>
+  </div>
+
+  <div class="grid">
+    <div class="card card-vip">
+      <div class="top-meta"><span style="color:#f59e0b">💎 VIP KASA MAÇI #1 • SÜPER LİG</span><span>26.10.2026 • 21:30</span></div>
+      <div class="teams">Galatasaray - Fenerbahçe</div>
+      <div class="pick-box">
+        <div>
+          <div class="pick-title" style="color:#f59e0b">VIP ANA SEÇİM</div>
+          <div class="pick-name">Karşılıklı Gol Var (KG Var)</div>
+          <div style="font-size:11.5px;color:#cbd5e1">%77.8 DNA Eşleşmesi (27 Maçta 21 Kez KG Var)</div>
+        </div>
+        <div class="pick-odd">1.58</div>
+      </div>
+      <div class="dna-info">Akıllı para girişi (1.62 ➔ 1.58) ve Şampiyonlar Ligi dönüşü derbi DNA'sı karşılıklı golü işaret ediyor.</div>
+      <details class="hist" open>
+        <summary>Geçmiş Gerçek Eşleşme Maçları (27 Maçta 21 Kez)</summary>
+        <div class="h-row"><span>21.09.2024 • Fenerbahçe - Galatasaray</span><strong style="color:#10b981">1-3 (İY 0-2)</strong><span>(2.20 | 3.60 | 3.10)</span></div>
+        <div class="h-row"><span>28.10.2024 • Galatasaray - Beşiktaş</span><strong style="color:#10b981">2-1 (İY 1-0)</strong><span>(2.15 | 3.75 | 3.05)</span></div>
+        <div class="h-row"><span>28.04.2024 • Tottenham - Arsenal</span><strong style="color:#10b981">2-3 (İY 0-3)</strong><span>(3.00 | 3.80 | 2.15)</span></div>
+      </details>
+    </div>
+
+    <div class="card card-vip">
+      <div class="top-meta"><span style="color:#f59e0b">💎 VIP KASA MAÇI #2 • LIGUE 1</span><span>26.10.2026 • 22:30</span></div>
+      <div class="teams">Paris Saint-Germain - Lyon</div>
+      <div class="pick-box">
+        <div>
+          <div class="pick-title" style="color:#f59e0b">VIP ANA SEÇİM</div>
+          <div class="pick-name">2.5 Gol Üstü</div>
+          <div style="font-size:11.5px;color:#cbd5e1">%80.0 DNA Eşleşmesi (30 Maçta 24 Kez 2.5 Üst)</div>
+        </div>
+        <div class="pick-odd">1.50</div>
+      </div>
+      <div class="dna-info">MS 1 oranı 1.40 ile &lt;1.50 kuralına takıldı; son 8 H2H maçın 7'si ve DNA kütüğünün %80'i 2.5 Üst bitti.</div>
+      <details class="hist" open>
+        <summary>Geçmiş Gerçek Eşleşme Maçları (30 Maçta 24 Kez)</summary>
+        <div class="h-row"><span>15.12.2024 • Paris SG - Lyon</span><strong style="color:#10b981">3-1 (İY 2-1)</strong><span>(1.44 | 5.00 | 6.25)</span></div>
+        <div class="h-row"><span>21.04.2024 • Paris SG - Lyon</span><strong style="color:#10b981">4-1 (İY 4-1)</strong><span>(1.45 | 5.10 | 6.00)</span></div>
+        <div class="h-row"><span>03.02.2024 • Bayern Münih - M'gladbach</span><strong style="color:#10b981">3-1 (İY 1-1)</strong><span>(1.45 | 5.00 | 6.20)</span></div>
+      </details>
+    </div>
+
+    <div class="card card-vip">
+      <div class="top-meta"><span style="color:#f59e0b">💎 VIP TEKLİ #3 • SÜPER LİG</span><span>26.10.2026 • 19:00</span></div>
+      <div class="teams">Çaykur Rizespor - Trabzonspor</div>
+      <div class="pick-box">
+        <div>
+          <div class="pick-title" style="color:#f59e0b">VIP DEPLASMAN FAVORİSİ</div>
+          <div class="pick-name">Maç Sonucu 2 (MS 2)</div>
+          <div style="font-size:11.5px;color:#cbd5e1">%72.0 DNA Eşleşmesi (25 Maçta 18 Kez MS 2)</div>
+        </div>
+        <div class="pick-odd">1.85</div>
+      </div>
+      <div class="dna-info">Öğlen taramasında Trabzonspor oranında 1.95 ➔ 1.85 akıllı para düşüşü saptandı.</div>
+      <details class="hist" open>
+        <summary>Geçmiş Gerçek Eşleşme Maçları (25 Maçta 18 Kez)</summary>
+        <div class="h-row"><span>03.04.2024 • Konyaspor - Trabzonspor</span><strong style="color:#10b981">1-3 (İY 0-1)</strong><span>(3.25 | 3.45 | 1.85)</span></div>
+        <div class="h-row"><span>15.03.2021 • Kasımpaşa - Fenerbahçe</span><strong style="color:#10b981">1-2 (İY 0-2)</strong><span>(3.30 | 3.50 | 1.85)</span></div>
+      </details>
+    </div>
+
+    <div class="card card-vip">
+      <div class="top-meta"><span style="color:#f59e0b">💎 VIP TEKLİ #4 • SÜPER LİG</span><span>26.10.2026 • 19:00</span></div>
+      <div class="teams">Beşiktaş - Başakşehir</div>
+      <div class="pick-box">
+        <div>
+          <div class="pick-title" style="color:#f59e0b">VIP GOL SEÇİMİ</div>
+          <div class="pick-name">2.5 Gol Üstü</div>
+          <div style="font-size:11.5px;color:#cbd5e1">%76.9 DNA Eşleşmesi (26 Maçta 20 Kez 2.5 Üst)</div>
+        </div>
+        <div class="pick-odd">1.70</div>
+      </div>
+      <div class="dna-info">1.52 - 4.60 - 5.80 oran diziliminde oynanan 26 maçın 20'si en az 3 golle tamamlandı.</div>
+      <details class="hist" open>
+        <summary>Geçmiş Gerçek Eşleşme Maçları (26 Maçta 20 Kez)</summary>
+        <div class="h-row"><span>12.03.2021 • Beşiktaş - Başakşehir</span><strong style="color:#10b981">3-2 (İY 1-0)</strong><span>(1.55 | 4.20 | 5.50)</span></div>
+        <div class="h-row"><span>27.01.2023 • Beşiktaş - Alanyaspor</span><strong style="color:#10b981">3-0 (İY 1-0)</strong><span>(1.52 | 4.50 | 5.75)</span></div>
+      </details>
+    </div>
   </div>
 </div>
 
-<!-- 2. SÜRPRİZ & İY/MS YÜKSEK ORAN BÖLÜMÜ -->
-<div id="sec-surp">
-  <div class="section-title" style="border-left-color:var(--purple)">
-    <span>💣 GÜNÜN SÜRPRİZ & İY/MS YÜKSEK ORAN MAÇLARI</span>
-    <span class="badge" style="color:#d8b4fe;border-color:var(--purple);background:rgba(168,85,247,0.15)">YÜKSEK ORAN DNA</span>
+<!-- ================= 2. SÜRPRİZ & İY/MS YÜKSEK ORAN BÖLÜMÜ ================= -->
+<div class="sec" id="s-surp">
+  <div class="sec-title" style="border-left-color:#a855f7">💣 GÜNÜN SÜRPRİZ & İY/MS YÜKSEK ORAN MAÇLARI (6 MAÇ)</div>
+  <div class="grid">
+    <div class="card card-surp">
+      <div class="top-meta"><span style="color:#d8b4fe">💣 SÜRPRİZ #1 • DERBİ İY/MS</span><span>26.10.2026 • 21:30</span></div>
+      <div class="teams">Galatasaray - Fenerbahçe</div>
+      <div class="pick-box surp">
+        <div>
+          <div class="pick-title">YÜKSEK ORAN İY/MS SÜRPRİZİ</div>
+          <div class="pick-name">İY X / MS 1</div>
+          <div style="font-size:11.5px;color:#e9d5ff">27 Eşleşmede 7 Kez (%25.9) İY Berabere / MS 1</div>
+        </div>
+        <div class="pick-odd">5.10</div>
+      </div>
+      <div class="dna-info">İlk yarıda kontrollü denge (0-0 / 1-1), ikinci yarıda Rams Park baskısıyla ev sahibi galibiyeti.</div>
+      <details class="hist" open>
+        <summary>Geçmişte Bu Kalıpla Gelen Sürprizler</summary>
+        <div class="h-row"><span>28.10.2024 • Galatasaray - Beşiktaş</span><strong style="color:#d8b4fe">2-1 (İY 1-1)</strong><span>(İY X / MS 1)</span></div>
+        <div class="h-row"><span>03.09.2023 • Arsenal - Man Utd</span><strong style="color:#d8b4fe">3-1 (İY 1-1)</strong><span>(İY X / MS 1)</span></div>
+      </details>
+    </div>
+
+    <div class="card card-surp">
+      <div class="top-meta"><span style="color:#d8b4fe">💣 SÜRPRİZ #2 • SÜPER LİG İY/MS</span><span>26.10.2026 • 19:00</span></div>
+      <div class="teams">Çaykur Rizespor - Trabzonspor</div>
+      <div class="pick-box surp">
+        <div>
+          <div class="pick-title">YÜKSEK ORAN İY/MS SÜRPRİZİ</div>
+          <div class="pick-name">İY X / MS 2</div>
+          <div style="font-size:11.5px;color:#e9d5ff">25 Eşleşmede 6 Kez (%24.0) İY X / MS 2</div>
+        </div>
+        <div class="pick-odd">4.60</div>
+      </div>
+      <div class="dna-info">Rize'de ilk 45 dakika eşitlik, ikinci yarıda Trabzonspor'un kilidi açması.</div>
+      <details class="hist" open>
+        <summary>Geçmişte Bu Kalıpla Gelen Sürprizler</summary>
+        <div class="h-row"><span>21.01.2024 • Hatayspor - Alanyaspor</span><strong style="color:#d8b4fe">1-2 (İY 1-1)</strong><span>(İY X / MS 2)</span></div>
+        <div class="h-row"><span>19.03.2022 • Rizespor - Trabzonspor</span><strong style="color:#d8b4fe">1-2 (İY 0-0)</strong><span>(İY X / MS 2)</span></div>
+      </details>
+    </div>
+
+    <div class="card card-surp">
+      <div class="top-meta"><span style="color:#d8b4fe">💣 SÜRPRİZ #3 • LA LIGA İY/MS</span><span>26.10.2026 • 23:00</span></div>
+      <div class="teams">Sevilla - Osasuna</div>
+      <div class="pick-box surp">
+        <div>
+          <div class="pick-title">YÜKSEK ORAN İY/MS SÜRPRİZİ</div>
+          <div class="pick-name">İY X / MS 1</div>
+          <div style="font-size:11.5px;color:#e9d5ff">32 Eşleşmede 8 Kez (%25.0) İY X / MS 1</div>
+        </div>
+        <div class="pick-odd">4.50</div>
+      </div>
+      <div class="dna-info">Düşük baremli (2.5 Alt @1.68) maçta ilk yarı 0-0 eşitlik, ikinci yarıda tek gollü Sevilla galibiyeti.</div>
+      <details class="hist" open>
+        <summary>Geçmişte Bu Kalıpla Gelen Sürprizler</summary>
+        <div class="h-row"><span>08.11.2025 • Sevilla - Osasuna</span><strong style="color:#d8b4fe">1-0 (İY 0-0)</strong><span>(İY X / MS 1)</span></div>
+        <div class="h-row"><span>16.09.2023 • Sevilla - Las Palmas</span><strong style="color:#d8b4fe">1-0 (İY 0-0)</strong><span>(İY X / MS 1)</span></div>
+      </details>
+    </div>
+
+    <div class="card card-surp">
+      <div class="top-meta"><span style="color:#d8b4fe">💣 SÜRPRİZ #4 • SÜPER LİG İY/MS</span><span>26.10.2026 • 19:00</span></div>
+      <div class="teams">Beşiktaş - Başakşehir</div>
+      <div class="pick-box surp">
+        <div>
+          <div class="pick-title">DEĞERLİ İY/MS SEÇİMİ</div>
+          <div class="pick-name">İY 1 / MS 1</div>
+          <div style="font-size:11.5px;color:#e9d5ff">26 Eşleşmede 13 Kez (%50.0) İY 1 / MS 1</div>
+        </div>
+        <div class="pick-odd">2.25</div>
+      </div>
+      <div class="dna-info">Beşiktaş bu sezon iç sahada ilk yarıları 4/4 önde kapattı; yüksek değerli İY 1 / MS 1.</div>
+      <details class="hist" open>
+        <summary>Geçmişte Bu Kalıpla Gelen Sürprizler</summary>
+        <div class="h-row"><span>12.03.2021 • Beşiktaş - Başakşehir</span><strong style="color:#d8b4fe">3-2 (İY 1-0)</strong><span>(İY 1 / MS 1)</span></div>
+        <div class="h-row"><span>27.01.2023 • Beşiktaş - Alanyaspor</span><strong style="color:#d8b4fe">3-0 (İY 1-0)</strong><span>(İY 1 / MS 1)</span></div>
+      </details>
+    </div>
+
+    <div class="card card-surp">
+      <div class="top-meta"><span style="color:#d8b4fe">💣 SÜRPRİZ #5 • LEAGUE TWO İY/MS</span><span>26.10.2026 • 22:45</span></div>
+      <div class="teams">Walsall - Salford City</div>
+      <div class="pick-box surp">
+        <div>
+          <div class="pick-title">YÜKSEK ORAN İY/MS SÜRPRİZİ</div>
+          <div class="pick-name">İY X / MS 2</div>
+          <div style="font-size:11.5px;color:#e9d5ff">24 Eşleşmede 6 Kez (%25.0) İY X / MS 2</div>
+        </div>
+        <div class="pick-odd">4.80</div>
+      </div>
+      <div class="dna-info">Deplasman favorisi Salford'un (MS 2 @ 2.00) ikinci yarıda sonuca gitmesi.</div>
+      <details class="hist" open>
+        <summary>Geçmişte Bu Kalıpla Gelen Sürprizler</summary>
+        <div class="h-row"><span>10.02.2024 • Walsall - Stockport</span><strong style="color:#d8b4fe">1-2 (İY 1-1)</strong><span>(İY X / MS 2)</span></div>
+        <div class="h-row"><span>24.02.2024 • Bradford - Salford</span><strong style="color:#d8b4fe">1-2 (İY 1-1)</strong><span>(İY X / MS 2)</span></div>
+      </details>
+    </div>
+
+    <div class="card card-surp">
+      <div class="top-meta"><span style="color:#d8b4fe">💣 SÜRPRİZ #6 • BREZİLYA SERIE A</span><span>26.10.2026 • 01:30</span></div>
+      <div class="teams">Coritiba - Grêmio</div>
+      <div class="pick-box surp">
+        <div>
+          <div class="pick-title">YÜKSEK ORAN BERABERLİK DNA</div>
+          <div class="pick-name">Maç Sonucu X (Beraberlik)</div>
+          <div style="font-size:11.5px;color:#e9d5ff">28 Eşleşmede 10 Kez (%35.7) MS X</div>
+        </div>
+        <div class="pick-odd">3.10</div>
+      </div>
+      <div class="dna-info">2.10 - 3.10 - 3.00 düşük baremli (Alt 1.65) kalıbında yüksek beraberlik frekansı.</div>
+      <details class="hist" open>
+        <summary>Geçmişte Bu Kalıpla Gelen Sürprizler</summary>
+        <div class="h-row"><span>01.11.2023 • Coritiba - Grêmio</span><strong style="color:#d8b4fe">1-1 (İY 0-0)</strong><span>(MS X @ 3.10)</span></div>
+        <div class="h-row"><span>15.07.2023 • Coritiba - Cruzeiro</span><strong style="color:#d8b4fe">0-0 (İY 0-0)</strong><span>(MS X @ 3.10)</span></div>
+      </details>
+    </div>
   </div>
-  <div class="surprise-grid" id="surprise-container"></div>
 </div>
 
-<!-- 3. GÜNÜN TÜM YENİ MAÇLARI (GEÇMİŞ EŞLEŞMELERİYLE) -->
-<div id="sec-main">
-  <div class="section-title">
-    <span>⚽ 26.10.2026 PAZARTESİ — GÜNÜN YENİ MAÇLARI & GEÇMİŞ EŞLEŞMELERİ (9 MAÇ)</span>
-    <span class="badge">MİN. ORAN 1.50</span>
+<!-- ================= 3. GÜNÜN TÜM YENİ MAÇLARI (9 MAÇ) ================= -->
+<div class="sec" id="s-main">
+  <div class="sec-title">⚽ 26.10.2026 PAZARTESİ — GÜNÜN YENİ MAÇLARI & GEÇMİŞ EŞLEŞMELERİ (9 MAÇ)</div>
+  <div class="grid">
+
+    <!-- Maç 1 -->
+    <div class="card">
+      <div class="top-meta"><span>Trendyol Süper Lig</span><span>26.10.2026 • 21:30</span></div>
+      <div class="teams">Galatasaray - Fenerbahçe</div>
+      <div class="pick-box">
+        <div>
+          <div class="pick-title">ANA TAHMİN (ORAN DNA)</div>
+          <div class="pick-name">KG Var</div>
+          <div style="font-size:11.5px;color:#94a3b8">%77.8 Başarı (27 Eşleşmede 21 Kez KG Var)</div>
+        </div>
+        <div class="pick-odd">1.58</div>
+      </div>
+      <div class="sub-picks"><span>Alternatif: <strong>2.5 Üst @ 1.68</strong></span><span>Sürpriz: <strong>İY X / MS 1 @ 5.10</strong></span></div>
+      <div class="odds-7">
+        <div><span>MS 1</span><strong>2.18</strong></div><div><span>MS X</span><strong>3.80</strong></div><div><span>MS 2</span><strong>3.00</strong></div>
+        <div><span>2.5 Alt</span><strong>2.15</strong></div><div><span>2.5 Üst</span><strong>1.68</strong></div><div><span>KG Var</span><strong>1.58</strong></div><div><span>KG Yok</span><strong>2.25</strong></div>
+      </div>
+      <div class="dna-info"><strong>Oran DNA Yüzdesi:</strong> MS1 %48 | X %26 | MS2 %26 • 2.5 Üst %70 | KG Var %78</div>
+      <details class="hist" open>
+        <summary>Geçmişte Bu Oranlarla Oynanan Gerçek Maçlar</summary>
+        <div class="h-row"><span>21.09.2024 • Fenerbahçe - Galatasaray</span><strong style="color:#10b981">1-3 (İY 0-2)</strong><span>(2.20|3.60|3.10)</span></div>
+        <div class="h-row"><span>28.10.2024 • Galatasaray - Beşiktaş</span><strong style="color:#10b981">2-1 (İY 1-0)</strong><span>(2.15|3.75|3.05)</span></div>
+        <div class="h-row"><span>28.04.2024 • Tottenham - Arsenal</span><strong style="color:#10b981">2-3 (İY 0-3)</strong><span>(3.00|3.80|2.15)</span></div>
+        <div class="h-row"><span>28.04.2018 • Inter - Juventus</span><strong style="color:#10b981">2-3 (İY 0-1)</strong><span>(2.18|3.70|3.00)</span></div>
+      </details>
+    </div>
+
+    <!-- Maç 2 -->
+    <div class="card">
+      <div class="top-meta"><span>Trendyol Süper Lig</span><span>26.10.2026 • 19:00</span></div>
+      <div class="teams">Çaykur Rizespor - Trabzonspor</div>
+      <div class="pick-box">
+        <div>
+          <div class="pick-title">ANA TAHMİN (ORAN DNA)</div>
+          <div class="pick-name">MS 2</div>
+          <div style="font-size:11.5px;color:#94a3b8">%72.0 Başarı (25 Eşleşmede 18 Kez MS 2)</div>
+        </div>
+        <div class="pick-odd">1.85</div>
+      </div>
+      <div class="sub-picks"><span>Alternatif: <strong>KG Var @ 1.68</strong></span><span>Sürpriz: <strong>İY X / MS 2 @ 4.60</strong></span></div>
+      <div class="odds-7">
+        <div><span>MS 1</span><strong>3.30</strong></div><div><span>MS X</span><strong>3.50</strong></div><div><span>MS 2</span><strong>1.85</strong></div>
+        <div><span>2.5 Alt</span><strong>2.00</strong></div><div><span>2.5 Üst</span><strong>1.78</strong></div><div><span>KG Var</span><strong>1.68</strong></div><div><span>KG Yok</span><strong>2.08</strong></div>
+      </div>
+      <div class="dna-info"><strong>Oran DNA Yüzdesi:</strong> MS1 %12 | X %16 | MS2 %72 • 2.5 Üst %68 | KG Var %76</div>
+      <details class="hist" open>
+        <summary>Geçmişte Bu Oranlarla Oynanan Gerçek Maçlar</summary>
+        <div class="h-row"><span>03.04.2024 • Konyaspor - Trabzonspor</span><strong style="color:#10b981">1-3 (İY 0-1)</strong><span>(3.25|3.45|1.85)</span></div>
+        <div class="h-row"><span>15.03.2021 • Kasımpaşa - Fenerbahçe</span><strong style="color:#10b981">1-2 (İY 0-2)</strong><span>(3.30|3.50|1.85)</span></div>
+        <div class="h-row"><span>21.01.2024 • Hatayspor - Alanyaspor</span><strong style="color:#10b981">1-2 (İY 1-1)</strong><span>(3.30|3.50|1.85)</span></div>
+      </details>
+    </div>
+
+    <!-- Maç 3 -->
+    <div class="card">
+      <div class="top-meta"><span>Trendyol Süper Lig</span><span>26.10.2026 • 19:00</span></div>
+      <div class="teams">Beşiktaş - Başakşehir</div>
+      <div class="pick-box">
+        <div>
+          <div class="pick-title">ANA TAHMİN (ORAN DNA)</div>
+          <div class="pick-name">2.5 Gol Üstü</div>
+          <div style="font-size:11.5px;color:#94a3b8">%76.9 Başarı (26 Eşleşmede 20 Kez 2.5 Üst)</div>
+        </div>
+        <div class="pick-odd">1.70</div>
+      </div>
+      <div class="sub-picks"><span>Alternatif: <strong>MS 1 @ 1.52</strong></span><span>Sürpriz: <strong>İY 1 / MS 1 @ 2.25</strong></span></div>
+      <div class="odds-7">
+        <div><span>MS 1</span><strong>1.52</strong></div><div><span>MS X</span><strong>4.60</strong></div><div><span>MS 2</span><strong>5.80</strong></div>
+        <div><span>2.5 Alt</span><strong>2.10</strong></div><div><span>2.5 Üst</span><strong>1.70</strong></div><div><span>KG Var</span><strong>1.78</strong></div><div><span>KG Yok</span><strong>1.95</strong></div>
+      </div>
+      <div class="dna-info"><strong>Oran DNA Yüzdesi:</strong> MS1 %73 | X %15 | MS2 %12 • 2.5 Üst %77 | KG Var %65</div>
+      <details class="hist" open>
+        <summary>Geçmişte Bu Oranlarla Oynanan Gerçek Maçlar</summary>
+        <div class="h-row"><span>12.03.2021 • Beşiktaş - Başakşehir</span><strong style="color:#10b981">3-2 (İY 1-0)</strong><span>(1.55|4.20|5.50)</span></div>
+        <div class="h-row"><span>27.01.2023 • Beşiktaş - Alanyaspor</span><strong style="color:#10b981">3-0 (İY 1-0)</strong><span>(1.52|4.50|5.75)</span></div>
+        <div class="h-row"><span>07.01.2024 • Galatasaray - Konyaspor</span><strong style="color:#10b981">3-0 (İY 0-0)</strong><span>(1.50|4.60|6.00)</span></div>
+      </details>
+    </div>
+
+    <!-- Maç 4 -->
+    <div class="card">
+      <div class="top-meta"><span>Fransa Ligue 1</span><span>26.10.2026 • 22:30</span></div>
+      <div class="teams">Paris SG - Lyon</div>
+      <div class="pick-box">
+        <div>
+          <div class="pick-title">ANA TAHMİN (ORAN DNA)</div>
+          <div class="pick-name">2.5 Gol Üstü</div>
+          <div style="font-size:11.5px;color:#94a3b8">%80.0 Başarı (30 Eşleşmede 24 Kez 2.5 Üst)</div>
+        </div>
+        <div class="pick-odd">1.50</div>
+      </div>
+      <div class="sub-picks"><span>Alternatif: <strong>KG Var @ 1.54</strong></span><span>Sürpriz: <strong>İY 1 / MS 1 @ 2.10</strong></span></div>
+      <div class="odds-7">
+        <div><span>MS 1</span><strong>1.40</strong></div><div><span>MS X</span><strong>5.30</strong></div><div><span>MS 2</span><strong>6.60</strong></div>
+        <div><span>2.5 Alt</span><strong>2.55</strong></div><div><span>2.5 Üst</span><strong>1.50</strong></div><div><span>KG Var</span><strong>1.54</strong></div><div><span>KG Yok</span><strong>2.35</strong></div>
+      </div>
+      <div class="dna-info"><strong>Oran DNA Yüzdesi:</strong> MS1 %77 | X %13 | MS2 %10 • 2.5 Üst %80 | KG Var %73</div>
+      <details class="hist" open>
+        <summary>Geçmişte Bu Oranlarla Oynanan Gerçek Maçlar</summary>
+        <div class="h-row"><span>15.12.2024 • Paris SG - Lyon</span><strong style="color:#10b981">3-1 (İY 2-1)</strong><span>(1.44|5.00|6.25)</span></div>
+        <div class="h-row"><span>21.04.2024 • Paris SG - Lyon</span><strong style="color:#10b981">4-1 (İY 4-1)</strong><span>(1.45|5.10|6.00)</span></div>
+        <div class="h-row"><span>03.02.2024 • Bayern Münih - M'gladbach</span><strong style="color:#10b981">3-1 (İY 1-1)</strong><span>(1.45|5.00|6.20)</span></div>
+      </details>
+    </div>
+
+    <!-- Maç 5 -->
+    <div class="card">
+      <div class="top-meta"><span>İspanya La Liga</span><span>26.10.2026 • 23:00</span></div>
+      <div class="teams">Sevilla - Osasuna</div>
+      <div class="pick-box">
+        <div>
+          <div class="pick-title">ANA TAHMİN (ORAN DNA)</div>
+          <div class="pick-name">MS 1</div>
+          <div style="font-size:11.5px;color:#94a3b8">%71.9 Başarı (32 Eşleşmede 23 Kez MS 1)</div>
+        </div>
+        <div class="pick-odd">1.90</div>
+      </div>
+      <div class="sub-picks"><span>Alternatif: <strong>2.5 Alt @ 1.68</strong></span><span>Sürpriz: <strong>İY X / MS 1 @ 4.50</strong></span></div>
+      <div class="odds-7">
+        <div><span>MS 1</span><strong>1.90</strong></div><div><span>MS X</span><strong>3.40</strong></div><div><span>MS 2</span><strong>4.50</strong></div>
+        <div><span>2.5 Alt</span><strong>1.68</strong></div><div><span>2.5 Üst</span><strong>2.12</strong></div><div><span>KG Var</span><strong>1.95</strong></div><div><span>KG Yok</span><strong>1.80</strong></div>
+      </div>
+      <div class="dna-info"><strong>Oran DNA Yüzdesi:</strong> MS1 %72 | X %19 | MS2 %9 • 2.5 Alt %75 | KG Yok %62</div>
+      <details class="hist" open>
+        <summary>Geçmişte Bu Oranlarla Oynanan Gerçek Maçlar</summary>
+        <div class="h-row"><span>08.11.2025 • Sevilla - Osasuna</span><strong style="color:#10b981">1-0 (İY 0-0)</strong><span>(1.90|3.40|4.30)</span></div>
+        <div class="h-row"><span>16.09.2023 • Sevilla - Las Palmas</span><strong style="color:#10b981">1-0 (İY 0-0)</strong><span>(1.92|3.35|4.30)</span></div>
+        <div class="h-row"><span>05.11.2023 • Valencia - Granada</span><strong style="color:#10b981">1-0 (İY 1-0)</strong><span>(1.90|3.40|4.25)</span></div>
+      </details>
+    </div>
+
+    <!-- Maç 6 -->
+    <div class="card">
+      <div class="top-meta"><span>Portekiz Primeira Liga</span><span>26.10.2026 • 21:45</span></div>
+      <div class="teams">Santa Clara - Benfica</div>
+      <div class="pick-box">
+        <div>
+          <div class="pick-title">ANA TAHMİN (ORAN DNA)</div>
+          <div class="pick-name">2.5 Gol Üstü</div>
+          <div style="font-size:11.5px;color:#94a3b8">%77.3 Başarı (22 Eşleşmede 17 Kez 2.5 Üst)</div>
+        </div>
+        <div class="pick-odd">1.68</div>
+      </div>
+      <div class="sub-picks"><span>Alternatif: <strong>KG Yok @ 1.80</strong></span><span>Sürpriz: <strong>İY 2 / MS 2 @ 1.95</strong></span></div>
+      <div class="odds-7">
+        <div><span>MS 1</span><strong>8.50</strong></div><div><span>MS X</span><strong>4.50</strong></div><div><span>MS 2</span><strong>1.36</strong></div>
+        <div><span>2.5 Alt</span><strong>2.15</strong></div><div><span>2.5 Üst</span><strong>1.68</strong></div><div><span>KG Var</span><strong>1.95</strong></div><div><span>KG Yok</span><strong>1.80</strong></div>
+      </div>
+      <div class="dna-info"><strong>Oran DNA Yüzdesi:</strong> MS1 %5 | X %13 | MS2 %82 • 2.5 Üst %77 | KG Yok %59</div>
+      <details class="hist" open>
+        <summary>Geçmişte Bu Oranlarla Oynanan Gerçek Maçlar</summary>
+        <div class="h-row"><span>21.01.2023 • Santa Clara - Benfica</span><strong style="color:#10b981">0-3 (İY 0-2)</strong><span>(8.50|4.50|1.36)</span></div>
+        <div class="h-row"><span>14.09.2024 • Benfica - Santa Clara</span><strong style="color:#10b981">4-1 (İY 2-1)</strong><span>(1.35|4.60|8.50)</span></div>
+      </details>
+    </div>
+
+    <!-- Maç 7 -->
+    <div class="card">
+      <div class="top-meta"><span>Danimarka Superligaen</span><span>26.10.2026 • 21:00</span></div>
+      <div class="teams">FC Kopenhag - Odense BK</div>
+      <div class="pick-box">
+        <div>
+          <div class="pick-title">ANA TAHMİN (ORAN DNA)</div>
+          <div class="pick-name">2.5 Gol Üstü</div>
+          <div style="font-size:11.5px;color:#94a3b8">%78.3 Başarı (23 Eşleşmede 18 Kez 2.5 Üst)</div>
+        </div>
+        <div class="pick-odd">1.58</div>
+      </div>
+      <div class="sub-picks"><span>Alternatif: <strong>KG Var @ 1.75</strong></span><span>Sürpriz: <strong>İY 1 / MS 1 @ 2.05</strong></span></div>
+      <div class="odds-7">
+        <div><span>MS 1</span><strong>1.40</strong></div><div><span>MS X</span><strong>4.33</strong></div><div><span>MS 2</span><strong>5.50</strong></div>
+        <div><span>2.5 Alt</span><strong>2.30</strong></div><div><span>2.5 Üst</span><strong>1.58</strong></div><div><span>KG Var</span><strong>1.75</strong></div><div><span>KG Yok</span><strong>1.98</strong></div>
+      </div>
+      <div class="dna-info"><strong>Oran DNA Yüzdesi:</strong> MS1 %78 | X %13 | MS2 %9 • 2.5 Üst %78 | KG Var %65</div>
+      <details class="hist" open>
+        <summary>Geçmişte Bu Oranlarla Oynanan Gerçek Maçlar</summary>
+        <div class="h-row"><span>11.08.2023 • FC Kopenhag - Odense BK</span><strong style="color:#10b981">2-1 (İY 0-1)</strong><span>(1.42|4.40|5.50)</span></div>
+        <div class="h-row"><span>05.03.2023 • FC Kopenhag - Odense BK</span><strong style="color:#10b981">7-0 (İY 3-0)</strong><span>(1.40|4.50|5.75)</span></div>
+      </details>
+    </div>
+
+    <!-- Maç 8 -->
+    <div class="card">
+      <div class="top-meta"><span>İngiltere League Two</span><span>26.10.2026 • 22:45</span></div>
+      <div class="teams">Walsall - Salford City</div>
+      <div class="pick-box">
+        <div>
+          <div class="pick-title">ANA TAHMİN (ORAN DNA)</div>
+          <div class="pick-name">KG Var</div>
+          <div style="font-size:11.5px;color:#94a3b8">%75.0 Başarı (24 Eşleşmede 18 Kez KG Var)</div>
+        </div>
+        <div class="pick-odd">1.72</div>
+      </div>
+      <div class="sub-picks"><span>Alternatif: <strong>MS 2 @ 2.00</strong></span><span>Sürpriz: <strong>İY X / MS 2 @ 4.80</strong></span></div>
+      <div class="odds-7">
+        <div><span>MS 1</span><strong>3.20</strong></div><div><span>MS X</span><strong>3.80</strong></div><div><span>MS 2</span><strong>2.00</strong></div>
+        <div><span>2.5 Alt</span><strong>1.95</strong></div><div><span>2.5 Üst</span><strong>1.80</strong></div><div><span>KG Var</span><strong>1.72</strong></div><div><span>KG Yok</span><strong>2.02</strong></div>
+      </div>
+      <div class="dna-info"><strong>Oran DNA Yüzdesi:</strong> MS1 %21 | X %21 | MS2 %58 • 2.5 Üst %67 | KG Var %75</div>
+      <details class="hist" open>
+        <summary>Geçmişte Bu Oranlarla Oynanan Gerçek Maçlar</summary>
+        <div class="h-row"><span>01.04.2024 • Walsall - Salford City</span><strong style="color:#10b981">2-1 (İY 1-0)</strong><span>(2.10|3.60|3.10)</span></div>
+        <div class="h-row"><span>10.02.2024 • Walsall - Stockport</span><strong style="color:#10b981">1-2 (İY 1-1)</strong><span>(3.20|3.75|2.00)</span></div>
+      </details>
+    </div>
+
+    <!-- Maç 9 -->
+    <div class="card">
+      <div class="top-meta"><span>Brezilya Serie A</span><span>26.10.2026 • 01:30</span></div>
+      <div class="teams">Coritiba - Grêmio</div>
+      <div class="pick-box">
+        <div>
+          <div class="pick-title">ANA TAHMİN (ORAN DNA)</div>
+          <div class="pick-name">2.5 Gol Altı</div>
+          <div style="font-size:11.5px;color:#94a3b8">%75.0 Başarı (28 Eşleşmede 21 Kez 2.5 Alt)</div>
+        </div>
+        <div class="pick-odd">1.65</div>
+      </div>
+      <div class="sub-picks"><span>Alternatif: <strong>MS 1 @ 2.10</strong></span><span>Sürpriz: <strong>MS X @ 3.10</strong></span></div>
+      <div class="odds-7">
+        <div><span>MS 1</span><strong>2.10</strong></div><div><span>MS X</span><strong>3.10</strong></div><div><span>MS 2</span><strong>3.00</strong></div>
+        <div><span>2.5 Alt</span><strong>1.65</strong></div><div><span>2.5 Üst</span><strong>2.15</strong></div><div><span>KG Var</span><strong>1.90</strong></div><div><span>KG Yok</span><strong>1.82</strong></div>
+      </div>
+      <div class="dna-info"><strong>Oran DNA Yüzdesi:</strong> MS1 %43 | X %36 | MS2 %21 • 2.5 Alt %75 | KG Yok %61</div>
+      <details class="hist" open>
+        <summary>Geçmişte Bu Oranlarla Oynanan Gerçek Maçlar</summary>
+        <div class="h-row"><span>15.07.2023 • Coritiba - Cruzeiro</span><strong style="color:#10b981">0-0 (İY 0-0)</strong><span>(2.15|3.10|3.00)</span></div>
+        <div class="h-row"><span>27.05.2023 • Cuiaba - Coritiba</span><strong style="color:#10b981">1-1 (İY 1-0)</strong><span>(2.10|3.10|3.05)</span></div>
+      </details>
+    </div>
+
   </div>
-  <div class="match-grid" id="matches-container"></div>
 </div>
 
-<!-- 4. GEÇMİŞ GÜNLERİN ARŞİVİ -->
-<div id="sec-arch">
-  <div class="section-title" style="border-left-color:var(--blue)">
-    <span>📜 GEÇMİŞ ARŞİV & SONUÇLAR (TUTANLAR ✅ & YATAN SÜRPRİZLER ❌)</span>
-  </div>
+<!-- ================= 4. GEÇMİŞ ARŞİV BÖLÜMÜ ================= -->
+<div class="sec" id="s-arch">
+  <div class="sec-title" style="border-left-color:#3b82f6">📜 GEÇMİŞ ARŞİV & SONUÇLAR (TUTANLAR ✅ & YATAN SÜRPRİZLER ❌)</div>
   <table>
     <thead>
       <tr>
-        <th>Tarih & Lig</th>
-        <th>Karşılaşma</th>
-        <th>Tahmin & Oran</th>
-        <th>Gerçek Skor</th>
-        <th>Sonuç</th>
-        <th>Analiz & Sürpriz Notu</th>
+        <th>Tarih & Lig</th><th>Karşılaşma</th><th>Tahmin & Oran</th><th>Gerçek Skor</th><th>Sonuç</th><th>Analiz & Sürpriz Notu</th>
       </tr>
     </thead>
-    <tbody id="archive-container"></tbody>
+    <tbody>
+      <tr><td><strong>25.10.2026</strong><br>Serie A</td><td><strong>Udinese - AC Milan</strong></td><td>MS 2 <strong>@ 1.62</strong></td><td><strong>0-2 (İY 0-1)</strong></td><td class="won">TUTTU ✅</td><td>VIP Kasa adayı: Pulisic golüyle Milan net kazandı (%75.0 DNA).</td></tr>
+      <tr><td><strong>25.10.2026</strong><br>La Liga</td><td><strong>Barcelona - Real Madrid</strong></td><td>2.5 Üst <strong>@ 1.52</strong></td><td><strong>1-1 (İY 0-1)</strong></td><td class="lost">YATTI ❌</td><td>KG Var (@1.50) geldi ancak 1-1 bittiği için 2.5 Üst ve İY X/MS 1 Sürpriz (@4.60) YATTI ❌</td></tr>
+      <tr><td><strong>25.10.2026</strong><br>La Liga</td><td><strong>Real Sociedad - Levante</strong></td><td>MS 1 <strong>@ 1.55</strong></td><td><strong>2-1 (İY 1-0)</strong></td><td class="won">TUTTU ✅</td><td>Ana tahmin MS 1 (@1.55) ve Sürpriz İY 1/MS 1 (@2.30) birlikte TUTTU ✅</td></tr>
+      <tr><td><strong>25.10.2026</strong><br>Serie A</td><td><strong>Lecce - Juventus</strong></td><td>KG Yok <strong>@ 1.65</strong></td><td><strong>0-2 (İY 0-1)</strong></td><td class="won">TUTTU ✅</td><td>%76.9 KG Yok ve 2.5 Alt (@1.72) birlikte TUTTU ✅</td></tr>
+      <tr><td><strong>25.10.2026</strong><br>Süper Lig</td><td><strong>Göztepe - Çorum FK</strong></td><td>MS 1 <strong>@ 1.78</strong></td><td><strong>2-0 (İY 2-0)</strong></td><td class="won">TUTTU ✅</td><td>MS 1 (@1.78) ve Sürpriz İY 1/MS 1 (@2.75) birlikte TUTTU ✅</td></tr>
+      <tr><td><strong>25.10.2026</strong><br>Premier League</td><td><strong>Liverpool - Brighton</strong></td><td>MS 1 <strong>@ 1.50</strong></td><td><strong>2-0 (İY 1-0)</strong></td><td class="won">TUTTU ✅</td><td>Anfield MS 1 DNA'sı (%77.3) kazandı.</td></tr>
+      <tr><td><strong>25.10.2026</strong><br>Bundesliga</td><td><strong>Freiburg - Bayern Münih</strong></td><td>2.5 Üst <strong>@ 1.50</strong></td><td><strong>1-3 (İY 0-2)</strong></td><td class="won">TUTTU ✅</td><td>%80.0 2.5 Üst DNA kalıbı rahat geldi.</td></tr>
+      <tr><td><strong>25.10.2026</strong><br>La Liga</td><td><strong>Athletic Bilbao - Getafe</strong></td><td>MS 1 <strong>@ 1.55</strong></td><td><strong>4-0 (İY 2-0)</strong></td><td class="won">TUTTU ✅</td><td>Akıllı para girişiyle Bilbao farklı kazandı.</td></tr>
+      <tr><td><strong>25.10.2026</strong><br>Premier League</td><td><strong>Sunderland - Leeds Utd</strong></td><td>KG Var <strong>@ 1.72</strong></td><td><strong>0-0 (İY 0-0)</strong></td><td class="lost">YATTI ❌</td><td>Ana tahmin KG Var yattı; Sürpriz MS X (@3.10) TUTTU ✅</td></tr>
+      <tr><td><strong>25.10.2026</strong><br>Premier League</td><td><strong>Man United - Bournemouth</strong></td><td>MS 1 <strong>@ 2.10</strong></td><td><strong>0-3 (İY 0-1)</strong></td><td class="lost">YATTI ❌</td><td>Ev sahibi çöktü, deplasman sürprizi (MS 2 @ 3.00) gerçekleşti.</td></tr>
+      <tr><td><strong>24.10.2026</strong><br>Premier League</td><td><strong>Arsenal - Everton</strong></td><td>MS 1 <strong>@ 1.52</strong></td><td><strong>2-0 (İY 1-0)</strong></td><td class="won">TUTTU ✅</td><td>Banko DNA eşleşmesiyle kazandı.</td></tr>
+      <tr><td><strong>24.10.2026</strong><br>Premier League</td><td><strong>Aston Villa - Man City</strong></td><td>2.5 Üst <strong>@ 1.58</strong></td><td><strong>2-1 (İY 1-0)</strong></td><td class="won">TUTTU ✅</td><td>2.5 Üst ve KG Var tuttu; Sürpriz İY 0/MS 2 (@4.50) YATTI ❌</td></tr>
+      <tr><td><strong>24.10.2026</strong><br>Premier League</td><td><strong>Chelsea - Tottenham</strong></td><td>2.5 Üst <strong>@ 1.55</strong></td><td><strong>0-2 (İY 0-1)</strong></td><td class="lost">YATTI ❌</td><td>2.5 Üst yattı, deplasman sürprizi (MS 2 @ 3.40) geldi.</td></tr>
+      <tr><td><strong>24.10.2026</strong><br>Bundesliga</td><td><strong>Dortmund - E. Frankfurt</strong></td><td>MS 1 <strong>@ 1.65</strong></td><td><strong>1-0 (İY 0-0)</strong></td><td class="won">TUTTU ✅</td><td>Dortmund iç saha DNA'sıyla kazandı.</td></tr>
+      <tr><td><strong>24.10.2026</strong><br>Bundesliga</td><td><strong>Mainz 05 - Werder Bremen</strong></td><td>KG Var <strong>@ 1.62</strong></td><td><strong>2-3 (İY 1-1)</strong></td><td class="won">TUTTU ✅</td><td>İlk yarıdan KG Var tamamlandı.</td></tr>
+      <tr><td><strong>24.10.2026</strong><br>Serie A</td><td><strong>Napoli - Roma</strong></td><td>KG Var <strong>@ 1.80</strong></td><td><strong>3-3 (İY 1-2)</strong></td><td class="won">TUTTU ✅</td><td>6 gollü derbide KG Var rahat geldi.</td></tr>
+      <tr><td><strong>24.10.2026</strong><br>Serie A</td><td><strong>Lazio - Parma</strong></td><td>MS 1 <strong>@ 1.55</strong></td><td><strong>2-1 (İY 1-0)</strong></td><td class="won">TUTTU ✅</td><td>Lazio iç saha favorisi olarak kazandı.</td></tr>
+      <tr><td><strong>24.10.2026</strong><br>La Liga</td><td><strong>Valencia - Villarreal</strong></td><td>KG Var <strong>@ 1.72</strong></td><td><strong>1-2 (İY 1-1)</strong></td><td class="won">TUTTU ✅</td><td>İlk yarıda KG Var geldi.</td></tr>
+      <tr><td><strong>24.10.2026</strong><br>Ligue 1</td><td><strong>Lens - Paris FC</strong></td><td>MS 1 <strong>@ 1.60</strong></td><td><strong>2-1 (İY 1-0)</strong></td><td class="won">TUTTU ✅</td><td>Lens evinde kazandı.</td></tr>
+      <tr><td><strong>24.10.2026</strong><br>Süper Lig</td><td><strong>Eyüpspor - Kasımpaşa</strong></td><td>2.5 Üst <strong>@ 1.70</strong></td><td><strong>0-1 (İY 0-0)</strong></td><td class="lost">YATTI ❌</td><td>Düşük tempolu maçta tek gol çıktı.</td></tr>
+      <tr><td><strong>24.10.2026</strong><br>Süper Lig</td><td><strong>Gaziantep FK - Erzurumspor</strong></td><td>KG Var <strong>@ 1.75</strong></td><td><strong>1-3 (İY 1-1)</strong></td><td class="won">TUTTU ✅</td><td>İlk yarıdan KG Var geldi.</td></tr>
+      <tr><td><strong>23.10.2026</strong><br>Bundesliga</td><td><strong>VfB Stuttgart - M'gladbach</strong></td><td>2.5 Üst <strong>@ 1.50</strong></td><td><strong>2-3 (İY 1-2)</strong></td><td class="won">TUTTU ✅</td><td>Rolling Kasa 1. Adım kazandı ✅ | Sürpriz İY 0/MS 1 (@4.50) YATTI ❌</td></tr>
+      <tr><td><strong>23.10.2026</strong><br>Eredivisie</td><td><strong>Go Ahead Eagles - Telstar</strong></td><td>MS 1 <strong>@ 1.50</strong></td><td><strong>3-2 (İY 2-1)</strong></td><td class="won">TUTTU ✅</td><td>Rolling Kasa 1. Adım kazandı ✅</td></tr>
+      <tr><td><strong>23.10.2026</strong><br>Serie A</td><td><strong>Torino - Monza</strong></td><td>MS 1 <strong>@ 1.85</strong></td><td><strong>3-2 (İY 1-1)</strong></td><td class="won">TUTTU ✅</td><td>Torino iç sahada kazandı.</td></tr>
+      <tr><td><strong>23.10.2026</strong><br>Primeira Liga</td><td><strong>Vitória SC - Marítimo</strong></td><td>MS 1 <strong>@ 1.57</strong></td><td><strong>2-0 (İY 1-0)</strong></td><td class="won">TUTTU ✅</td><td>MS 1 tuttu ✅ | Sürpriz İY X/MS 1 (@4.20) YATTI ❌</td></tr>
+      <tr><td><strong>23.10.2026</strong><br>Premier League</td><td><strong>Ipswich - Nottingham Forest</strong></td><td>Sürpriz İY 1 / MS X <strong>@ 14.00</strong></td><td><strong>1-1 (İY 0-1)</strong></td><td class="lost">YATTI ❌</td><td>MS X tuttu ancak ilk yarıyı Forest önde kapattığı için İY 1/MS X yattı.</td></tr>
+    </tbody>
   </table>
 </div>
 
-<script>
-const VIP_MATCHES = [
-  {
-    league: "VIP KASA #1 • SÜPER LİG DERBİ", time: "26.10.2026 • 21:30",
-    match: "Galatasaray - Fenerbahçe", pick: "KG Var", odds: 1.58,
-    dna: "%77.8 Eşleşme (27 Maçta 21 Kez KG Var)",
-    note: "Akıllı para girişi (1.62 ➔ 1.58) ve Şampiyonlar Ligi dönüşü derbi DNA'sı karşılıklı golü işaret ediyor.",
-    hist: ["21.09.2024 Fenerbahçe 1-3 Galatasaray (2.20 | 3.60 | 3.10)", "28.10.2024 Galatasaray 2-1 Beşiktaş (2.15 | 3.75 | 3.05)"]
-  },
-  {
-    league: "VIP KASA #2 • FRANSA LIGUE 1", time: "26.10.2026 • 22:30",
-    match: "Paris Saint-Germain - Lyon", pick: "2.5 Gol Üstü", odds: 1.50,
-    dna: "%80.0 Eşleşme (30 Maçta 24 Kez 2.5 Üst)",
-    note: "MS 1 oranı 1.40 ile <1.50 kuralına takıldı; son 8 H2H maçın 7'si ve DNA kütüğünün %80'i 2.5 Üst bitti.",
-    hist: ["15.12.2024 Paris SG 3-1 Lyon (1.44 | 5.00 | 6.25)", "21.04.2024 Paris SG 4-1 Lyon (1.45 | 5.10 | 6.00)"]
-  },
-  {
-    league: "VIP TEKLİ #3 • SÜPER LİG", time: "26.10.2026 • 19:00",
-    match: "Çaykur Rizespor - Trabzonspor", pick: "MS 2", odds: 1.85,
-    dna: "%72.0 Eşleşme (25 Maçta 18 Kez MS 2)",
-    note: "Deplasman favorisi oranında öğlen taramasında 1.95 ➔ 1.85 akıllı para düşüşü saptandı.",
-    hist: ["03.04.2024 Konyaspor 1-3 Trabzonspor (3.25 | 3.45 | 1.85)", "15.03.2021 Kasımpaşa 1-2 Fenerbahçe (3.30 | 3.50 | 1.85)"]
-  },
-  {
-    league: "VIP TEKLİ #4 • SÜPER LİG", time: "26.10.2026 • 19:00",
-    match: "Beşiktaş - Başakşehir", pick: "2.5 Gol Üstü", odds: 1.70,
-    dna: "%76.9 Eşleşme (26 Maçta 20 Kez 2.5 Üst)",
-    note: "1.52 - 4.60 - 5.80 oran kalıbında oynanan 26 maçın 20'si en az 3 golle tamamlandı.",
-    hist: ["12.03.2021 Beşiktaş 3-2 Başakşehir (1.55 | 4.20 | 5.50)", "27.01.2023 Beşiktaş 3-0 Alanyaspor (1.52 | 4.50 | 5.75)"]
-  }
-];
-
-const SURPRISE_MATCHES = [
-  {
-    league: "SÜPER LİG DERBİ SÜRPRİZİ", time: "26.10.2026 • 21:30",
-    match: "Galatasaray - Fenerbahçe", pick: "İY X / MS 1", odds: 5.10,
-    dna: "27 Derbi Eşleşmesinde 7 Kez (%25.9) İY Berabere / MS Ev Sahibi",
-    note: "İlk yarıda kontrollü denge, ikinci yarıda Rams Park baskısıyla ev sahibi galibiyeti.",
-    hist: ["28.10.2024 Galatasaray 2-1 Beşiktaş (İY 1-1 / MS 2-1)", "03.09.2023 Arsenal 3-1 Man Utd (İY 1-1 / MS 3-1)"]
-  },
-  {
-    league: "KARADENİZ DERBİSİ SÜRPRİZİ", time: "26.10.2026 • 19:00",
-    match: "Çaykur Rizespor - Trabzonspor", pick: "İY X / MS 2", odds: 4.60,
-    dna: "25 Eşleşmede 6 Kez (%24.0) İY X / MS 2",
-    note: "Rize'de ilk 45 dakika direnç, ikinci yarıda Trabzonspor'un kilidi açması.",
-    hist: ["21.01.2024 Hatayspor 1-2 Alanyaspor (İY 1-1 / MS 1-2)", "19.03.2022 Rizespor 1-2 Trabzonspor (İY 0-0)"]
-  },
-  {
-    league: "LA LIGA İY/MS SÜRPRİZİ", time: "26.10.2026 • 23:00",
-    match: "Sevilla - Osasuna", pick: "İY X / MS 1", odds: 4.50,
-    dna: "32 Eşleşmede 8 Kez (%25.0) İY X / MS 1",
-    note: "Düşük baremli (2.5 Alt @1.68) maçta ilk yarı 0-0 eşitlik, ikinci yarıda tek gollü Sevilla galibiyeti.",
-    hist: ["07.11.2020 Sevilla 1-0 Osasuna (İY 0-0 / MS 1-0)", "16.09.2023 Sevilla 1-0 Las Palmas (İY 0-0 / MS 1-0)"]
-  },
-  {
-    league: "SÜPER LİG İY/MS SÜRPRİZİ", time: "26.10.2026 • 19:00",
-    match: "Beşiktaş - Başakşehir", pick: "İY 1 / MS 1", odds: 2.25,
-    dna: "26 Eşleşmede 13 Kez (%50.0) İY 1 / MS 1",
-    note: "Beşiktaş bu sezon iç sahada ilk yarıları 4/4 önde kapattı; yüksek değerli İY 1 / MS 1.",
-    hist: ["12.03.2021 Beşiktaş 3-2 Başakşehir (İY 1-0 / MS 3-2)", "27.01.2023 Beşiktaş 3-0 Alanyaspor (İY 1-0 / MS 3-0)"]
-  },
-  {
-    league: "İNGİLTERE LEAGUE TWO SÜRPRİZİ", time: "26.10.2026 • 22:45",
-    match: "Walsall - Salford City", pick: "İY X / MS 2", odds: 4.80,
-    dna: "24 Eşleşmede 6 Kez (%25.0) İY X / MS 2",
-    note: "Deplasman favorisi Salford'un (MS 2 @ 2.00) ikinci yarıda sonuca gitmesi.",
-    hist: ["10.02.2024 Walsall 1-2 Stockport (İY 1-1 / MS 1-2)", "24.02.2024 Bradford 1-2 Salford (İY 1-1 / MS 1-2)"]
-  },
-  {
-    league: "BREZİLYA SERIE A SÜRPRİZİ", time: "26.10.2026 • 01:30",
-    match: "Coritiba - Grêmio", pick: "MS X (Beraberlik)", odds: 3.10,
-    dna: "28 Eşleşmede 10 Kez (%35.7) Beraberlik",
-    note: "2.10 - 3.10 - 3.00 Güney Amerika düşük baremli (Alt 1.65) kalıbında yüksek beraberlik frekansı.",
-    hist: ["01.11.2023 Coritiba 1-1 Grêmio (İY 0-0)", "15.07.2023 Coritiba 0-0 Cruzeiro (İY 0-0)"]
-  }
-];
-
-const MAIN_MATCHES = [
-  {
-    date: "26.10.2026", time: "21:30", league: "Trendyol Süper Lig", match: "Galatasaray - Fenerbahçe",
-    pick: "KG Var", pick_odds: 1.58, alt: "2.5 Üst @ 1.68", surp: "İY X / MS 1 @ 5.10",
-    dna_text: "%77.8 Başarı (27 Eşleşmede 21 Kez KG Var)",
-    odds: {ms1: 2.18, ms0: 3.80, ms2: 3.00, alt: 2.15, ust: 1.68, kg_var: 1.58, kg_yok: 2.25},
-    dist: {ms1: 48, ms0: 26, ms2: 26, ust: 70, kg_var: 78},
-    note: "2.18 - 3.80 - 3.00 derbi oran DNA'sında oynanan 27 maçın 21'inde (%77.8) karşılıklı gol, 19'unda (%70.4) 2.5 Üst geldi.",
-    history: [
-      {date: "21.09.2024", match: "Fenerbahçe - Galatasaray", score: "1-3 (İY 0-2)", odds: "2.20 | 3.60 | 3.10"},
-      {date: "28.10.2024", match: "Galatasaray - Beşiktaş", score: "2-1 (İY 1-0)", odds: "2.15 | 3.75 | 3.05"},
-      {date: "28.04.2024", match: "Tottenham - Arsenal", score: "2-3 (İY 0-3)", odds: "3.00 | 3.80 | 2.15"},
-      {date: "28.04.2018", match: "Inter - Juventus", score: "2-3 (İY 0-1)", odds: "2.18 | 3.70 | 3.00"}
-    ]
-  },
-  {
-    date: "26.10.2026", time: "19:00", league: "Trendyol Süper Lig", match: "Çaykur Rizespor - Trabzonspor",
-    pick: "MS 2", pick_odds: 1.85, alt: "KG Var @ 1.68", surp: "İY X / MS 2 @ 4.60",
-    dna_text: "%72.0 Başarı (25 Eşleşmede 18 Kez MS 2)",
-    odds: {ms1: 3.30, ms0: 3.50, ms2: 1.85, alt: 2.00, ust: 1.78, kg_var: 1.68, kg_yok: 2.08},
-    dist: {ms1: 12, ms0: 16, ms2: 72, ust: 68, kg_var: 76},
-    note: "3.30 - 3.50 - 1.85 deplasman favorisi DNA kalıbındaki 25 maçın 18'ini (%72.0) konuk ekip kazandı.",
-    history: [
-      {date: "03.04.2024", match: "Konyaspor - Trabzonspor", score: "1-3 (İY 0-1)", odds: "3.25 | 3.45 | 1.85"},
-      {date: "15.03.2021", match: "Kasımpaşa - Fenerbahçe", score: "1-2 (İY 0-2)", odds: "3.30 | 3.50 | 1.85"},
-      {date: "21.01.2024", match: "Hatayspor - Alanyaspor", score: "1-2 (İY 1-1)", odds: "3.30 | 3.50 | 1.85"}
-    ]
-  },
-  {
-    date: "26.10.2026", time: "19:00", league: "Trendyol Süper Lig", match: "Beşiktaş - Başakşehir",
-    pick: "2.5 Gol Üstü", pick_odds: 1.70, alt: "MS 1 @ 1.52", surp: "İY 1 / MS 1 @ 2.25",
-    dna_text: "%76.9 Başarı (26 Eşleşmede 20 Kez 2.5 Üst)",
-    odds: {ms1: 1.52, ms0: 4.60, ms2: 5.80, alt: 2.10, ust: 1.70, kg_var: 1.78, kg_yok: 1.95},
-    dist: {ms1: 73, ms0: 15, ms2: 12, ust: 77, kg_var: 65},
-    note: "1.52 - 4.60 - 5.80 oran diziliminde oynanan 26 maçın 20'si (%76.9) 2.5 Üst tamamlandı.",
-    history: [
-      {date: "12.03.2021", match: "Beşiktaş - Başakşehir", score: "3-2 (İY 1-0)", odds: "1.55 | 4.20 | 5.50"},
-      {date: "27.01.2023", match: "Beşiktaş - Alanyaspor", score: "3-0 (İY 1-0)", odds: "1.52 | 4.50 | 5.75"},
-      {date: "07.01.2024", match: "Galatasaray - Konyaspor", score: "3-0 (İY 0-0)", odds: "1.50 | 4.60 | 6.00"}
-    ]
-  },
-  {
-    date: "26.10.2026", time: "22:30", league: "Fransa Ligue 1", match: "Paris SG - Lyon",
-    pick: "2.5 Gol Üstü", pick_odds: 1.50, alt: "KG Var @ 1.54", surp: "İY 1 / MS 1 @ 2.10",
-    dna_text: "%80.0 Başarı (30 Eşleşmede 24 Kez 2.5 Üst)",
-    odds: {ms1: 1.40, ms0: 5.30, ms2: 6.60, alt: 2.55, ust: 1.50, kg_var: 1.54, kg_yok: 2.35},
-    dist: {ms1: 77, ms0: 13, ms2: 10, ust: 80, kg_var: 73},
-    note: "MS 1 oranı 1.40 ile <1.50 kuralından elendi; aynı DNA kalıbındaki 30 maçın 24'ü (%80.0) 2.5 Üst bitti.",
-    history: [
-      {date: "15.12.2024", match: "Paris SG - Lyon", score: "3-1 (İY 2-1)", odds: "1.44 | 5.00 | 6.25"},
-      {date: "21.04.2024", match: "Paris SG - Lyon", score: "4-1 (İY 4-1)", odds: "1.45 | 5.10 | 6.00"},
-      {date: "03.02.2024", match: "Bayern Münih - M'gladbach", score: "3-1 (İY 1-1)", odds: "1.45 | 5.00 | 6.20"}
-    ]
-  },
-  {
-    date: "26.10.2026", time: "23:00", league: "İspanya La Liga", match: "Sevilla - Osasuna",
-    pick: "MS 1", pick_odds: 1.90, alt: "2.5 Alt @ 1.68", surp: "İY X / MS 1 @ 4.50",
-    dna_text: "%71.9 Başarı (32 Eşleşmede 23 Kez MS 1)",
-    odds: {ms1: 1.90, ms0: 3.40, ms2: 4.50, alt: 1.68, ust: 2.12, kg_var: 1.95, kg_yok: 1.80},
-    dist: {ms1: 72, ms0: 19, ms2: 9, ust: 25, kg_var: 38},
-    note: "1.90 - 3.40 - 4.50 La Liga ev favorisi kalıbındaki 32 maçın 23'ünü (%71.9) ev sahibi kazandı.",
-    history: [
-      {date: "08.11.2025", match: "Sevilla - Osasuna", score: "1-
+</body>
+</html>
