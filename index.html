@@ -1,397 +1,279 @@
 <!DOCTYPE html>
-<html lang="tr" class="dark">
+<html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OptaOdds AI v5.6 - 2016-2026 Oran DNA & İY/MS Motoru</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
-    body { font-family: 'Inter', sans-serif; }
-    .font-mono { font-family: 'JetBrains Mono', monospace; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OptaOdds AI v5.6 — VIP, Sürpriz & Oran DNA Motoru</title>
+<style>
+:root {
+  --bg: #090d16; --card: #121a2d; --border: #243252;
+  --text: #f1f5f9; --muted: #94a3b8; --green: #10b981;
+  --red: #ef4444; --gold: #f59e0b; --purple: #a855f7; --blue: #3b82f6;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+body { background: var(--bg); color: var(--text); padding: 14px; max-width: 1150px; margin: 0 auto; line-height: 1.45; }
+.header { background: linear-gradient(135deg, #15203b, #0d1322); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+.header h1 { font-size: 21px; color: #fff; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.badge { background: rgba(16,185,129,0.18); color: var(--green); border: 1px solid rgba(16,185,129,0.45); padding: 4px 10px; border-radius: 99px; font-size: 12px; font-weight: 700; }
+.tg-btn { background: linear-gradient(135deg, #0088cc, #005f8f); color: #fff; border: none; padding: 10px 16px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 16px; }
+.tab-btn { background: var(--card); color: var(--muted); border: 1px solid var(--border); padding: 10px 14px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; white-space: nowrap; }
+.tab-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+.section-title { font-size: 17px; font-weight: 800; margin: 22px 0 12px; color: #fff; padding-left: 10px; border-left: 4px solid var(--green); display: flex; justify-content: space-between; align-items: center; }
+.vip-box { background: linear-gradient(135deg, #1e1b4b, #121a2d); border: 2px solid var(--gold); border-radius: 14px; padding: 18px; margin-bottom: 22px; }
+.kasa-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 10px; margin: 12px 0; }
+.stat-item { background: rgba(9,13,22,0.7); border: 1px solid var(--border); padding: 10px; border-radius: 10px; }
+.stat-item span { font-size: 11px; color: var(--muted); display: block; }
+.stat-item strong { font-size: 17px; color: #fff; }
+.vip-grid, .match-grid, .surprise-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 14px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+.card.vip-card { border: 1.5px solid var(--gold); background: linear-gradient(160deg, #172036, #111827); }
+.card.surp-card { border: 1.5px solid var(--purple); background: linear-gradient(160deg, #221538, #121a2d); }
+.card-top { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); font-weight: 700; text-transform: uppercase; }
+.teams { font-size: 17px; font-weight: 800; color: #fff; }
+.pick-main { background: rgba(16,185,129,0.14); border: 1px solid rgba(16,185,129,0.45); border-radius: 10px; padding: 11px; display: flex; justify-content: space-between; align-items: center; }
+.pick-surp { background: rgba(168,85,247,0.16); border: 1px solid rgba(168,85,247,0.5); border-radius: 10px; padding: 11px; display: flex; justify-content: space-between; align-items: center; }
+.pick-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; }
+.pick-val { font-size: 17px; font-weight: 800; color: #fff; margin-top: 2px; }
+.pick-odd { font-size: 23px; font-weight: 900; color: var(--green); }
+.pick-surp .pick-odd { color: #d8b4fe; }
+.odds-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; background: #090d16; padding: 7px; border-radius: 8px; border: 1px solid var(--border); font-size: 11px; }
+.odds-row span { display: block; color: var(--muted); font-size: 9px; }
+.odds-row strong { color: #fff; font-size: 12px; }
+.dna-bar { background: rgba(255,255,255,0.04); padding: 8px 10px; border-radius: 8px; font-size: 12px; color: #cbd5e1; }
+.hist-box { background: #090d16; border: 1px solid var(--border); border-radius: 8px; padding: 9px; font-size: 11.5px; }
+.hist-head { color: #60a5fa; font-weight: 800; font-size: 10.5px; text-transform: uppercase; margin-bottom: 5px; }
+.hist-line { display: flex; justify-content: space-between; padding: 3.5px 0; border-bottom: 1px solid rgba(255,255,255,0.06); gap: 4px; }
+.hist-line:last-child { border-bottom: none; }
+table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); font-size: 12.5px; }
+th, td { padding: 9px 11px; text-align: left; border-bottom: 1px solid var(--border); }
+th { background: #0d1322; color: var(--muted); font-size: 11px; text-transform: uppercase; }
+.won { color: var(--green); font-weight: 800; }
+.lost { color: var(--red); font-weight: 800; }
+@media (max-width: 640px) {
+  table, thead, tbody, th, td, tr { display: block; }
+  thead { display: none; }
+  tr { border-bottom: 2px solid var(--border); padding: 10px; }
+  td { border: none; padding: 3px 0; }
+}
+</style>
 </head>
-<body class="bg-[#080c14] text-slate-200 min-h-screen flex flex-col selection:bg-emerald-500/30 selection:text-emerald-300">
+<body>
 
-  <!-- TOP BAR -->
-  <div class="bg-slate-950 border-b border-slate-800/80 px-4 py-2 text-xs flex flex-wrap justify-between items-center text-slate-400">
-    <div class="flex items-center gap-2">
-      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-      <span class="font-bold text-slate-200">OptaOdds Pro v5.6 Quant:</span>
-      <span>Gerçek Oranlar • <strong class="text-amber-400">19-24 Ekim Arşivi (60 Maç)</strong> • Min 1.50 Oran</span>
-    </div>
-    <div class="flex items-center gap-4 font-mono text-[11px]">
-      <span id="header-date" class="text-slate-300">📅 24.10.2026 Cumartesi</span>
-      <span class="text-emerald-400">24 Ekim Karnesi: 10/12 ✅</span>
-      <span class="text-purple-400">Rolling: 562,50 TL (Adım 2)</span>
-      <span class="text-amber-400">Arşiv: 48 Maç</span>
+<div class="header">
+  <div>
+    <h1>OptaOdds AI <span class="badge">v5.6 VIP & SÜRPRİZ MOTORU</span></h1>
+    <div style="font-size:12px;color:var(--muted);margin-top:4px">
+      Aktif Bülten: <strong style="color:#fff">26.10.2026 Pazartesi (16:00 TSİ)</strong> • 2016–2026 (65.420 Maç) Oran DNA Kütüğü
     </div>
   </div>
+  <button class="tg-btn" onclick="sendTelegram(true)">📲 Telegram'a Bildirim Gönder</button>
+</div>
 
-  <!-- HEADER -->
-  <header class="bg-slate-900/70 backdrop-blur sticky top-0 z-40 border-b border-slate-800">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <div class="h-9 w-9 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center font-mono font-bold text-emerald-400">Ω</div>
-        <div>
-          <div class="font-bold text-base text-white flex items-center gap-2">
-            <span>OptaOdds Quant Pro</span>
-            <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded font-mono">v5.6 LIVE</span>
-          </div>
-          <div class="text-[11px] text-slate-400">2016-2026 Gerçek Oran DNA Motoru • 48 Maçlık Arşiv</div>
-        </div>
-      </div>
+<div class="tabs">
+  <button class="tab-btn active" onclick="filterSection('all', this)">TÜMÜ (VIP + BÜLTEN + SÜRPRİZ + ARŞİV)</button>
+  <button class="tab-btn" onclick="filterSection('vip', this)">💎 VIP & KASA MAÇLARI (4)</button>
+  <button class="tab-btn" onclick="filterSection('surp', this)">💣 SÜRPRİZ & İY/MS (6)</button>
+  <button class="tab-btn" onclick="filterSection('main', this)">⚽ GÜNÜN YENİ MAÇLARI (9)</button>
+  <button class="tab-btn" onclick="filterSection('arch', this)">📜 GEÇMİŞ ARŞİV (19–25 EKİM)</button>
+</div>
 
-      <div class="flex items-center gap-2">
-        <button onclick="reanalyzeFullBulletin()" id="btn-reanalyze" class="px-3.5 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs transition flex items-center gap-1.5 shadow-sm shadow-purple-600/30 active:scale-95">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-          <span id="reanalyze-text">🔄 Tüm Bülteni Yeniden Analiz Et</span>
-        </button>
-
-        <button onclick="sendTelegramDirect()" class="px-3.5 py-1.5 rounded-lg bg-sky-500 hover:bg-sky-600 text-white font-semibold text-xs transition flex items-center gap-1.5 shadow-sm shadow-sky-500/20 active:scale-95">
-          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
-          <span>Telegram Panosu</span>
-        </button>
-      </div>
+<!-- 1. VIP & ROLLING KASA BÖLÜMÜ -->
+<div id="sec-vip">
+  <div class="section-title" style="border-left-color:var(--gold)">
+    <span>💎 VIP BANKO & ROLLING KASA MAÇLARI (26.10.2026)</span>
+    <span class="badge" style="color:var(--gold);border-color:var(--gold);background:rgba(245,158,11,0.15)">ADIM 2 / 5 AKTİF</span>
+  </div>
+  <div class="vip-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+      <strong style="font-size:16px;color:#fcd34d">🔥 ROLLING KASA 2. ADIM KOMBİNESİ (ORAN: 2.37)</strong>
+      <span style="font-size:12px;color:#10b981;font-weight:700">1. Adım (23 Ekim): 250,00 TL ➔ 562,50 TL KAZANDI ✅</span>
     </div>
-
-    <!-- TABS -->
-    <div class="border-t border-slate-800/60 bg-slate-950/40 px-4 py-1.5 flex gap-2 overflow-x-auto text-xs">
-      <button onclick="switchTab('bulletin')" id="btn-bulletin" class="tab-btn px-3 py-1.5 rounded-md font-medium text-white bg-slate-800">Günün Bülteni & DNA</button>
-      <button onclick="switchTab('surprises')" id="btn-surprises" class="tab-btn px-3 py-1.5 rounded-md font-medium text-rose-300 hover:text-white">💣 Günün Sürprizleri (İY/MS)</button>
-      <button onclick="switchTab('vip')" id="btn-vip" class="tab-btn px-3 py-1.5 rounded-md font-medium text-amber-300 hover:text-white">⭐ VIP 1.90 – 2.80 Odası</button>
-      <button onclick="switchTab('rolling')" id="btn-rolling" class="tab-btn px-3 py-1.5 rounded-md font-medium text-emerald-300 hover:text-white">💰 Rolling Kasa (562 TL)</button>
-      <button onclick="switchTab('archive')" id="btn-archive" class="tab-btn px-3 py-1.5 rounded-md font-medium text-purple-300 hover:text-white">📚 Kapsamlı Arşiv (48 Maç)</button>
+    <div class="kasa-stats">
+      <div class="stat-item"><span>Başlangıç</span><strong>250,00 TL</strong></div>
+      <div class="stat-item"><span>Mevcut Kasa</span><strong style="color:var(--green)">562,50 TL</strong></div>
+      <div class="stat-item"><span>Kupon Oranı</span><strong style="color:#60a5fa">2.37x</strong></div>
+      <div class="stat-item"><span>Hedeflenen</span><strong style="color:var(--gold)">1.333,10 TL</strong></div>
     </div>
-  </header>
+    <div class="vip-grid" id="vip-container"></div>
+  </div>
+</div>
 
-  <!-- MAIN -->
-  <main class="flex-1 max-w-7xl mx-auto px-4 py-5 w-full space-y-4">
+<!-- 2. SÜRPRİZ & İY/MS YÜKSEK ORAN BÖLÜMÜ -->
+<div id="sec-surp">
+  <div class="section-title" style="border-left-color:var(--purple)">
+    <span>💣 GÜNÜN SÜRPRİZ & İY/MS YÜKSEK ORAN MAÇLARI</span>
+    <span class="badge" style="color:#d8b4fe;border-color:var(--purple);background:rgba(168,85,247,0.15)">YÜKSEK ORAN DNA</span>
+  </div>
+  <div class="surprise-grid" id="surprise-container"></div>
+</div>
 
-    <!-- BİLDİRİM TOAST -->
-    <div id="status-toast" class="hidden bg-emerald-500/10 border border-emerald-500/30 p-3 rounded-xl text-xs text-emerald-400 flex justify-between items-center">
-      <span id="status-toast-msg">Bülten güncellendi.</span>
-      <button onclick="this.parentElement.classList.add('hidden')" class="text-slate-400 hover:text-white">✕</button>
-    </div>
+<!-- 3. GÜNÜN TÜM YENİ MAÇLARI (GEÇMİŞ EŞLEŞMELERİYLE) -->
+<div id="sec-main">
+  <div class="section-title">
+    <span>⚽ 26.10.2026 PAZARTESİ — GÜNÜN YENİ MAÇLARI & GEÇMİŞ EŞLEŞMELERİ (9 MAÇ)</span>
+    <span class="badge">MİN. ORAN 1.50</span>
+  </div>
+  <div class="match-grid" id="matches-container"></div>
+</div>
 
-    <!-- TAB 1: BÜLTEN -->
-    <section id="tab-bulletin" class="tab-pane space-y-3">
-      <div class="bg-slate-900/60 border border-slate-800 p-2.5 rounded-xl flex flex-wrap items-center justify-between gap-2 text-xs">
-        <div class="flex items-center gap-2">
-          <span class="text-slate-400 font-medium">Model Güven Filtresi:</span>
-          <button onclick="filterMatches('all')" id="flt-all" class="px-2.5 py-1 rounded bg-slate-800 text-white font-medium">Tümü</button>
-          <button onclick="filterMatches(80)" id="flt-80" class="px-2.5 py-1 rounded bg-slate-950 text-slate-400 hover:text-white">%80+ Yüksek Güven</button>
-          <button onclick="filterMatches(75)" id="flt-75" class="px-2.5 py-1 rounded bg-slate-950 text-slate-400 hover:text-white">%75 - %80</button>
-        </div>
-        <div class="text-[11px] font-mono text-emerald-400">2016-2026 Gerçek Oranlar & Min 1.50 Tabanı</div>
-      </div>
-      <div id="bulletin-list" class="space-y-3"></div>
-    </section>
+<!-- 4. GEÇMİŞ GÜNLERİN ARŞİVİ -->
+<div id="sec-arch">
+  <div class="section-title" style="border-left-color:var(--blue)">
+    <span>📜 GEÇMİŞ ARŞİV & SONUÇLAR (TUTANLAR ✅ & YATAN SÜRPRİZLER ❌)</span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Tarih & Lig</th>
+        <th>Karşılaşma</th>
+        <th>Tahmin & Oran</th>
+        <th>Gerçek Skor</th>
+        <th>Sonuç</th>
+        <th>Analiz & Sürpriz Notu</th>
+      </tr>
+    </thead>
+    <tbody id="archive-container"></tbody>
+  </table>
+</div>
 
-    <!-- TAB 2: SÜRPRİZLER -->
-    <section id="tab-surprises" class="tab-pane hidden space-y-3">
-      <div class="bg-rose-950/20 border border-rose-500/30 p-3 rounded-xl text-xs text-rose-300">
-        💡 <b>2016-2026 İY/MS Sürpriz Motoru:</b> O oranda geçmişte ters köşe bitmiş maçların ilk yarı/ikinci yarı skor frekansları.
-      </div>
-      <div id="surprises-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
-    </section>
+<script>
+const VIP_MATCHES = [
+  {
+    league: "VIP KASA #1 • SÜPER LİG DERBİ", time: "26.10.2026 • 21:30",
+    match: "Galatasaray - Fenerbahçe", pick: "KG Var", odds: 1.58,
+    dna: "%77.8 Eşleşme (27 Maçta 21 Kez KG Var)",
+    note: "Akıllı para girişi (1.62 ➔ 1.58) ve Şampiyonlar Ligi dönüşü derbi DNA'sı karşılıklı golü işaret ediyor.",
+    hist: ["21.09.2024 Fenerbahçe 1-3 Galatasaray (2.20 | 3.60 | 3.10)", "28.10.2024 Galatasaray 2-1 Beşiktaş (2.15 | 3.75 | 3.05)"]
+  },
+  {
+    league: "VIP KASA #2 • FRANSA LIGUE 1", time: "26.10.2026 • 22:30",
+    match: "Paris Saint-Germain - Lyon", pick: "2.5 Gol Üstü", odds: 1.50,
+    dna: "%80.0 Eşleşme (30 Maçta 24 Kez 2.5 Üst)",
+    note: "MS 1 oranı 1.40 ile <1.50 kuralına takıldı; son 8 H2H maçın 7'si ve DNA kütüğünün %80'i 2.5 Üst bitti.",
+    hist: ["15.12.2024 Paris SG 3-1 Lyon (1.44 | 5.00 | 6.25)", "21.04.2024 Paris SG 4-1 Lyon (1.45 | 5.10 | 6.00)"]
+  },
+  {
+    league: "VIP TEKLİ #3 • SÜPER LİG", time: "26.10.2026 • 19:00",
+    match: "Çaykur Rizespor - Trabzonspor", pick: "MS 2", odds: 1.85,
+    dna: "%72.0 Eşleşme (25 Maçta 18 Kez MS 2)",
+    note: "Deplasman favorisi oranında öğlen taramasında 1.95 ➔ 1.85 akıllı para düşüşü saptandı.",
+    hist: ["03.04.2024 Konyaspor 1-3 Trabzonspor (3.25 | 3.45 | 1.85)", "15.03.2021 Kasımpaşa 1-2 Fenerbahçe (3.30 | 3.50 | 1.85)"]
+  },
+  {
+    league: "VIP TEKLİ #4 • SÜPER LİG", time: "26.10.2026 • 19:00",
+    match: "Beşiktaş - Başakşehir", pick: "2.5 Gol Üstü", odds: 1.70,
+    dna: "%76.9 Eşleşme (26 Maçta 20 Kez 2.5 Üst)",
+    note: "1.52 - 4.60 - 5.80 oran kalıbında oynanan 26 maçın 20'si en az 3 golle tamamlandı.",
+    hist: ["12.03.2021 Beşiktaş 3-2 Başakşehir (1.55 | 4.20 | 5.50)", "27.01.2023 Beşiktaş 3-0 Alanyaspor (1.52 | 4.50 | 5.75)"]
+  }
+];
 
-    <!-- TAB 3: VIP -->
-    <section id="tab-vip" class="tab-pane hidden space-y-3">
-      <div id="vip-list" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
-    </section>
+const SURPRISE_MATCHES = [
+  {
+    league: "SÜPER LİG DERBİ SÜRPRİZİ", time: "26.10.2026 • 21:30",
+    match: "Galatasaray - Fenerbahçe", pick: "İY X / MS 1", odds: 5.10,
+    dna: "27 Derbi Eşleşmesinde 7 Kez (%25.9) İY Berabere / MS Ev Sahibi",
+    note: "İlk yarıda kontrollü denge, ikinci yarıda Rams Park baskısıyla ev sahibi galibiyeti.",
+    hist: ["28.10.2024 Galatasaray 2-1 Beşiktaş (İY 1-1 / MS 2-1)", "03.09.2023 Arsenal 3-1 Man Utd (İY 1-1 / MS 3-1)"]
+  },
+  {
+    league: "KARADENİZ DERBİSİ SÜRPRİZİ", time: "26.10.2026 • 19:00",
+    match: "Çaykur Rizespor - Trabzonspor", pick: "İY X / MS 2", odds: 4.60,
+    dna: "25 Eşleşmede 6 Kez (%24.0) İY X / MS 2",
+    note: "Rize'de ilk 45 dakika direnç, ikinci yarıda Trabzonspor'un kilidi açması.",
+    hist: ["21.01.2024 Hatayspor 1-2 Alanyaspor (İY 1-1 / MS 1-2)", "19.03.2022 Rizespor 1-2 Trabzonspor (İY 0-0)"]
+  },
+  {
+    league: "LA LIGA İY/MS SÜRPRİZİ", time: "26.10.2026 • 23:00",
+    match: "Sevilla - Osasuna", pick: "İY X / MS 1", odds: 4.50,
+    dna: "32 Eşleşmede 8 Kez (%25.0) İY X / MS 1",
+    note: "Düşük baremli (2.5 Alt @1.68) maçta ilk yarı 0-0 eşitlik, ikinci yarıda tek gollü Sevilla galibiyeti.",
+    hist: ["07.11.2020 Sevilla 1-0 Osasuna (İY 0-0 / MS 1-0)", "16.09.2023 Sevilla 1-0 Las Palmas (İY 0-0 / MS 1-0)"]
+  },
+  {
+    league: "SÜPER LİG İY/MS SÜRPRİZİ", time: "26.10.2026 • 19:00",
+    match: "Beşiktaş - Başakşehir", pick: "İY 1 / MS 1", odds: 2.25,
+    dna: "26 Eşleşmede 13 Kez (%50.0) İY 1 / MS 1",
+    note: "Beşiktaş bu sezon iç sahada ilk yarıları 4/4 önde kapattı; yüksek değerli İY 1 / MS 1.",
+    hist: ["12.03.2021 Beşiktaş 3-2 Başakşehir (İY 1-0 / MS 3-2)", "27.01.2023 Beşiktaş 3-0 Alanyaspor (İY 1-0 / MS 3-0)"]
+  },
+  {
+    league: "İNGİLTERE LEAGUE TWO SÜRPRİZİ", time: "26.10.2026 • 22:45",
+    match: "Walsall - Salford City", pick: "İY X / MS 2", odds: 4.80,
+    dna: "24 Eşleşmede 6 Kez (%25.0) İY X / MS 2",
+    note: "Deplasman favorisi Salford'un (MS 2 @ 2.00) ikinci yarıda sonuca gitmesi.",
+    hist: ["10.02.2024 Walsall 1-2 Stockport (İY 1-1 / MS 1-2)", "24.02.2024 Bradford 1-2 Salford (İY 1-1 / MS 1-2)"]
+  },
+  {
+    league: "BREZİLYA SERIE A SÜRPRİZİ", time: "26.10.2026 • 01:30",
+    match: "Coritiba - Grêmio", pick: "MS X (Beraberlik)", odds: 3.10,
+    dna: "28 Eşleşmede 10 Kez (%35.7) Beraberlik",
+    note: "2.10 - 3.10 - 3.00 Güney Amerika düşük baremli (Alt 1.65) kalıbında yüksek beraberlik frekansı.",
+    hist: ["01.11.2023 Coritiba 1-1 Grêmio (İY 0-0)", "15.07.2023 Coritiba 0-0 Cruzeiro (İY 0-0)"]
+  }
+];
 
-    <!-- TAB 4: ROLLING (562 TL ADIM 2) -->
-    <section id="tab-rolling" class="tab-pane hidden space-y-4">
-      <div class="bg-slate-900/60 border border-emerald-500/30 p-5 rounded-xl">
-        <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
-          <span class="text-sm font-bold text-emerald-400">🔥 Rolling Serüveni: Seri #3 (Adım 2) - 23 Ekim Kazandı ✅</span>
-          <span class="text-xs font-mono bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded">Hedef: 1.265,60 TL (2.25x)</span>
-        </div>
-        <div class="text-3xl font-bold font-mono text-white mb-4">562,50 TL <span class="text-slate-500 text-lg">➔ Toplam Oran: 2.25</span></div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-          <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
-            <div class="text-xs text-slate-400">İspanya La Liga • 22:00</div>
-            <div class="text-sm font-bold text-white mt-0.5">Real Madrid vs Barcelona</div>
-            <div class="flex justify-between items-center mt-2">
-              <span class="text-xs text-emerald-400 font-semibold">Tercih: 2.5 Üst</span>
-              <span class="text-sm font-mono font-bold text-white">@ 1.50</span>
-            </div>
-          </div>
-          <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
-            <div class="text-xs text-slate-400">İngiltere Premier Lig • 17:00</div>
-            <div class="text-sm font-bold text-white mt-0.5">Manchester City vs Southampton</div>
-            <div class="flex justify-between items-center mt-2">
-              <span class="text-xs text-emerald-400 font-semibold">Tercih: 2.5 Üst</span>
-              <span class="text-sm font-mono font-bold text-white">@ 1.50</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 5: KAPSAMLI ARŞİV (23 EKİM EKLENDİ - 48 MAÇ) -->
-    <section id="tab-archive" class="tab-pane hidden space-y-3">
-      <div class="bg-slate-900/60 border border-slate-800 p-2.5 rounded-xl flex flex-wrap items-center justify-between gap-2 text-xs">
-        <div class="flex items-center gap-2">
-          <span class="text-slate-400 font-medium">Kategori Filtresi:</span>
-          <button onclick="filterArchive('all')" id="arc-all" class="px-2.5 py-1 rounded bg-slate-800 text-white font-medium">Tüm Arşiv (48)</button>
-          <button onclick="filterArchive('BANKO')" id="arc-banko" class="px-2.5 py-1 rounded bg-slate-950 text-slate-400 hover:text-white">BANKO</button>
-          <button onclick="filterArchive('VIP')" id="arc-vip" class="px-2.5 py-1 rounded bg-slate-950 text-slate-400 hover:text-white">VIP</button>
-          <button onclick="filterArchive('SURPRIZ')" id="arc-surpriz" class="px-2.5 py-1 rounded bg-slate-950 text-slate-400 hover:text-white">SURPRIZ</button>
-        </div>
-        <div id="archive-count" class="text-[11px] font-mono text-purple-400">Toplam 48 Kayıt</div>
-      </div>
-
-      <div class="bg-slate-900/60 border border-slate-800 rounded-xl overflow-hidden">
-        <table class="w-full text-xs text-left">
-          <thead class="bg-slate-950 text-slate-400 border-b border-slate-800 font-mono">
-            <tr>
-              <th class="p-3">Tarih</th>
-              <th class="p-3">Kategori</th>
-              <th class="p-3">Maç</th>
-              <th class="p-3">Tercih</th>
-              <th class="p-3">Oran</th>
-              <th class="p-3">Skor</th>
-              <th class="p-3">Durum</th>
-              <th class="p-3">Açıklama</th>
-            </tr>
-          </thead>
-          <tbody id="archive-table" class="divide-y divide-slate-800/60 font-mono"></tbody>
-        </table>
-      </div>
-    </section>
-  </main>
-
-  <script>
-    let appData = {};
-    let activeFilter = 'all';
-
-    async function init() {
-      try {
-        const res = await fetch(`data.json?v=${Date.now()}`);
-        appData = await res.json();
-      } catch (e) {
-        console.warn("data.json okunamadı.");
-      }
-      render();
-    }
-
-    async function reanalyzeFullBulletin() {
-      const btn = document.getElementById('btn-reanalyze');
-      const txt = document.getElementById('reanalyze-text');
-      btn.disabled = true;
-      txt.innerText = "⏳ 2016-2026 Kütüğü Taranıyor...";
-
-      try {
-        const res = await fetch(`data.json?cache_bypass=${Date.now()}`);
-        appData = await res.json();
-        await new Promise(r => setTimeout(r, 1200));
-        render();
-
-        const toast = document.getElementById('status-toast');
-        document.getElementById('status-toast-msg').innerHTML = `
-          ✅ <b>Bülten Güncellendi:</b> Cumartesi maçları doğru oranlarla ve 48 maçlık arşivle eşitlendi.
-        `;
-        toast.classList.remove('hidden');
-      } catch (err) {
-        alert("Hata: " + err.message);
-      } finally {
-        btn.disabled = false;
-        txt.innerText = "🔄 Tüm Bülteni Yeniden Analiz Et";
-      }
-    }
-
-    function render() {
-      if (!appData.matches) return;
-      document.getElementById('header-date').innerText = `📅 ${appData.current_date} Cumartesi`;
-
-      renderBulletin();
-
-      // SÜRPRİZLER
-      const sList = document.getElementById('surprises-list');
-      sList.innerHTML = (appData.surprise_picks || []).map(s => `
-        <div class="bg-slate-900/60 border border-rose-500/30 p-4 rounded-xl flex flex-col justify-between">
-          <div>
-            <div class="text-[10px] text-rose-400 font-bold uppercase">${s.league}</div>
-            <div class="text-sm font-bold text-white mt-1">${s.match}</div>
-            <div class="text-xs text-rose-300 font-semibold mt-2">${s.prediction}</div>
-            <div class="text-2xl font-mono font-bold text-white mt-1">@ ${s.odds}</div>
-            <div class="text-[11px] text-slate-400 mt-2 border-t border-slate-800 pt-2">${s.reason}</div>
-          </div>
-          <div class="mt-3 text-[10px] bg-rose-500/10 text-rose-300 px-2 py-1 rounded font-mono text-center">
-            İY/MS Frekansı: %${s.frequency || 20}
-          </div>
-        </div>
-      `).join('');
-
-      // VIP
-      const vList = document.getElementById('vip-list');
-      vList.innerHTML = (appData.vip_room || []).map(v => `
-        <div class="bg-slate-900/60 border border-amber-500/30 p-4 rounded-xl">
-          <div class="text-xs text-amber-400 font-bold">${v.league}</div>
-          <div class="text-sm font-bold text-white mt-1">${v.match}</div>
-          <div class="mt-2 flex justify-between items-center">
-            <span class="text-xs font-semibold text-emerald-400">${v.prediction}</span>
-            <span class="text-base font-mono font-bold text-white">@ ${v.odds}</span>
-          </div>
-          <div class="text-[11px] text-slate-400 mt-2 border-t border-slate-800 pt-2">${v.reason}</div>
-        </div>
-      `).join('');
-
-      // ARŞİV (48 MAÇ)
-      renderArchive('all');
-    }
-
-    function renderBulletin() {
-      const bList = document.getElementById('bulletin-list');
-      let filtered = appData.matches || [];
-      if (activeFilter === 80) filtered = filtered.filter(m => m.confidence >= 80);
-      else if (activeFilter === 75) filtered = filtered.filter(m => m.confidence >= 75 && m.confidence < 80);
-
-      bList.innerHTML = filtered.map(m => `
-        <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl flex flex-col md:flex-row justify-between gap-4">
-          <div class="space-y-1.5 flex-1">
-            <div class="flex items-center gap-2 text-[11px] text-slate-400">
-              <span class="bg-slate-800 px-2 py-0.5 rounded text-slate-300 font-semibold">${m.league}</span>
-              <span>• ${m.time}</span>
-            </div>
-            <div class="text-base font-bold text-white">${m.match}</div>
-            <div class="text-[11px] font-mono text-emerald-400">Açılış Oran DNA'sı: ${m.odds_dna}</div>
-            
-            <div class="flex flex-wrap items-center gap-2 pt-1 text-[11px]">
-              <span class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded">
-                %85 DNA İsabeti: <b>%${m.dna_score || 80}</b>
-              </span>
-              <span class="bg-purple-500/10 border border-purple-500/20 text-purple-300 px-2 py-0.5 rounded font-bold">
-                Bileşik Güven: %${m.confidence}
-              </span>
-            </div>
-
-            <!-- TAM SONUÇ DAĞILIM KUTUSU -->
-            ${m.stats ? `
-              <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-[11px] font-mono space-y-1 mt-2">
-                <div class="text-slate-400 font-semibold text-[10px] uppercase">2016-2026 Birebir ${m.stats.total_matched} Maçın Röntgeni:</div>
-                <div class="text-slate-300">├ 1X2: Ev: ${m.stats.h_wins} (%${m.stats.h_pct}) | Ber: ${m.stats.draws} | Dep: ${m.stats.a_wins}</div>
-                <div class="text-slate-300">├ Gol: 2.5 Üst: ${m.stats.over25} (%${m.stats.over_pct}) | 2.5 Alt: ${m.stats.under25} (%${m.stats.under_pct})</div>
-                <div class="text-slate-300">└ KG: Var: ${m.stats.btts_yes} (%${m.stats.btts_pct}) | Yok: ${m.stats.btts_no}</div>
-              </div>
-            ` : ''}
-
-            <div class="text-[11px] text-slate-400 pt-1">
-              <span class="text-slate-500 font-medium">🧬 2016-2026 Birebir Eşleşmeler:</span> 
-              <div class="text-slate-300 font-mono text-[10.5px] mt-0.5 space-y-0.5">
-                ${(m.history_matches || []).map(h => `<div>• ${h}</div>`).join('')}
-              </div>
-            </div>
-          </div>
-
-          <div class="text-right flex md:flex-col justify-between items-end border-t md:border-t-0 md:border-l border-slate-800 pt-3 md:pt-0 md:pl-5">
-            <div>
-              <div class="text-xs text-amber-400 font-semibold">${m.prediction}</div>
-              <div class="text-2xl font-mono font-bold text-white">@ ${(typeof m.odds === "number" ? m.odds : Number(m.odds_val || m.pick_odds || 1.50)).toFixed(2)}</div>
-            </div>
-            <div class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded uppercase font-semibold">
-              ${m.status || 'BANKO'}
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function renderArchive(cat) {
-      const aTable = document.getElementById('archive-table');
-      let list = appData.archive || [];
-      if (cat !== 'all') {
-        list = list.filter(a => (a.category || 'BANKO').toUpperCase() === cat.toUpperCase());
-      }
-
-      document.getElementById('archive-count').innerText = `Filtrelenen: ${list.length} / Toplam ${appData.archive ? appData.archive.length : 48} Kayıt`;
-
-      aTable.innerHTML = list.map(a => {
-        let catColor = "bg-slate-800 text-slate-300";
-        if (a.category === "VIP") catColor = "bg-amber-500/20 text-amber-300 border border-amber-500/30";
-        else if (a.category === "SURPRIZ") catColor = "bg-rose-500/20 text-rose-300 border border-rose-500/30";
-
-        const isWin = (a.result || a.status || '').includes("TUTTU");
-
-        return `
-          <tr class="hover:bg-slate-800/30">
-            <td class="p-3 text-slate-400">${a.date}</td>
-            <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-semibold ${catColor}">${a.category}</span></td>
-            <td class="p-3 text-white font-medium">${a.match}</td>
-            <td class="p-3 text-slate-300">${a.pick}</td>
-            <td class="p-3 font-mono text-emerald-400 font-bold">${a.odds ? a.odds.toFixed(2) : '-'}</td>
-            <td class="p-3 text-amber-300">${a.score}</td>
-            <td class="p-3">
-              <span class="inline-flex items-center gap-1 font-bold ${isWin ? 'text-emerald-400' : 'text-rose-400'}">
-                <span>${isWin ? '✅' : '❌'}</span>
-                <span>${isWin ? 'TUTTU' : 'YATTI'}</span>
-              </span>
-            </td>
-            <td class="p-3 text-slate-400 text-[11px]">${a.note || ''}</td>
-          </tr>
-        `;
-      }).join('');
-    }
-
-    function filterMatches(val) {
-      activeFilter = val;
-      document.querySelectorAll('#flt-all, #flt-80, #flt-75').forEach(b => b.className = "px-2.5 py-1 rounded bg-slate-950 text-slate-400 hover:text-white");
-      if (val === 'all') document.getElementById('flt-all').className = "px-2.5 py-1 rounded bg-slate-800 text-white font-medium";
-      else if (val === 80) document.getElementById('flt-80').className = "px-2.5 py-1 rounded bg-slate-800 text-white font-medium";
-      else if (val === 75) document.getElementById('flt-75').className = "px-2.5 py-1 rounded bg-slate-800 text-white font-medium";
-      renderBulletin();
-    }
-
-    function filterArchive(cat) {
-      document.querySelectorAll('#arc-all, #arc-banko, #arc-vip, #arc-surpriz').forEach(b => b.className = "px-2.5 py-1 rounded bg-slate-950 text-slate-400 hover:text-white");
-      if (cat === 'all') document.getElementById('arc-all').className = "px-2.5 py-1 rounded bg-slate-800 text-white font-medium";
-      else if (cat === 'BANKO') document.getElementById('arc-banko').className = "px-2.5 py-1 rounded bg-slate-800 text-white font-medium";
-      else if (cat === 'VIP') document.getElementById('arc-vip').className = "px-2.5 py-1 rounded bg-slate-800 text-white font-medium";
-      else if (cat === 'SURPRIZ') document.getElementById('arc-surpriz').className = "px-2.5 py-1 rounded bg-slate-800 text-white font-medium";
-      renderArchive(cat);
-    }
-
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('bg-slate-800', 'text-white'));
-      document.getElementById('tab-' + tabId).classList.remove('hidden');
-      document.getElementById('btn-' + tabId).classList.add('bg-slate-800', 'text-white');
-    }
-
-    async function sendTelegramDirect() {
-      const btn = event.currentTarget;
-      btn.disabled = true;
-      btn.innerText = "Gönderiliyor...";
-      
-      let text = `⚡ <b>OPTAODDS AI v5.6 BÜLTENİ</b> ⚡\n📅 <b>Tarih:</b> ${appData.current_date}\n───────────────────────\n`;
-      (appData.matches || []).forEach(m => {
-        text += `• <b>${m.match}</b> (${m.league})\n  👉 <b>Tercih:</b> ${m.prediction} (@ ${(typeof m.odds === "number" ? m.odds : Number(m.odds_val || m.pick_odds || 1.50)).toFixed(2)})\n  📊 Güven: %${m.confidence}\n\n`;
-      });
-      text = text.replace(/&/g, 've');
-
-      try {
-        const res = await fetch(`https://api.telegram.org/bot8922109226:AAGCEVmDNyCf2DMLhnOi1Mh2hYLp5WdV_tc/sendMessage`, {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            chat_id: '867372590',
-            text: text,
-            parse_mode: 'HTML'
-          })
-        });
-        if (res.ok) alert("Bülten Telegram'a iletildi!");
-        else alert("Telegram API hatası oluştu.");
-      } catch (err) {
-        alert("Hata: " + err.message);
-      } finally {
-        btn.disabled = false;
-        btn.innerText = "Telegram Panosu";
-      }
-    }
-
-    init();
-  </script>
-</body>
-</html>
+const MAIN_MATCHES = [
+  {
+    date: "26.10.2026", time: "21:30", league: "Trendyol Süper Lig", match: "Galatasaray - Fenerbahçe",
+    pick: "KG Var", pick_odds: 1.58, alt: "2.5 Üst @ 1.68", surp: "İY X / MS 1 @ 5.10",
+    dna_text: "%77.8 Başarı (27 Eşleşmede 21 Kez KG Var)",
+    odds: {ms1: 2.18, ms0: 3.80, ms2: 3.00, alt: 2.15, ust: 1.68, kg_var: 1.58, kg_yok: 2.25},
+    dist: {ms1: 48, ms0: 26, ms2: 26, ust: 70, kg_var: 78},
+    note: "2.18 - 3.80 - 3.00 derbi oran DNA'sında oynanan 27 maçın 21'inde (%77.8) karşılıklı gol, 19'unda (%70.4) 2.5 Üst geldi.",
+    history: [
+      {date: "21.09.2024", match: "Fenerbahçe - Galatasaray", score: "1-3 (İY 0-2)", odds: "2.20 | 3.60 | 3.10"},
+      {date: "28.10.2024", match: "Galatasaray - Beşiktaş", score: "2-1 (İY 1-0)", odds: "2.15 | 3.75 | 3.05"},
+      {date: "28.04.2024", match: "Tottenham - Arsenal", score: "2-3 (İY 0-3)", odds: "3.00 | 3.80 | 2.15"},
+      {date: "28.04.2018", match: "Inter - Juventus", score: "2-3 (İY 0-1)", odds: "2.18 | 3.70 | 3.00"}
+    ]
+  },
+  {
+    date: "26.10.2026", time: "19:00", league: "Trendyol Süper Lig", match: "Çaykur Rizespor - Trabzonspor",
+    pick: "MS 2", pick_odds: 1.85, alt: "KG Var @ 1.68", surp: "İY X / MS 2 @ 4.60",
+    dna_text: "%72.0 Başarı (25 Eşleşmede 18 Kez MS 2)",
+    odds: {ms1: 3.30, ms0: 3.50, ms2: 1.85, alt: 2.00, ust: 1.78, kg_var: 1.68, kg_yok: 2.08},
+    dist: {ms1: 12, ms0: 16, ms2: 72, ust: 68, kg_var: 76},
+    note: "3.30 - 3.50 - 1.85 deplasman favorisi DNA kalıbındaki 25 maçın 18'ini (%72.0) konuk ekip kazandı.",
+    history: [
+      {date: "03.04.2024", match: "Konyaspor - Trabzonspor", score: "1-3 (İY 0-1)", odds: "3.25 | 3.45 | 1.85"},
+      {date: "15.03.2021", match: "Kasımpaşa - Fenerbahçe", score: "1-2 (İY 0-2)", odds: "3.30 | 3.50 | 1.85"},
+      {date: "21.01.2024", match: "Hatayspor - Alanyaspor", score: "1-2 (İY 1-1)", odds: "3.30 | 3.50 | 1.85"}
+    ]
+  },
+  {
+    date: "26.10.2026", time: "19:00", league: "Trendyol Süper Lig", match: "Beşiktaş - Başakşehir",
+    pick: "2.5 Gol Üstü", pick_odds: 1.70, alt: "MS 1 @ 1.52", surp: "İY 1 / MS 1 @ 2.25",
+    dna_text: "%76.9 Başarı (26 Eşleşmede 20 Kez 2.5 Üst)",
+    odds: {ms1: 1.52, ms0: 4.60, ms2: 5.80, alt: 2.10, ust: 1.70, kg_var: 1.78, kg_yok: 1.95},
+    dist: {ms1: 73, ms0: 15, ms2: 12, ust: 77, kg_var: 65},
+    note: "1.52 - 4.60 - 5.80 oran diziliminde oynanan 26 maçın 20'si (%76.9) 2.5 Üst tamamlandı.",
+    history: [
+      {date: "12.03.2021", match: "Beşiktaş - Başakşehir", score: "3-2 (İY 1-0)", odds: "1.55 | 4.20 | 5.50"},
+      {date: "27.01.2023", match: "Beşiktaş - Alanyaspor", score: "3-0 (İY 1-0)", odds: "1.52 | 4.50 | 5.75"},
+      {date: "07.01.2024", match: "Galatasaray - Konyaspor", score: "3-0 (İY 0-0)", odds: "1.50 | 4.60 | 6.00"}
+    ]
+  },
+  {
+    date: "26.10.2026", time: "22:30", league: "Fransa Ligue 1", match: "Paris SG - Lyon",
+    pick: "2.5 Gol Üstü", pick_odds: 1.50, alt: "KG Var @ 1.54", surp: "İY 1 / MS 1 @ 2.10",
+    dna_text: "%80.0 Başarı (30 Eşleşmede 24 Kez 2.5 Üst)",
+    odds: {ms1: 1.40, ms0: 5.30, ms2: 6.60, alt: 2.55, ust: 1.50, kg_var: 1.54, kg_yok: 2.35},
+    dist: {ms1: 77, ms0: 13, ms2: 10, ust: 80, kg_var: 73},
+    note: "MS 1 oranı 1.40 ile <1.50 kuralından elendi; aynı DNA kalıbındaki 30 maçın 24'ü (%80.0) 2.5 Üst bitti.",
+    history: [
+      {date: "15.12.2024", match: "Paris SG - Lyon", score: "3-1 (İY 2-1)", odds: "1.44 | 5.00 | 6.25"},
+      {date: "21.04.2024", match: "Paris SG - Lyon", score: "4-1 (İY 4-1)", odds: "1.45 | 5.10 | 6.00"},
+      {date: "03.02.2024", match: "Bayern Münih - M'gladbach", score: "3-1 (İY 1-1)", odds: "1.45 | 5.00 | 6.20"}
+    ]
+  },
+  {
+    date: "26.10.2026", time: "23:00", league: "İspanya La Liga", match: "Sevilla - Osasuna",
+    pick: "MS 1", pick_odds: 1.90, alt: "2.5 Alt @ 1.68", surp: "İY X / MS 1 @ 4.50",
+    dna_text: "%71.9 Başarı (32 Eşleşmede 23 Kez MS 1)",
+    odds: {ms1: 1.90, ms0: 3.40, ms2: 4.50, alt: 1.68, ust: 2.12, kg_var: 1.95, kg_yok: 1.80},
+    dist: {ms1: 72, ms0: 19, ms2: 9, ust: 25, kg_var: 38},
+    note: "1.90 - 3.40 - 4.50 La Liga ev favorisi kalıbındaki 32 maçın 23'ünü (%71.9) ev sahibi kazandı.",
+    history: [
+      {date: "08.11.2025", match: "Sevilla - Osasuna", score: "1-
