@@ -17,5 +17,14 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Send Telegram Daily Bulletin
-        run: curl -s -X POST "https://api.telegram.org/bot8922109226:AAGCEVmDNyCf2DMLhnOi1Mh2hYLp5WdV_tc/sendMessage" -d "chat_id=867372590" --data-urlencode "text=💎 OPTAODDS AI v5.6 — VIP, SÜRPRİZ & GÜNLÜK BÜLTEN AKTİF! Canlı ekran: https://alpaydnmez.github.io/optaodds-ai/"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Auto Engine & Send Single Telegram Notification
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          TELEGRAM_TOKEN: "8922109226:AAGCEVmDNyCf2DMLhnOi1Mh2hYLp5WdV_tc"
+          TELEGRAM_CHAT_ID: "867372590"
+        run: python3 scripts/auto_engine.py || true
