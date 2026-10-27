@@ -465,7 +465,7 @@ if tg_token and tg_chat:
     try:
         requests.post(
             f"https://api.telegram.org/bot{tg_token}/sendMessage",
-            json={{"chat_id": tg_chat, "text": tg_text, "parse_mode": "HTML"}},
+            json={"chat_id": tg_chat, "text": tg_text, "parse_mode": "HTML"},
             timeout=10
         )
         print("[+] Telegram bildirimi basariyla gonderildi.")
