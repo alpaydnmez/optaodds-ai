@@ -1,45 +1,30 @@
-name: OptaOdds Daily Auto Engine
+name: OptaOdds AI Daily Engine
 
 on:
+  workflow_dispatch:
   schedule:
-    # Her gün TSİ 01:30, 12:30 ve 18:30'da otomatik çalışır (UTC karşılıkları)
-    - cron: '30 22 * * *'
-    - cron: '30 9 * * *'
-    - cron: '30 15 * * *'
-  workflow_dispatch: # İstediğin an tek tıkla elle tetikleme
+    - cron: '15 22 * * *'
+    - cron: '15 9 * * *'
+    - cron: '15 13 * * *'
 
 permissions:
   contents: write
 
 jobs:
-  update-engine:
+  optaodds-sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout repo
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install Dependencies
-        run: |
-          pip install requests beautifulsoup4 pytz
-
-      - name: Run Auto Engine
+      - name: Run Auto Engine & Send Single Telegram Notification
         env:
-          TG_BOT_TOKEN: "8922109226:AAGCEVmDNyCf2DMLhnOi1Mh2hYLp5WdV_tc"
-          TG_CHAT_ID: "867372590"
-        run: |
-          python engine.py
-
-     - name: Commit and Push Updates
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.html
-          git commit -m "Auto Update Bulletin [skip ci]" || exit 0
-          git push
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          TELEGRAM_TOKEN: "8922109226:AAGCEVmDNyCf2DMLhnOi1Mh2hYLp5WdV_tc"
+          TELEGRAM_CHAT_ID: "867372590"
+        run: python3 scripts/auto_engine.py || true
